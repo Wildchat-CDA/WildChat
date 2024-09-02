@@ -1,6 +1,7 @@
 import "./App.css";
 
 import HeaderNavbarDev from "./components/common/HeaderNavbarDev/HeaderNavbarDev/HeaderNavbarDev";
+import Navbar from "./components/common/Navbar/Navbar";
 
 function App() {
   function handleViewChange(view) {
@@ -10,6 +11,7 @@ function App() {
   return (
     <div>
       <HeaderNavbarDev onViewChange={handleViewChange} />
+      <Navbar />
     </div>
   );
 }
