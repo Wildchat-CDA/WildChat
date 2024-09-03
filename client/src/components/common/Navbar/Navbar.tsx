@@ -1,34 +1,44 @@
 import React, { useState } from 'react';
 import { useHandRaise } from '../../../context/HandRaiseContext';
 import './Navbar.css';
+import Logo from '../Logo';
 
-function Navbar() {
+const NavItem = ({ icon, text, onClick, isActive }) => (
+  <div className={`nav-item ${isActive ? 'active' : ''}`} onClick={onClick}>
+    <div className="icon-wrapper">
+      <img src={`/icons/${icon}`} alt={text} className="nav-icon" />
+    </div>
+    <span className="nav-text">{text}</span>
+  </div>
+);
+
+const Navbar = () => {
   const { userHandState, toggleHandRaise } = useHandRaise();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  function toggleDropdown() {
-    setIsDropdownOpen(function(prev) {
-      return !prev;
-    });
-  }
+  const toggleDropdown = () => {
+    setIsDropdownOpen(prev => !prev);
+  };
 
-  function handleToggleHandRaise(type: 'forSelf' | 'forTable') {
+  const handleToggleHandRaise = (type: 'forSelf' | 'forTable') => {
     toggleHandRaise(type);
     setIsDropdownOpen(false);
-  }
+  };
 
   const isHandRaised = userHandState.forSelf || userHandState.forTable;
 
   return (
     <nav className="main-navbar">
-      <div className="nav-item" onClick={toggleDropdown}>
-        <img 
-          src={`/icons/${isHandRaised ? 'prohibition.png' : 'palm.png'}`} 
-          alt={isHandRaised ? "Baisser la main" : "Lever la main"} 
-          className="nav-icon"
-        />
-        <span className="nav-text">{isHandRaised ? "Baisser la main" : "Lever la main"}</span>
+      <div className="logo-container">
+        <Logo width={40} color="white" />
+        <span className="logo-text">Wild Chat</span>
       </div>
+      <NavItem 
+        icon={isHandRaised ? 'prohibition.png' : 'palm.png'}
+        text={isHandRaised ? "Baisser la main" : "Lever la main"}
+        onClick={toggleDropdown}
+        isActive={isHandRaised}
+      />
       {isDropdownOpen && (
         <div className="dropdown">
           <div className="dropdown-item" onClick={() => handleToggleHandRaise('forSelf')}>
@@ -45,6 +55,6 @@ function Navbar() {
       )}
     </nav>
   );
-}
+};
 
 export default Navbar;
