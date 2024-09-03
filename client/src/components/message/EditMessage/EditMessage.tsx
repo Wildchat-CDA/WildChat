@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { Message } from '../../../types/messageTypes';
-import {
-  MessageUpdate,
-  editMessage,
-} from '../../../services/message/EditMessage';
+import { MessageUpdate } from '../../../types/messageTypes';
+import { editMessage } from '../../../services/message/EditMessage';
 
 const MessageEditor: React.FC<MessageUpdate> = ({
   message,

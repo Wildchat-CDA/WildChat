@@ -3,3 +3,9 @@ export interface Message {
   message: string;
   roomId: number;
 }
+
+export interface MessageUpdate {
+  index: number;
+  message: string;
+  roomId: number;
+}

@@ -3,3 +3,11 @@ export interface Payload {
   message: string;
   roomId: number;
 }
+
+export interface MessageUpdateData {
+  messageUpdate: {
+    index: number;
+    message: string;
+    roomId: string;
+  };
+}
