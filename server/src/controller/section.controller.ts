@@ -35,4 +35,9 @@ export class SectionController {
       throw new NotFoundException(error.message);
     }
   }
+
+  @Post('/topic')
+  async createSectionWithChannels(@Body() section: Section): Promise<Section> {
+    return await this.sectionService.createSectionWithChannels(section);
+  }
 }
