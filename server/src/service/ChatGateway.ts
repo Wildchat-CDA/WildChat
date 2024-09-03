@@ -37,7 +37,7 @@ export class ChatGateway
   @SubscribeMessage('message')
   handleMessage(@MessageBody() data: Payload) {
     console.log(data, 'Message received');
-    this.redisService.client.lPush(
+    this.redisService.client.rPush(
       `room:${data.roomId}`,
       `${data.name} : ${data.message}`,
     );

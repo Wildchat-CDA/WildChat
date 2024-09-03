@@ -17,11 +17,11 @@ export class RedisController {
     @Param('roomId') roomId: string,
     @MessageBody() data: MessageUpdateData,
   ) {
-    console.log('messageUpdate : ', data.messageUpdate.index);
     return await this.redisService.updateMessage(
-      roomId,
+      data.messageUpdate.name,
       data.messageUpdate.index,
       data.messageUpdate.message,
+      roomId,
     );
   }
 }

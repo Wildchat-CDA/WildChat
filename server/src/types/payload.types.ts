@@ -6,6 +6,7 @@ export interface Payload {
 
 export interface MessageUpdateData {
   messageUpdate: {
+    name: string;
     index: number;
     message: string;
     roomId: string;

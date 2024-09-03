@@ -35,7 +35,7 @@ const ShowMessage: React.FC = () => {
     }
   }, [messages]);
 
-  const handleEdit = (_: any, index: number) => {
+  const handleEdit = (index: number) => {
     setActiveEdit(index);
   };
 
@@ -46,17 +46,15 @@ const ShowMessage: React.FC = () => {
           <span className='message-name'>{message.name} </span>
           {activeEdit === index ? (
             <MessageEditor
+              name={message.name}
               message={message.message}
               index={index}
               roomId={message.roomId}
             />
           ) : (
-            <span>{message.message}</span> // Assurez-vous que `message.message` est affiché correctement
+            <span>{message.message}</span>
           )}
-          <span
-            className='edit-span'
-            onClick={() => handleEdit(message, index)}
-          >
+          <span className='edit-span' onClick={() => handleEdit(index)}>
             EDIT
           </span>
         </div>

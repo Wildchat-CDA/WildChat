@@ -5,6 +5,7 @@ export interface Message {
 }
 
 export interface MessageUpdate {
+  name: string;
   index: number;
   message: string;
   roomId: number;

@@ -9,7 +9,6 @@ export async function LoadMessage(): Promise<Message[]> {
   }
 
   const payload: Message[] = await response.json();
-  console.log('payload : ', payload);
 
-  return payload.reverse();
+  return payload;
 }
