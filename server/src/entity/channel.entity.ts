@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Section } from './section.entity';
 
 @Entity()
 export class Channel {
@@ -16,4 +17,7 @@ export class Channel {
 
   @Column()
   slot: number;
+
+  @ManyToMany(() => Section, (section: Section) => section.channels)
+  sections: Array<Section>;
 }

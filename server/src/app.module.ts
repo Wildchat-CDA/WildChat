@@ -9,27 +9,27 @@ import { Channel } from './entity/channel.entity';
 import { Type } from './entity/type.entity';
 import { Config } from './entity/config.entity';
 import { ConfigModule } from '@nestjs/config';
+import { SectionController } from './controller/section.controller';
+import { ChannelController } from './controller/channel.controller';
+import { SectionService } from './service/section.service';
+import { ChannelService } from './service/channel.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      // host: 'localhost',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT, 10),
-      // port: 3306,
-      // username: 'sdp',
       username: process.env.DB_USERNAME,
-      // password: 'T9j83dmx?',
       password: process.env.DB_PASSWORD,
-      // database: 'wildchat',
       database: process.env.DB_DATABASE,
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([Section, Channel]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, SectionController, ChannelController],
+  providers: [AppService, SectionService, ChannelService],
 })
 export class AppModule {}

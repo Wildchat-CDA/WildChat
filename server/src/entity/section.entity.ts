@@ -19,7 +19,9 @@ export class Section {
   @Column()
   order: number;
 
-  @ManyToMany(() => Channel)
+  @ManyToMany(() => Channel, (channel: Channel) => channel.sections, {
+    cascade: true,
+  })
   @JoinTable()
   channels: Array<Channel>;
 }
