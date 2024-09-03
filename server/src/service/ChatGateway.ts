@@ -9,12 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RedisService } from './redis.service';
-
-interface Payload {
-  name: string;
-  message: string;
-  roomId: number;
-}
+import { Payload } from 'src/types/payload.types';
 
 @WebSocketGateway({
   cors: true,

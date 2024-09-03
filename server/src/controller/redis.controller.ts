@@ -1,12 +1,13 @@
-import { Controller, Inject, Get } from '@nestjs/common';
+import { Controller, Inject, Get, Param } from '@nestjs/common';
 import { RedisService } from 'src/service/redis.service';
 
-@Controller('/message')
+@Controller('/room')
 export class RedisController {
   constructor(@Inject() private readonly redisService: RedisService) {}
 
-  @Get()
-  public async getAllMessages() {
-    return await this.redisService.client.lRange(`room:1`, 0, -1);
+  @Get(':id?') // 'id' optionnel
+  public async getAllMessages(@Param('id') id: string) {
+    const roomId = id ?? '1'; // Utilise '1' si 'id' est undefined
+    return await this.redisService.getMessages(roomId);
   }
 }

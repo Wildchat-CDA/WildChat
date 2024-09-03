@@ -1,6 +1,6 @@
 import React from 'react';
-import InputMessage from './components/InputMessage/InputMessage';
-import ShowMessage from './components/ShowMessage/ShowMessage';
+import InputMessage from "./components/message/InputMessage/InputMessage"
+import ShowMessage from './components/message/ShowMessage/ShowMessage';
 
 const App = (props) => {
   return (

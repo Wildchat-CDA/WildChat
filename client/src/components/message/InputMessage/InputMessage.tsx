@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { handleEnterKey } from '../../services/eventHandlerService';
-import socket from '../../services/webSocketService';
+import { handleEnterKey } from '../../../services/eventHandlerService';
+import socket from '../../../services/webSocketService';
 import './InputMessage.css';
-import '../../App.css';
+import '../../../App.css';
 
 const InputMessage = (props) => {
   const [input, setInput] = useState('');
