@@ -13,6 +13,8 @@ import { SectionController } from './controller/section.controller';
 import { ChannelController } from './controller/channel.controller';
 import { SectionService } from './service/section.service';
 import { ChannelService } from './service/channel.service';
+import { TypeController } from './controller/type.controller';
+import { TypeService } from './service/type.service';
 
 @Module({
   imports: [
@@ -27,9 +29,14 @@ import { ChannelService } from './service/channel.service';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Section, Channel]),
+    TypeOrmModule.forFeature([Section, Channel, Type]),
   ],
-  controllers: [AppController, SectionController, ChannelController],
-  providers: [AppService, SectionService, ChannelService],
+  controllers: [
+    AppController,
+    SectionController,
+    ChannelController,
+    TypeController,
+  ],
+  providers: [AppService, SectionService, ChannelService, TypeService],
 })
 export class AppModule {}
