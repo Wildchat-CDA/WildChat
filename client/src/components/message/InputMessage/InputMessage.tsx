@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { handleEnterKey } from '../../../services/eventHandlerService';
+import { handleKeyDown } from '../../../services/eventHandlerService';
 import socket from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
 
-const InputMessage = (props) => {
+const InputMessage = () => {
   const [input, setInput] = useState('');
   //TODO - Use context pour user
   const name = 'BOB';
@@ -16,7 +16,6 @@ const InputMessage = (props) => {
     e.preventDefault();
     const payload = { name, message: input, roomId: roomId };
     socket.emit('message', payload);
-
     setInput('');
   };
 
@@ -27,7 +26,7 @@ const InputMessage = (props) => {
           className='input-message'
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => handleEnterKey(e, onSubmit)}
+          onKeyDown={(e) => handleKeyDown(e, onSubmit, () => setInput(''))}
           placeholder='Envoyer un message'
         ></textarea>
       </form>

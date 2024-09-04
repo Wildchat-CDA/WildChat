@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { MessageUpdatePaylod } from '../../../types/messageTypes';
 import { editMessage } from '../../../services/message/EditMessage';
-// import { updateMessage } from '../../../services/message/LoadMessage';
+
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';
 
@@ -13,7 +13,6 @@ const MessageEditor: React.FC<MessageUpdatePaylod> = ({
   setActiveEdit,
   updateMessage,
 }) => {
- 
   const [newMessage, setNewMessage] = useState(message);
 
   const cancelEdit = () => {
