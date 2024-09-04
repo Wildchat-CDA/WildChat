@@ -1,9 +1,26 @@
 :root {
+  /* GLOBAL */
   --color-primary: #2b2d31;
   --color-primary-hover: #4e5058;
   --color-secondary: #4e5058;
   --color-font: #dbdee1;
+
+  /* Composant <ShowMessage> */
   --color-name: #35a554;
+  --scrollbar-bg: #2f3136; /* Couleur de fond de la scrollbar */
+  --scrollbar-thumb: #444; /* Couleur de la barre de défilement */
+  --scrollbar-thumb-hover: #666; /* Couleur de la barre de défilement au survol */
+
+  /* Composant <MessageEdit> */
+  --color-primary: #36393f; /* Fond du conteneur */
+  --color-secondary: #2f3136; /* Couleur de fond de la zone de texte */
+  --color-font: #dcddde; /* Couleur du texte principal */
+  --color-font-secondary: #b9bbbe; /* Couleur du texte secondaire */
+  --color-border: #424549; /* Bordure discrète */
+  --color-button: #7289da; /* Couleur de fond du bouton */
+  --color-button-text: #ffffff; /* Couleur du texte du bouton */
+  --color-button-hover: #5b6eae; /* Couleur de fond du bouton au survol */
+  --color-link: #00a8fc;
 }
 
 textarea {

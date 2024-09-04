@@ -1,9 +1,11 @@
-import React from "react";
-import "./App.css";
-import { HandRaiseProvider } from "./context/HandRaiseContext";
-import HeaderNavbarDev from "./components/common/HeaderNavbarDev/HeaderNavbarDev/HeaderNavbarDev";
-import Navbar from "./components/common/Navbar/Navbar";
-import RaisedHandsList from "./components/teacher/RaisedHandsList";
+import React from 'react';
+import './App.css';
+import { HandRaiseProvider } from './context/HandRaiseContext';
+import HeaderNavbarDev from './components/common/HeaderNavbarDev/HeaderNavbarDev/HeaderNavbarDev';
+import Navbar from './components/common/Navbar/Navbar';
+import RaisedHandsList from './components/teacher/RaisedHandsList';
+import InputMessage from './components/message/InputMessage/InputMessage';
+import ShowMessage from './components/message/ShowMessage/ShowMessage';
 
 function App() {
   function handleViewChange(view: string) {
@@ -11,13 +13,17 @@ function App() {
   }
 
   return (
-    <HandRaiseProvider>
-      <div>
-        <HeaderNavbarDev onViewChange={handleViewChange} />
-        <Navbar />
-        <RaisedHandsList />
-      </div>
-    </HandRaiseProvider>
+    // <HandRaiseProvider>
+    //   <div>
+    //     <HeaderNavbarDev onViewChange={handleViewChange} />
+    //     <Navbar />
+    //     <RaisedHandsList />
+    //   </div>
+    // </HandRaiseProvider>
+    <>
+      <ShowMessage />
+      <InputMessage />
+    </>
   );
 }
 

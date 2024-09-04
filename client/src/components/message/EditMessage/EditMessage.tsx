@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MessageUpdatePaylod } from '../../../types/messageTypes';
 import { editMessage } from '../../../services/message/EditMessage';
-
+import { useScrollToBottom } from '../../../services/useScrollBottom';
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';
 
@@ -26,6 +26,8 @@ const MessageEditor: React.FC<MessageUpdatePaylod> = ({
     updateMessage(newMessage, index);
   };
 
+  const scrollRef = useScrollToBottom(newMessage);
+
   return (
     <div className='message-editor'>
       <textarea
@@ -37,9 +39,10 @@ const MessageEditor: React.FC<MessageUpdatePaylod> = ({
       <div className='valid-or-cancel_edit'>
         <span> échap pour </span>
         <button onClick={cancelEdit}>annuler</button>
-        <span> ° entrée pour </span>
+        <span>  entrée pour </span>
         <button onClick={handleSaveClick}>enregistrer</button>
       </div>
+      <div ref={scrollRef}></div>
     </div>
   );
 };

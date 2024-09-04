@@ -1,6 +1,22 @@
+.input-message-container {
+  width: 100%;
+
+
+
+}
+
 .input-message {
-  width: 95%;
+  width: 100%;
+  min-height: 50px;
+  max-height: 300px; /* Ajustez si nécessaire */
   padding: 10px;
-  margin: auto;
+  margin: 10px 0;
   background-color: var(--color-secondary);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  overflow: auto;
+  resize: none;
+  font-size: 1em;
+
 }

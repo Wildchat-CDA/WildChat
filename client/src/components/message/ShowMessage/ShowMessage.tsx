@@ -4,13 +4,14 @@ import socket from '../../../services/webSocketService';
 import '../../../App.css';
 import './ShowMessage.css';
 import { Message } from '../../../types/messageTypes';
+import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
+import InputMessage from '../InputMessage/InputMessage';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
-  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // Load messages with redis (init)
@@ -30,11 +31,7 @@ const ShowMessage: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
+  const scrollRef = useScrollToBottom(messages);
 
   const handleEdit = (index: number) => {
     setActiveEdit(true);
