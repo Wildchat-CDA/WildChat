@@ -43,6 +43,11 @@ export class RedisService {
   }
 
   public async postMessage(data: Payload) {
+    if (data.message.length === 0) {
+      throw new Error(
+        'The message cannot be empty. Please enter some text before submitting.',
+      );
+    }
     await this.client.rPush(
       `room:${data.roomId}`,
       `${data.name} : ${data.message}`,
@@ -58,6 +63,11 @@ export class RedisService {
     const currentMessages = await this._client.lRange(`room:${roomId}`, 0, -1);
     if (index < 0 || index >= currentMessages.length) {
       throw new Error('Index out of range');
+    }
+    if (newMessage.length === 0) {
+      throw new Error(
+        'The message cannot be empty. Please enter some text before submitting.',
+      );
     }
 
     const updatedMessage = `${name} : ${newMessage}`;

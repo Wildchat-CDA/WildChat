@@ -24,9 +24,11 @@ const InputMessage = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = { name, message: input, roomId };
-    socket.emit('message', payload);
-    setInput(''); // Clear input field
+    if (input.length !== 0) {
+      const payload = { name, message: input, roomId };
+      socket.emit('message', payload);
+      setInput(''); // Clear input field
+    }
   };
 
   return (

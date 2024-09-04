@@ -1,8 +1,5 @@
 .input-message-container {
   width: 100%;
-
-
-
 }
 
 .input-message {
@@ -18,5 +15,25 @@
   overflow: auto;
   resize: none;
   font-size: 1em;
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
 
+.input-message::-webkit-scrollbar {
+width: 8px;
+}
+
+.input-message::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 8px;
+}
+
+.input-message::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.input-message::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+  border-radius: 8px;
 }
