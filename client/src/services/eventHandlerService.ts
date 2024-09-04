@@ -1,12 +1,25 @@
 import { KeyboardEvent } from 'react';
 
 // Submit input with ENTER
-export const handleEnterKey = (
+export const handleKeyDown = (
   e: KeyboardEvent,
-  onSubmit: (e: KeyboardEvent) => void
+  onSubmit: (e: KeyboardEvent) => void,
+  onCancel: () => void
 ) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    onSubmit(e);
+  switch (e.key) {
+    case 'Enter':
+      if (!e.shiftKey) {
+        e.preventDefault();
+        onSubmit(e);
+      }
+      break;
+
+    case 'Escape':
+      e.preventDefault();
+      onCancel();
+      break;
+
+    default:
+      break;
   }
 };

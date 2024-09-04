@@ -7,6 +7,7 @@ import {
   RedisScripts,
 } from 'redis';
 import { Injectable } from '@nestjs/common';
+import { Payload } from 'src/types/payload.types';
 
 @Injectable()
 export class RedisService {
@@ -41,29 +42,25 @@ export class RedisService {
     });
   }
 
+  public async postMessage(data: Payload) {
+    await this.client.rPush(
+      `room:${data.roomId}`,
+      `${data.name} : ${data.message}`,
+    );
+  }
+
   public async updateMessage(
     name: string,
     index: number,
     newMessage: string,
     roomId: string,
   ): Promise<void> {
-    // Récupère le message actuel à l'index donné pour ne pas perdre le nom
     const currentMessages = await this._client.lRange(`room:${roomId}`, 0, -1);
-    console.log('room : ', roomId);
-    console.log('LENGTH : ', currentMessages.length);
     if (index < 0 || index >= currentMessages.length) {
       throw new Error('Index out of range');
     }
 
-    // Crée le nouveau message avec le nom existant et le nouveau message
     const updatedMessage = `${name} : ${newMessage}`;
-
-    // Met à jour le message à l'index spécifié
-    const result = await this._client.lSet(
-      `room:${roomId}`,
-      index,
-      updatedMessage,
-    );
-    console.log('RESULT : ', result);
+    await this._client.lSet(`room:${roomId}`, index, updatedMessage);
   }
 }

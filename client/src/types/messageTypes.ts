@@ -4,9 +4,12 @@ export interface Message {
   roomId: number;
 }
 
-export interface MessageUpdate {
+export interface MessageUpdatePaylod {
   name: string;
   index: number;
   message: string;
   roomId: number;
+  setActiveEdit(newState: boolean): void;
+  setMessages(newState: (prevState: Message[]) => Message[]): void;
+  updateMessage(msg: string, index: number): void;
 }

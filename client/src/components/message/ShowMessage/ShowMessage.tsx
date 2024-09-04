@@ -8,7 +8,8 @@ import MessageEditor from '../EditMessage/EditMessage';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [activeEdit, setActiveEdit] = useState<number>();
+  const [activeEdit, setActiveEdit] = useState<boolean>();
+  const [currentIndex, setCurrentIndex] = useState<number>();
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -36,7 +37,17 @@ const ShowMessage: React.FC = () => {
   }, [messages]);
 
   const handleEdit = (index: number) => {
-    setActiveEdit(index);
+    setActiveEdit(true);
+    setCurrentIndex(index);
+  };
+
+  // Update message in message Array
+  const updateMessage = (msg: string, index: number) => {
+    setMessages((prevMessages) =>
+      prevMessages.map((message, i) =>
+        i === index ? { ...message, message: msg } : message
+      )
+    );
   };
 
   return (
@@ -44,12 +55,15 @@ const ShowMessage: React.FC = () => {
       {messages.map((message, index) => (
         <div className='message-el' key={index}>
           <span className='message-name'>{message.name} </span>
-          {activeEdit === index ? (
+          {currentIndex === index && activeEdit === true ? (
             <MessageEditor
               name={message.name}
               message={message.message}
               index={index}
               roomId={message.roomId}
+              setActiveEdit={setActiveEdit}
+              setMessages={setMessages}
+              updateMessage={updateMessage}
             />
           ) : (
             <span>{message.message}</span>

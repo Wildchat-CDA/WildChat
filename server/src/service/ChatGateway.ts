@@ -30,17 +30,14 @@ export class ChatGateway
     console.log(`Client connected: ${client.id}`);
   }
 
-  handleDisconnect(client: Socket): any {
+  handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('message')
-  handleMessage(@MessageBody() data: Payload) {
+  async handleMessage(@MessageBody() data: Payload) {
     console.log(data, 'Message received');
-    this.redisService.client.rPush(
-      `room:${data.roomId}`,
-      `${data.name} : ${data.message}`,
-    );
+    await this.redisService.postMessage(data);
     this.server.emit('message', data);
   }
 }

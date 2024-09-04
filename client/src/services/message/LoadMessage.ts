@@ -12,3 +12,11 @@ export async function LoadMessage(): Promise<Message[]> {
 
   return payload;
 }
+
+export const updateMessage = (msg, index, setState) => {
+  setState((prevMessages) =>
+    prevMessages.map((message, i) =>
+      i === index ? { ...prevMessages, message: msg } : message
+    )
+  );
+};
