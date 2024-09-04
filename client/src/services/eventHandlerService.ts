@@ -4,7 +4,7 @@ import { KeyboardEvent } from 'react';
 export const handleKeyDown = (
   e: KeyboardEvent,
   onSubmit: (e: KeyboardEvent) => void,
-  onCancel?: () => void
+  onCancel: () => void
 ) => {
   switch (e.key) {
     case 'Enter':
