@@ -3,13 +3,13 @@ import { LoadMessage } from '../../../services/message/LoadMessage';
 import socket from '../../../services/webSocketService';
 import '../../../App.css';
 import './ShowMessage.css';
-import { Message } from '../../../types/messageTypes';
+import { IMessage } from '../../../types/messageTypes';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
-import InputMessage from '../InputMessage/InputMessage';
+import { deleteMessage } from '../../../services/message/DeleteMessage';
 
 const ShowMessage: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
 
@@ -36,6 +36,19 @@ const ShowMessage: React.FC = () => {
   const handleEdit = (index: number) => {
     setActiveEdit(true);
     setCurrentIndex(index);
+  };
+
+  const handleDelete = (roomId: number, index: number) => {
+    const data = { roomId, index };
+    deleteMessage(data)
+      .then(() => {
+        setMessages((prevMessages) =>
+          prevMessages.filter((_, i) => i !== index)
+        );
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la suppression du message :', error);
+      });
   };
 
   // Update message in message Array
@@ -65,9 +78,20 @@ const ShowMessage: React.FC = () => {
           ) : (
             <span>{message.message}</span>
           )}
-          <span className='edit-span' onClick={() => handleEdit(index)}>
-            EDIT
-          </span>
+          <div className='span-action_container'>
+            <span
+              className=' span-action edit-span'
+              onClick={() => handleEdit(index)}
+            >
+              MODIFIER
+            </span>
+            <span
+              className='span-action delete-span'
+              onClick={() => handleDelete(message.roomId, index)}
+            >
+              SUPPRIMER
+            </span>
+          </div>
         </div>
       ))}
       <div ref={scrollRef}></div>

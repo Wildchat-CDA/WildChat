@@ -1,4 +1,4 @@
-import { Controller, Inject, Get, Param, Put } from '@nestjs/common';
+import { Controller, Inject, Get, Param, Put, Delete } from '@nestjs/common';
 import { MessageBody } from '@nestjs/websockets';
 import { RedisService } from 'src/service/redis.service';
 import { MessageUpdateData } from 'src/types/payload.types';
@@ -23,5 +23,13 @@ export class RedisController {
       data.messageUpdate.message,
       roomId,
     );
+  }
+
+  @Delete(':roomId/message/:index')
+  public async deleteMessage(
+    @Param('roomId') roomId: string,
+    @Param('index') index: number,
+  ) {
+    return await this.redisService.deleteMessage(roomId, index);
   }
 }

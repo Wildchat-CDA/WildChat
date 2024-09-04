@@ -13,14 +13,16 @@
     padding: 15px 10px;
     position: relative;
     white-space: pre-wrap;
-    word-wrap: break-word
+    word-wrap: break-word;
   }
 
   .message-el:hover {
     background-color: var(--color-primary-hover);
 
-    .edit-span {
-      display: block;
+    .edit-span,
+    .delete-span {
+      opacity: 1;
+
     }
   }
 
@@ -29,11 +31,15 @@
     font-weight: bold;
   }
 
-  .edit-span {
-    display: none;
+  .span-action_container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .span-action {
+   opacity: 0;
     right: 30px;
     color: var(--color-font);
-    position: absolute;
     cursor: pointer;
   }
 }

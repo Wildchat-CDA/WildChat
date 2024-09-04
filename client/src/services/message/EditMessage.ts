@@ -1,18 +1,31 @@
-import { MessageUpdate } from '../../types/messageTypes';
+import { IMessageUpdateRedis } from '../../types/messageTypes';
 
-export async function editMessage(messageUpdate: MessageUpdate): Promise<void> {
-  const response = await fetch(
-    `http://localhost:3000/room/${messageUpdate.roomId}/message`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messageUpdate,
-      }),
+export async function editMessage(
+  messageUpdate: IMessageUpdateRedis
+): Promise<void> {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/room/${messageUpdate.roomId}/message`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messageUpdate,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Error: ${response.status} ${response.statusText} while updating message in room ${messageUpdate.roomId}`
+      );
     }
-  );
 
-  console.log('message updae :: ', messageUpdate);
+    console.log('Message update successful:', messageUpdate);
+  } catch (error) {
+    console.error('Failed to update message:', error);
+    throw new Error('Failed to update the message. Please try again later.');
+  }
 }

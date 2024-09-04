@@ -1,16 +1,22 @@
-import { Message } from '../../types/messageTypes';
+import { IMessage } from '../../types/messageTypes';
 
 // Load message with redis
-export async function LoadMessage(): Promise<Message[]> {
-  const response = await fetch('http://localhost:3000/room/1');
+export async function LoadMessage(): Promise<IMessage[]> {
+  try {
+    const response = await fetch('http://localhost:3000/room/1');
 
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
+    if (!response.ok) {
+      throw new Error(
+        `Error: ${response.status} ${response.statusText} while fetching messages from ${response.url}`
+      );
+    }
+
+    const payload: IMessage[] = await response.json();
+    return payload;
+  } catch (error) {
+    console.error('Failed to load messages:', error);
+    throw new Error('Failed to load messages. Please try again later.');
   }
-
-  const payload: Message[] = await response.json();
-
-  return payload;
 }
 
 export const updateMessage = (msg, index, setState) => {

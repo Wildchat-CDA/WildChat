@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { MessageUpdatePaylod } from '../../../types/messageTypes';
+import { IMessageUpdateProps } from '../../../types/messageTypes';
 import { editMessage } from '../../../services/message/EditMessage';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';
 
-const MessageEditor: React.FC<MessageUpdatePaylod> = ({
+const MessageEditor: React.FC<IMessageUpdateProps> = ({
   name,
   message,
   index,
@@ -32,19 +32,20 @@ const MessageEditor: React.FC<MessageUpdatePaylod> = ({
 
   return (
     <div className='message-editor'>
-      <textarea
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        className='edit-input'
-        onKeyDown={(e) => handleKeyDown(e, handleSaveClick, cancelEdit)}
-      />
+      <div ref={scrollRef}>
+        <textarea
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          className='edit-input'
+          onKeyDown={(e) => handleKeyDown(e, handleSaveClick, cancelEdit)}
+        />
+      </div>
       <div className='valid-or-cancel_edit'>
         <span> échap pour </span>
         <button onClick={cancelEdit}>annuler</button>
         <span> entrée pour </span>
         <button onClick={handleSaveClick}>enregistrer</button>
       </div>
-      <div ref={scrollRef}></div>
     </div>
   );
 };
