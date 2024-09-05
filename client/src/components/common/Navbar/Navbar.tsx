@@ -1,60 +1,99 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useUserRole } from '../../../context/UserRoleContext';
 import { useHandRaise } from '../../../context/HandRaiseContext';
-import './Navbar.css';
 import Logo from '../Logo';
+import './Navbar.css';
 
-const NavItem = ({ icon, text, onClick, isActive }) => (
-  <div className={`nav-item ${isActive ? 'active' : ''}`} onClick={onClick}>
-    <div className="icon-wrapper">
-      <img src={`/icons/${icon}`} alt={text} className="nav-icon" />
+interface NavbarProps {
+  isMobile: boolean;
+}
+
+interface NavItemProps {
+  icon: string;
+  text: string;
+  onClick: () => void;
+  isActive?: boolean;
+}
+
+function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
+  return (
+    <div className={`nav-item ${isActive ? 'active' : ''}`} onClick={onClick}>
+      <div className="icon-wrapper">
+        <img src={`/icons/${icon}`} alt={text} className="nav-icon" />
+      </div>
+      <span className="nav-text">{text}</span>
     </div>
-    <span className="nav-text">{text}</span>
-  </div>
-);
+  );
+}
 
-const Navbar = () => {
-  const { userHandState, toggleHandRaise } = useHandRaise();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+function Navbar({ isMobile }: NavbarProps) {
+  const { userRole } = useUserRole();
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(prev => !prev);
+  const renderNavItems = () => {
+    if (userRole === 'teacher') {
+      if (isMobile) {
+        return (
+          <>
+            <NavItem icon="navigation.png" text="Navigation" onClick={() => {/* ... */}} />
+            <NavItem icon="notification.png" text="Notifications" onClick={() => {/* ... */}} />
+            <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
+            <NavItem icon="speak.png" text="Prendre la parole" onClick={() => {/* ... */}} />
+          </>
+        );
+      } else {
+        return (
+          <>
+            <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
+            <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
+            <NavItem icon="students.png" text="Élèves connectés" onClick={() => {/* ... */}} />
+            <NavItem icon="palm.png" text="Mains levées" onClick={() => {/* ... */}} />
+            <NavItem icon="speak.png" text="Prendre la parole" onClick={() => {/* ... */}} />
+          </>
+        );
+      }
+    } else { // student
+      if (isMobile) {
+        function toggleDropdown(): void {
+          throw new Error('Function not implemented.');
+        }
+
+        return (
+          <>
+            <NavItem icon="library.png" text="Bibliothèque" onClick={() => {/* ... */}} />
+            <NavItem icon="channels.png" text="Canaux" onClick={() => {/* ... */}} />
+            <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
+            <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
+            <NavItem icon="palm.png" text="Lever la main" onClick={toggleDropdown} />
+          </>
+        );
+      } else {
+        function toggleDropdown(): void {
+          throw new Error('Function not implemented.');
+        }
+
+        return (
+          <>
+            <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
+            <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
+            <NavItem icon="palm.png" text="Lever la main" onClick={toggleDropdown} />
+          </>
+        );
+      }
+    }
   };
-
-  const handleToggleHandRaise = (type: 'forSelf' | 'forTable') => {
-    toggleHandRaise(type);
-    setIsDropdownOpen(false);
-  };
-
-  const isHandRaised = userHandState.forSelf || userHandState.forTable;
 
   return (
-    <nav className="main-navbar">
-      <div className="logo-container">
-        <Logo width={40} color="white" />
-        <span className="logo-text">Wild Chat</span>
-      </div>
-      <NavItem 
-        icon={isHandRaised ? 'prohibition.png' : 'palm.png'}
-        text={isHandRaised ? "Baisser la main" : "Lever la main"}
-        onClick={toggleDropdown}
-        isActive={isHandRaised}
-      />
-      {isDropdownOpen && (
-        <div className="dropdown">
-          <div className="dropdown-item" onClick={() => handleToggleHandRaise('forSelf')}>
-            <img src="/icons/graduate-hat.png" alt="Pour soi" className="dropdown-icon" />
-            <span>Pour soi</span>
-            {userHandState.forSelf && <span className="status-indicator">✓</span>}
-          </div>
-          <div className="dropdown-item" onClick={() => handleToggleHandRaise('forTable')}>
-            <img src="/icons/multiple-users-silhouette.png" alt="Pour la table" className="dropdown-icon" />
-            <span>Pour la table</span>
-            {userHandState.forTable && <span className="status-indicator">✓</span>}
-          </div>
+    <nav className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`}>
+      {!isMobile && (
+        <div className="logo-container">
+          <Logo width={40} color="white" />
+          <span className="logo-text">Wild Chat</span>
         </div>
       )}
+      {renderNavItems()}
+      {/* Dropdown component */}
     </nav>
   );
-};
+}
 
 export default Navbar;
