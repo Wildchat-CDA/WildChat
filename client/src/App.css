@@ -1,0 +1,11 @@
+:root {
+  --color-primary: #2b2d31;
+  --color-primary-hover: #4e5058;
+  --color-secondary: #4e5058;
+  --color-font: #dbdee1;
+  --color-name: #35a554;
+}
+
+textarea {
+  color: var(--color-font);
+}

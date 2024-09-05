@@ -1,0 +1,15 @@
+.edit-input {
+  background-color: var(--color-secondary);
+  border: 0px;
+  color: var(--color-font);
+  width: 100%;
+  outline: none;
+  height: 30px;
+  line-height: 35px;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.valid-or-cancel_edit{
+  font-size: 0.7em;
+}
