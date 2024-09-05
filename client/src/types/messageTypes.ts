@@ -5,9 +5,17 @@ export interface IMessage {
 }
 export interface IMessageUpdateRedis {
   name: string;
-  index:number;
+  index: number;
   message: string;
   roomId: number;
+}
+
+export interface IModalMessagePayload {
+  currentIndex: number | undefined;
+  selectedRoomId: number | null;
+  setMessages(newState: (prevState: IMessage[]) => IMessage[]): void;
+  setActiveModalDelete: React.Dispatch<React.SetStateAction<boolean>>;
+  currentMessage: string | undefined;
 }
 
 export interface IMessageUpdateProps {
@@ -21,6 +29,6 @@ export interface IMessageUpdateProps {
 }
 
 export interface IMessageDelete {
-  roomId: number;
-  index: number;
+  roomId: number | null;
+  index: number | undefined;
 }

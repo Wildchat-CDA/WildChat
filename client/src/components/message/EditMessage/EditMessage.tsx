@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { IMessageUpdateProps } from '../../../types/messageTypes';
-import { editMessage } from '../../../services/message/EditMessage';
+import { editMessage } from '../../../services/message/fetch/EditMessage';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';

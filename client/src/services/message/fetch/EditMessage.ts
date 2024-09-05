@@ -1,4 +1,4 @@
-import { IMessageUpdateRedis } from '../../types/messageTypes';
+import { IMessageUpdateRedis } from '../../../types/messageTypes';
 
 export async function editMessage(
   messageUpdate: IMessageUpdateRedis

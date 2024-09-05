@@ -1,4 +1,4 @@
-import { IMessage } from '../../types/messageTypes';
+import { IMessage } from '../../../types/messageTypes';
 
 // Load message with redis
 export async function LoadMessage(): Promise<IMessage[]> {
@@ -18,11 +18,3 @@ export async function LoadMessage(): Promise<IMessage[]> {
     throw new Error('Failed to load messages. Please try again later.');
   }
 }
-
-export const updateMessage = (msg, index, setState) => {
-  setState((prevMessages) =>
-    prevMessages.map((message, i) =>
-      i === index ? { ...prevMessages, message: msg } : message
-    )
-  );
-};

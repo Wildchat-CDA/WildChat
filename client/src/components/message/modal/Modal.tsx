@@ -1,5 +1,6 @@
 import './Modal.css';
-import { deleteMessage } from '../../../services/message/DeleteMessage';
+import React from 'react';
+import { deleteMessage } from '../../../services/message/fetch/DeleteMessage';
 
 const Modal = ({
   currentIndex,
@@ -8,6 +9,7 @@ const Modal = ({
   setActiveModalDelete,
   currentMessage,
 }) => {
+  
   const handleDelete = () => {
     const data = { roomId: selectedRoomId, index: currentIndex };
     deleteMessage(data)

@@ -1,4 +1,4 @@
-import { IMessageDelete } from '../../types/messageTypes';
+import { IMessageDelete } from '../../../types/messageTypes';
 
 export async function deleteMessage(data: IMessageDelete): Promise<void> {
   try {

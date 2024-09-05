@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { LoadMessage } from '../../../services/message/LoadMessage';
+import { LoadMessage } from '../../../services/message/fetch/LoadMessage';
 import socket from '../../../services/webSocketService';
 import '../../../App.css';
 import './ShowMessage.css';
