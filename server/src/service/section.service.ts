@@ -65,18 +65,76 @@ export class SectionService {
 
       newChannel.config = newConfig;
 
-      console.log(newChannel, 'nouveau channel');
+      // console.log(newChannel, 'nouveau channel');
 
       await this.configRepository.save(newConfig);
 
       const savedChannel = await this.channelRepository.save(newChannel);
 
-      console.log(savedChannel, 'channel saved');
+      // console.log(savedChannel, 'channel saved');
 
       newChannels.push(savedChannel);
     }
 
     section.channels = newChannels;
     return await this.sectionRepository.save(section);
+  }
+
+  async createClassRoomWithChannels(): Promise<any> {
+    const sections = [
+      { title: 'Tableau des annonces', order: 1 },
+      { title: 'Bureaux', order: 2 },
+      { title: 'Tables', order: 3 },
+    ];
+
+    const channelsPerSection = {
+      'Tableau des annonces': [
+        'Annonces Générales',
+        'Annonces Administratives',
+      ],
+      Bureaux: ['Bureau du professeur', "Bureau de l'assistant"],
+      Tables: ['Table principale', 'Table des dailys'],
+    };
+
+    const allSections = [];
+
+    for (const sectionData of sections) {
+      const section = await this.sectionRepository.save({
+        title: sectionData.title,
+        order: sectionData.order,
+        relations: ['channels'],
+      });
+
+      const channels = channelsPerSection[sectionData.title];
+
+      console.log(channels, 'channels');
+
+      const newChannels = [];
+
+      for (const channelTitle of channels) {
+        const newChannel = this.channelRepository.create({
+          uuid: uuidv4(),
+          title: channelTitle,
+          slot: 1,
+        });
+
+        const newConfig = this.configRepository.create({
+          maxSlot: 1,
+          type: await this.typeRepository.findOneBy({ id: 1 }),
+        });
+
+        newChannel.config = newConfig;
+
+        await this.configRepository.save(newConfig);
+        const savedChannel = await this.channelRepository.save(newChannel);
+
+        newChannels.push(savedChannel);
+      }
+
+      section.channels = newChannels;
+      allSections.push(section);
+    }
+
+    return await this.sectionRepository.save(allSections);
   }
 }

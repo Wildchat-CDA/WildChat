@@ -17,7 +17,6 @@ import { TypeController } from './controller/type.controller';
 import { TypeService } from './service/type.service';
 import { ConfigController } from './controller/config.controller';
 import { ConfigService } from './service/config.service';
-import { animationFrameScheduler } from 'rxjs';
 
 @Module({
   imports: [
