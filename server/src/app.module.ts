@@ -15,6 +15,9 @@ import { SectionService } from './service/section.service';
 import { ChannelService } from './service/channel.service';
 import { TypeController } from './controller/type.controller';
 import { TypeService } from './service/type.service';
+import { ConfigController } from './controller/config.controller';
+import { ConfigService } from './service/config.service';
+import { animationFrameScheduler } from 'rxjs';
 
 @Module({
   imports: [
@@ -29,14 +32,21 @@ import { TypeService } from './service/type.service';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Section, Channel, Type]),
+    TypeOrmModule.forFeature([Section, Channel, Type, Config]),
   ],
   controllers: [
     AppController,
     SectionController,
     ChannelController,
     TypeController,
+    ConfigController,
   ],
-  providers: [AppService, SectionService, ChannelService, TypeService],
+  providers: [
+    AppService,
+    SectionService,
+    ChannelService,
+    TypeService,
+    ConfigService,
+  ],
 })
 export class AppModule {}

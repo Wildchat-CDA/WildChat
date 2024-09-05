@@ -1,5 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Section } from './section.entity';
+import { Config } from './config.entity';
 
 @Entity()
 export class Channel {
@@ -13,10 +21,11 @@ export class Channel {
   title: string;
 
   @Column()
-  type: number;
-
-  @Column()
   slot: number;
+
+  @OneToOne(() => Config)
+  @JoinColumn()
+  config: Config;
 
   @ManyToMany(() => Section, (section: Section) => section.channels)
   sections: Array<Section>;

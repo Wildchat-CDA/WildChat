@@ -1,4 +1,12 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  Put,
+  NotFoundException,
+} from '@nestjs/common';
 import { ChannelService } from '../service/channel.service';
 import { Channel } from 'src/entity/channel.entity';
 
@@ -14,5 +22,17 @@ export class ChannelController {
   @Get('/')
   async findAll(): Promise<Channel[]> {
     return await this.channelService.findAll();
+  }
+
+  @Put('/:channelId/config/:configId')
+  async addType(
+    @Param('configId') configId: number,
+    @Param('channelId') channelId: number,
+  ) {
+    try {
+      return await this.channelService.addConfig(channelId, configId);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }
