@@ -12,6 +12,7 @@
   background-color: var(
     --color-secondary
   ); /* Couleur de fond de la zone de texte */
+  overflow: auto;
   border: 1px solid var(--color-border); /* Bordure discrète */
   color: var(--color-font); /* Couleur du texte */
   width: calc(100% - 20px); /* Largeur avec padding interne */

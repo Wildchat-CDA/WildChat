@@ -22,22 +22,30 @@
     .edit-span,
     .delete-span {
       opacity: 1;
-
     }
-  }
-
-  .message-name {
-    color: var(--color-name);
-    font-weight: bold;
   }
 
   .span-action_container {
     display: flex;
-    justify-content: space-between;
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: center;
+
+    .icon-delete {
+      width: 20px;
+      height: auto;
+   padding-top: 5px;
+    }
+
+    .icon-edit {
+      width: 20px;
+      height: auto;
+     
+    }
   }
 
   .span-action {
-   opacity: 0;
+    opacity: 0;
     right: 30px;
     color: var(--color-font);
     cursor: pointer;

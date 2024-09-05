@@ -4,9 +4,15 @@
   --color-primary-hover: #4e5058;
   --color-secondary: #4e5058;
   --color-font: #dbdee1;
+  /* 
+   || COMMON ||
+
+   name :  */
+  --color-name: #2dc770;
+  --font-name: bold;
 
   /* Composant <ShowMessage> */
-  --color-name: #35a554;
+
   --scrollbar-bg: #2f3136; /* Couleur de fond de la scrollbar */
   --scrollbar-thumb: #444; /* Couleur de la barre de défilement */
   --scrollbar-thumb-hover: #666; /* Couleur de la barre de défilement au survol */
@@ -21,8 +27,16 @@
   --color-button-text: #ffffff; /* Couleur du texte du bouton */
   --color-button-hover: #5b6eae; /* Couleur de fond du bouton au survol */
   --color-link: #00a8fc;
+
+  /* BUTTON DELETE */
+  --color-delete: #da373c;
 }
 
 textarea {
   color: var(--color-font);
+}
+
+.name {
+  color: var(--color-name);
+  font-weight: var(--font-name);
 }

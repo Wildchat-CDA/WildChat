@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { IMessageUpdateProps } from '../../../types/messageTypes';
 import { editMessage } from '../../../services/message/EditMessage';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
@@ -28,18 +28,14 @@ const MessageEditor: React.FC<IMessageUpdateProps> = ({
     }
   };
 
-  const scrollRef = useScrollToBottom(newMessage);
-
   return (
     <div className='message-editor'>
-      <div ref={scrollRef}>
-        <textarea
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className='edit-input'
-          onKeyDown={(e) => handleKeyDown(e, handleSaveClick, cancelEdit)}
-        />
-      </div>
+      <textarea
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        className='edit-input'
+        onKeyDown={(e) => handleKeyDown(e, handleSaveClick, cancelEdit)}
+      />
       <div className='valid-or-cancel_edit'>
         <span> échap pour </span>
         <button onClick={cancelEdit}>annuler</button>

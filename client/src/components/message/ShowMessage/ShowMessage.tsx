@@ -6,12 +6,15 @@ import './ShowMessage.css';
 import { IMessage } from '../../../types/messageTypes';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
-import { deleteMessage } from '../../../services/message/DeleteMessage';
+import Modal from '../modal/Modal';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
+  const [currentMessage, setCurrentMessage] = useState<string>();
+  const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
   useEffect(() => {
     // Load messages with redis (init)
@@ -38,17 +41,10 @@ const ShowMessage: React.FC = () => {
     setCurrentIndex(index);
   };
 
-  const handleDelete = (roomId: number, index: number) => {
-    const data = { roomId, index };
-    deleteMessage(data)
-      .then(() => {
-        setMessages((prevMessages) =>
-          prevMessages.filter((_, i) => i !== index)
-        );
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la suppression du message :', error);
-      });
+  const activeDelete = (roomId, index) => {
+    setCurrentIndex(index);
+    setSelectedRoomId(roomId);
+    setActiveModalDelete(true);
   };
 
   // Update message in message Array
@@ -64,7 +60,7 @@ const ShowMessage: React.FC = () => {
     <div className='messages-container'>
       {messages.map((message, index) => (
         <div className='message-el' key={index}>
-          <span className='message-name'>{message.name} </span>
+          <span className='name'>{message.name} </span>
           {currentIndex === index && activeEdit === true ? (
             <MessageEditor
               name={message.name}
@@ -83,17 +79,29 @@ const ShowMessage: React.FC = () => {
               className=' span-action edit-span'
               onClick={() => handleEdit(index)}
             >
-              MODIFIER
+              <img src='/icons/edit.png' alt='' className='icon-edit' />
             </span>
             <span
               className='span-action delete-span'
-              onClick={() => handleDelete(message.roomId, index)}
+              onClick={() => {
+                activeDelete(message.roomId, index);
+                setCurrentMessage(message.message);
+              }}
             >
-              SUPPRIMER
+              <img src='/icons/bdelete.png' className='icon-delete'></img>
             </span>
           </div>
         </div>
       ))}
+      {activeModalDelete && (
+        <Modal
+          currentIndex={currentIndex}
+          selectedRoomId={selectedRoomId}
+          setMessages={setMessages}
+          setActiveModalDelete={setActiveModalDelete}
+          currentMessage={currentMessage}
+        />
+      )}
       <div ref={scrollRef}></div>
     </div>
   );

@@ -1,0 +1,71 @@
+.modal-bg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.575);
+  position: fixed; /* Fixe la modal sur toute la page */
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal-container {
+    background-color: var(--color-primary);
+    color: var(--color-font);
+    width: 50%;
+    max-height: 80%; /* Limite la hauteur à 80% de la fenêtre */
+    overflow-y: auto; /* Ajoute une barre de défilement si nécessaire */
+    word-wrap: break-word;
+    padding: 20px;
+    position: relative;
+    border-radius: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+
+    .modal-main_container {
+      padding-top: 1px;
+      padding-left: 20px;
+    }
+
+    .modal-name_container {
+      padding: 30px;
+      border: 1px solid #242528;
+    }
+
+    .modal-btn_container {
+      display: flex;
+      width: 100%;
+      justify-content: end;
+      margin-top: 30px;
+      background-color: #2b2d31;
+      .modal-btn {
+        margin: 15px;
+        border: none;
+        font-size: inherit;
+        cursor: pointer;
+        padding: 0;
+        color: var(--color-font);
+      }
+
+      .modal-btn_cancel {
+        background: none;
+      }
+
+      .modal-btn_cancel:hover {
+        text-decoration: underline;
+      }
+
+      .modal-btn_delete {
+        background-color: var(--color-delete);
+        padding: 8px;
+        border-radius: 5px;
+      }
+
+      .modal-btn_delete:hover {
+        background-color: #a12828;
+      }
+    }
+  }
+}
