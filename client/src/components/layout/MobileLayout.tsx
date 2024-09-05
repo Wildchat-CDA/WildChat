@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../common/Navbar/Navbar';
+import HeaderNavbarDev from "../common/HeaderNavbarDev/HeaderNavbarDev"
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -8,11 +9,12 @@ interface MobileLayoutProps {
 function MobileLayout({ children }: MobileLayoutProps) {
   return (
     <div className="mobile-layout">
-      <div className="mobile-content">
-        {children}
-      </div>
-      <Navbar isMobile={true} />
+    <HeaderNavbarDev />
+    <div className="mobile-content">
+      {children}
     </div>
+    <Navbar isMobile={true} />
+  </div>
   );
 }
 

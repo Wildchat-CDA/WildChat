@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
 import { useHandRaise } from '../../../context/HandRaiseContext';
 import Logo from '../Logo';
+import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -28,6 +29,22 @@ function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
 
 function Navbar({ isMobile }: NavbarProps) {
   const { userRole } = useUserRole();
+  const { userHandState, toggleHandRaise } = useHandRaise();
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleRaiseHand = (type: 'forSelf' | 'forTable') => {
+    toggleHandRaise(type);
+    setShowDropdown(false);
+  };
+
+  const dropdownItems = [
+    { icon: 'graduate-hat.png', text: 'Pour soi', onClick: () => handleRaiseHand('forSelf') },
+    { icon: 'multiple-users-silhouette.png', text: 'Pour la table', onClick: () => handleRaiseHand('forTable') }
+  ];
 
   const renderNavItems = () => {
     if (userRole === 'teacher') {
@@ -52,30 +69,34 @@ function Navbar({ isMobile }: NavbarProps) {
         );
       }
     } else { // student
-      if (isMobile) {
-        function toggleDropdown(): void {
-          throw new Error('Function not implemented.');
-        }
+      const handRaiseItem = (
+        <div className="hand-raise-container">
+          <NavItem
+            icon="palm.png"
+            text="Lever la main"
+            onClick={toggleDropdown}
+            isActive={userHandState.forSelf || userHandState.forTable}
+          />
+          {showDropdown && <Dropdown items={dropdownItems} />}
+        </div>
+      );
 
+      if (isMobile) {
         return (
           <>
             <NavItem icon="library.png" text="Bibliothèque" onClick={() => {/* ... */}} />
             <NavItem icon="channels.png" text="Canaux" onClick={() => {/* ... */}} />
             <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
             <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
-            <NavItem icon="palm.png" text="Lever la main" onClick={toggleDropdown} />
+            {handRaiseItem}
           </>
         );
       } else {
-        function toggleDropdown(): void {
-          throw new Error('Function not implemented.');
-        }
-
         return (
           <>
             <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
             <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
-            <NavItem icon="palm.png" text="Lever la main" onClick={toggleDropdown} />
+            {handRaiseItem}
           </>
         );
       }
@@ -91,7 +112,6 @@ function Navbar({ isMobile }: NavbarProps) {
         </div>
       )}
       {renderNavItems()}
-      {/* Dropdown component */}
     </nav>
   );
 }
