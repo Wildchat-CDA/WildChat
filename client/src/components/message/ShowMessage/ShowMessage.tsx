@@ -16,6 +16,8 @@ const ShowMessage: React.FC = () => {
   const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
+  const name = 'Théo'; // TODO Need to use an userContext
+
   useEffect(() => {
     // Load messages with redis (init)
     LoadMessage()
@@ -39,6 +41,8 @@ const ShowMessage: React.FC = () => {
   const handleEdit = (index: number) => {
     setActiveEdit(true);
     setCurrentIndex(index);
+    console.log('NAME : ', name);
+    console.log('MESSAGE NAME : ', messages);
   };
 
   const activeDelete = (roomId, index) => {
@@ -61,7 +65,9 @@ const ShowMessage: React.FC = () => {
       {messages.map((message, index) => (
         <div className='message-el' key={index}>
           <span className='name'>{message.name} </span>
-          {currentIndex === index && activeEdit === true ? (
+          {currentIndex === index &&
+          activeEdit === true &&
+          name !== message.name ? (
             <MessageEditor
               name={message.name}
               message={message.message}
@@ -74,23 +80,25 @@ const ShowMessage: React.FC = () => {
           ) : (
             <span>{message.message}</span>
           )}
-          <div className='span-action_container'>
-            <span
-              className=' span-action edit-span'
-              onClick={() => handleEdit(index)}
-            >
-              <img src='/icons/edit.png' alt='' className='icon-edit' />
-            </span>
-            <span
-              className='span-action delete-span'
-              onClick={() => {
-                activeDelete(message.roomId, index);
-                setCurrentMessage(message.message);
-              }}
-            >
-              <img src='/icons/bdelete.png' className='icon-delete'></img>
-            </span>
-          </div>
+          {name !== message.name && (
+            <div className='span-action_container'>
+              <span
+                className=' span-action edit-span'
+                onClick={() => handleEdit(index)}
+              >
+                <img src='/icons/edit.png' alt='' className='icon-edit' />
+              </span>
+              <span
+                className='span-action delete-span'
+                onClick={() => {
+                  activeDelete(message.roomId, index);
+                  setCurrentMessage(message.message);
+                }}
+              >
+                <img src='/icons/bdelete.png' className='icon-delete'></img>
+              </span>
+            </div>
+          )}
         </div>
       ))}
       {activeModalDelete && (

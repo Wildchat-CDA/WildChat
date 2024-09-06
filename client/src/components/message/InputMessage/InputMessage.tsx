@@ -7,7 +7,7 @@ import '../../../App.css';
 const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const name = 'BOB'; // TODO: Use context for user
+  const name = 'Théo'; // TODO: Use context for user
   const roomId = 1; // TODO: Retrieve roomId from context or props
 
   // Adjust height of textarea based on content
