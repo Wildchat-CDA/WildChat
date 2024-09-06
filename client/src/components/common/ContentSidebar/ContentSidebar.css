@@ -1,6 +1,6 @@
 .content-sidebar {
   position: fixed;
-  top: 60px;
+  top: 54px;
   left: 60px;
   bottom: 0;
   width: 33%;
@@ -13,5 +13,6 @@
   .content-sidebar {
     width: 100%;
     height: calc(100% - 60px);
+    left: 0;
   }
 }
