@@ -7,7 +7,12 @@ import {
   RedisScripts,
 } from 'redis';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Payload } from 'src/types/payload.types';
+import {
+  IMessagePostPayload,
+  IMessageDeletePayload,
+  IMessageGet,
+  IMessageUpdatePayload,
+} from '../../../common/interface/messageInterface';
 
 @Injectable()
 export class RedisService {
@@ -40,15 +45,13 @@ export class RedisService {
     return this._client;
   }
 
-  public async getMessages(
-    roomId: string,
-  ): Promise<{ name: string; message: string; roomId: string }[]> {
+  public async getMessages(roomId: string): Promise<IMessageGet[]> {
     try {
       const messages = await this._client.lRange(`room:${roomId}`, 0, -1);
 
       return messages.map((msg) => {
         const [name, message] = msg.split(' : ');
-        return { name, message, roomId };
+        return { name, message, roomId: parseInt(roomId, 10) };
       });
     } catch (error) {
       console.error('Failed to get messages:', error);
@@ -58,7 +61,7 @@ export class RedisService {
     }
   }
 
-  public async postMessage(data: Payload) {
+  public async postMessage(data: IMessagePostPayload) {
     if (data.message.length === 0) {
       throw new Error(
         'The message cannot be empty. Please enter some text before submitting.',
@@ -76,10 +79,8 @@ export class RedisService {
   }
 
   public async updateMessage(
-    name: string,
-    index: number,
-    newMessage: string,
-    roomId: string,
+    data: IMessageUpdatePayload,
+    roomId,
   ): Promise<void> {
     try {
       const currentMessages = await this._client.lRange(
@@ -88,17 +89,17 @@ export class RedisService {
         -1,
       );
 
-      if (index < 0 || index >= currentMessages.length) {
+      if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
       }
-      if (newMessage.length === 0) {
+      if (data.message.length === 0) {
         throw new Error(
           'The message cannot be empty. Please enter some text before submitting.',
         );
       }
 
-      const updatedMessage = `${name} : ${newMessage}`;
-      await this._client.lSet(`room:${roomId}`, index, updatedMessage);
+      const updatedMessage = `${data.name} : ${data.message}`;
+      await this._client.lSet(`room:${roomId}`, data.index, updatedMessage);
     } catch (error) {
       console.error('Failed to update message:', error);
       throw new InternalServerErrorException(
@@ -107,24 +108,24 @@ export class RedisService {
     }
   }
 
-  public async deleteMessage(roomId: string, index: number): Promise<void> {
+  public async deleteMessage(data: IMessageDeletePayload): Promise<void> {
     try {
       const currentMessages = await this._client.lRange(
-        `room:${roomId}`,
+        `room:${data.roomId}`,
         0,
         -1,
       );
 
-      if (index < 0 || index >= currentMessages.length) {
+      if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
       }
 
       // Replace the message to delete with a unique value
       const uniqueValue = '__DELETE__';
-      await this._client.lSet(`room:${roomId}`, index, uniqueValue);
+      await this._client.lSet(`room:${data.roomId}`, data.index, uniqueValue);
 
       // Remove the unique value from the list
-      await this._client.lRem(`room:${roomId}`, 1, uniqueValue);
+      await this._client.lRem(`room:${data.roomId}`, 1, uniqueValue);
     } catch (error) {
       console.error('Failed to delete message:', error);
       throw new InternalServerErrorException(

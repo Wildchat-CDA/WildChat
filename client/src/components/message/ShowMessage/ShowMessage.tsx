@@ -3,13 +3,13 @@ import { LoadMessage } from '../../../services/message/fetch/LoadMessage';
 import socket from '../../../services/webSocketService';
 import '../../../App.css';
 import './ShowMessage.css';
-import { IMessage } from '../../../types/messageTypes';
+import { IMessagePostPayload } from '../../../../../common/interface/messageInterface';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
 import Modal from '../modal/Modal';
 
 const ShowMessage: React.FC = () => {
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
   const [currentMessage, setCurrentMessage] = useState<string>();

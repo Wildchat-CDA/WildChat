@@ -1,7 +1,7 @@
-import { IMessageUpdateRedis } from '../../../types/messageTypes';
+import { IMessageUpdatePayload } from '../../../../../common/interface/messageInterface';
 
 export async function editMessage(
-  messageUpdate: IMessageUpdateRedis
+  messageUpdate: IMessageUpdatePayload
 ): Promise<void> {
   try {
     const response = await fetch(

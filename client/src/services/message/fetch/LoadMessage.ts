@@ -1,7 +1,7 @@
-import { IMessage } from '../../../types/messageTypes';
+import { IMessageGet } from '../../../../../common/interface/messageInterface';
 
 // Load message with redis
-export async function LoadMessage(): Promise<IMessage[]> {
+export async function LoadMessage(): Promise<IMessageGet[]> {
   try {
     const response = await fetch('http://localhost:3000/room/1');
 
@@ -11,7 +11,7 @@ export async function LoadMessage(): Promise<IMessage[]> {
       );
     }
 
-    const payload: IMessage[] = await response.json();
+    const payload: IMessageGet[] = await response.json();
     return payload;
   } catch (error) {
     console.error('Failed to load messages:', error);

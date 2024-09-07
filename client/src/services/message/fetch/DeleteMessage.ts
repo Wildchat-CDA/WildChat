@@ -1,6 +1,8 @@
-import { IMessageDelete } from '../../../types/messageTypes';
+import { IMessageDeletePayload } from '../../../../../common/interface/messageInterface';
 
-export async function deleteMessage(data: IMessageDelete): Promise<void> {
+export async function deleteMessage(
+  data: IMessageDeletePayload
+): Promise<void> {
   try {
     const response = await fetch(
       `http://localhost:3000/room/${data.roomId}/message/${data.index}`,
