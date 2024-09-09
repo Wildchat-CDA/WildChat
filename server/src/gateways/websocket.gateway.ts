@@ -117,6 +117,20 @@ export class WebsocketGateway
     }
   }
 
+  @SubscribeMessage('initializeCall')
+  handleInitializeCall(client: Socket, payload: { targetId: string }) {
+    const user = this.users.get(client.id);
+    if (user && user.roomId) {
+      this.server.to(payload.targetId).emit('incomingCall', {
+        from: client.id,
+        username: user.username,
+      });
+      this.logger.log(
+        `User ${user.username} initiated a call to ${payload.targetId}`,
+      );
+    }
+  }
+
   private addUser(userId: string, username: string, roomId: string) {
     this.users.set(userId, { id: userId, username, roomId });
     if (!this.rooms.has(roomId)) {

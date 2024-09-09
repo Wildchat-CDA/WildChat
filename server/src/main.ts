@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { PeerJSService } from './services/peerjs.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,9 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
+
+  const peerJSService = app.get(PeerJSService);
+  peerJSService.setupPeerServer(app);
 
   await app.listen(process.env.PORT || 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
