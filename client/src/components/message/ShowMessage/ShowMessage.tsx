@@ -66,7 +66,7 @@ const ShowMessage: React.FC = () => {
         <h3 className='h-room'># : Nom de la room</h3>
       </div>
 
-      <div className='messages-column'>
+      <div className='messages-column' aria-live='polite'>
         {messages.map((message, index) => (
           <div className='message-el' key={index}>
             <span className='name'>{message.name} </span>
@@ -88,16 +88,18 @@ const ShowMessage: React.FC = () => {
             {name !== message.name && (
               <div className='span-action_container'>
                 <span
+                  aria-label='Modifier ce message'
                   className=' span-action edit-span'
                   onClick={() => handleEdit(index)}
                 >
                   <img
                     src='/icons/edit.png'
-                    alt='modifie ton message'
+                    alt='crayon édiion messages'
                     className='icon-edit'
                   />
                 </span>
                 <span
+                  aria-label='Supprimer ce message'
                   className='span-action delete-span'
                   onClick={() => {
                     activeDelete(message.roomId, index);
@@ -107,7 +109,7 @@ const ShowMessage: React.FC = () => {
                   <img
                     src='/icons/bdelete.png'
                     className='icon-delete'
-                    alt='supprime ton message'
+                    alt='poubelle de supression de messages'
                   ></img>
                 </span>
               </div>
