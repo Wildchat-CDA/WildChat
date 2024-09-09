@@ -41,7 +41,7 @@ export class SectionController {
     return await this.sectionService.createSectionWithChannels(section);
   }
 
-  @Post('/classRoom')
+  // @Post('/classRoom')
   async createClassRoomWithChannels(): Promise<Section> {
     return await this.sectionService.createClassRoomWithChannels();
   }
