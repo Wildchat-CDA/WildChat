@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
+import useHandRaise from '../../hooks/useHandRaise';
 
 interface RaiseHandButtonProps {
   studentId: number;
-  onRaiseHand: (studentId: number, type: 'self' | 'table') => void;
+  studentName: string;
+  table: number;
 }
 
-const RaiseHandButton = ({ studentId, onRaiseHand }: RaiseHandButtonProps) => {
-  const [raisedForSelf, setRaisedForSelf] = useState(false);
-  const [raisedForTable, setRaisedForTable] = useState(false);
+function RaiseHandButton({ studentId, studentName, table }: RaiseHandButtonProps) {
+  const { isHandRaised, raiseHand, lowerHand } = useHandRaise(studentId, studentName, table);
+  const [raisedForSelf, setRaisedForSelf] = useState(isHandRaised.self);
+  const [raisedForTable, setRaisedForTable] = useState(isHandRaised.table);
 
   const handleRaiseHandSelf = () => {
-    setRaisedForSelf(prev => !prev);
-    onRaiseHand(studentId, 'self');
+    const newState = !raisedForSelf;
+    setRaisedForSelf(newState);
+    if (newState) {
+      raiseHand('self');
+    } else {
+      lowerHand('self');
+    }
   };
 
   const handleRaiseHandTable = () => {
-    setRaisedForTable(prev => !prev);
-    onRaiseHand(studentId, 'table');
+    const newState = !raisedForTable;
+    setRaisedForTable(newState);
+    if (newState) {
+      raiseHand('table');
+    } else {
+      lowerHand('table');
+    }
   };
 
   return (
@@ -29,6 +42,6 @@ const RaiseHandButton = ({ studentId, onRaiseHand }: RaiseHandButtonProps) => {
       </button>
     </div>
   );
-};
+}
 
 export default RaiseHandButton;
