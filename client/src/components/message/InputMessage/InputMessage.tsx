@@ -10,16 +10,15 @@ const InputMessage = () => {
   const name = 'Théo'; // TODO: Use context for user
   const roomId = 1; // TODO: Retrieve roomId from context or props
 
-  // Adjust height of textarea based on content
   const adjustHeight = () => {
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = 'auto'; // Reset height
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`; // Set height based on content
+      textAreaRef.current.style.height = 'auto';
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
     }
   };
 
   useEffect(() => {
-    adjustHeight(); // Adjust height on initial render and whenever input changes
+    adjustHeight();
   }, [input]);
 
   const onSubmit = (e: React.FormEvent) => {
@@ -27,20 +26,24 @@ const InputMessage = () => {
     if (input.length !== 0) {
       const payload = { name, message: input, roomId };
       socket.emit('message', payload);
-      setInput(''); // Clear input field
+      setInput('');
     }
   };
 
   return (
     <div className='input-message-container'>
       <form onSubmit={onSubmit}>
+        <label htmlFor='messageInput' className='visually-hidden'>
+          Message
+        </label>
         <textarea
+          id='messageInput'
           ref={textAreaRef}
           className='input-message'
           value={input}
           onChange={(e) => {
             setInput(e.target.value);
-            adjustHeight(); // Adjust height when input changes
+            adjustHeight();
           }}
           onKeyDown={(e) => handleKeyDown(e, onSubmit, () => setInput(''))}
           placeholder='Envoyer un message'

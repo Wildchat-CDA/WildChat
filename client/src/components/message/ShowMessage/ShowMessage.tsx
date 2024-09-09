@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoadMessage } from '../../../services/message/fetch/LoadMessage';
 import socket from '../../../services/webSocketService';
 import '../../../App.css';
@@ -62,55 +62,69 @@ const ShowMessage: React.FC = () => {
 
   return (
     <div className='messages-container'>
-      {messages.map((message, index) => (
-        <div className='message-el' key={index}>
-          <span className='name'>{message.name} </span>
-          {currentIndex === index &&
-          activeEdit === true &&
-          name !== message.name ? (
-            <MessageEditor
-              name={message.name}
-              message={message.message}
-              index={index}
-              roomId={message.roomId}
-              setActiveEdit={setActiveEdit}
-              setMessages={setMessages}
-              updateMessage={updateMessage}
-            />
-          ) : (
-            <span>{message.message}</span>
-          )}
-          {name !== message.name && (
-            <div className='span-action_container'>
-              <span
-                className=' span-action edit-span'
-                onClick={() => handleEdit(index)}
-              >
-                <img src='/icons/edit.png' alt='' className='icon-edit' />
-              </span>
-              <span
-                className='span-action delete-span'
-                onClick={() => {
-                  activeDelete(message.roomId, index);
-                  setCurrentMessage(message.message);
-                }}
-              >
-                <img src='/icons/bdelete.png' className='icon-delete'></img>
-              </span>
-            </div>
-          )}
-        </div>
-      ))}
-      {activeModalDelete && (
-        <Modal
-          currentIndex={currentIndex}
-          selectedRoomId={selectedRoomId}
-          setMessages={setMessages}
-          setActiveModalDelete={setActiveModalDelete}
-          currentMessage={currentMessage}
-        />
-      )}
-      <div ref={scrollRef}></div>
+      <div className='h-room_container'>
+        <h3 className='h-room'># : Nom de la room</h3>
+      </div>
+
+      <div className='messages-column'>
+        {messages.map((message, index) => (
+          <div className='message-el' key={index}>
+            <span className='name'>{message.name} </span>
+            {currentIndex === index &&
+            activeEdit === true &&
+            name !== message.name ? (
+              <MessageEditor
+                name={message.name}
+                message={message.message}
+                index={index}
+                roomId={message.roomId}
+                setActiveEdit={setActiveEdit}
+                setMessages={setMessages}
+                updateMessage={updateMessage}
+              />
+            ) : (
+              <span>{message.message}</span>
+            )}
+            {name !== message.name && (
+              <div className='span-action_container'>
+                <span
+                  className=' span-action edit-span'
+                  onClick={() => handleEdit(index)}
+                >
+                  <img
+                    src='/icons/edit.png'
+                    alt='modifie ton message'
+                    className='icon-edit'
+                  />
+                </span>
+                <span
+                  className='span-action delete-span'
+                  onClick={() => {
+                    activeDelete(message.roomId, index);
+                    setCurrentMessage(message.message);
+                  }}
+                >
+                  <img
+                    src='/icons/bdelete.png'
+                    className='icon-delete'
+                    alt='supprime ton message'
+                  ></img>
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
+        {activeModalDelete && (
+          <Modal
+            currentIndex={currentIndex}
+            selectedRoomId={selectedRoomId}
+            setMessages={setMessages}
+            setActiveModalDelete={setActiveModalDelete}
+            currentMessage={currentMessage}
+          />
+        )}
+        <div ref={scrollRef}></div>
+      </div>
     </div>
   );
 };

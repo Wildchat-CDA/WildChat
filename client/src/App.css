@@ -37,6 +37,6 @@ textarea {
 }
 
 .name {
-  color: var(--color-name);
+  color: var(--color-font);
   font-weight: var(--font-name);
 }
