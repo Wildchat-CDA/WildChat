@@ -7,6 +7,7 @@ import RaisedHandsList from './components/teacher/RaisedHandsList';
 import InputMessage from './components/message/InputMessage/InputMessage';
 import ShowMessage from './components/message/ShowMessage/ShowMessage';
 import Modal from './components/message/modal/Modal';
+import Section from './components/channel/section/Section';
 
 function App() {
   function handleViewChange(view: string) {
@@ -22,8 +23,9 @@ function App() {
     //   </div>
     // </HandRaiseProvider>
     <>
-      <ShowMessage />
-      <InputMessage />
+      {/* <ShowMessage />
+      <InputMessage /> */}
+      {<Section />}
     </>
   );
 }

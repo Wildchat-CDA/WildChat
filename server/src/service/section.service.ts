@@ -137,4 +137,10 @@ export class SectionService {
 
     return await this.sectionRepository.save(allSections);
   }
+
+  async findAllTopicAndSection() {
+    return await this.sectionRepository.find({
+      relations: ['channels'],
+    });
+  }
 }
