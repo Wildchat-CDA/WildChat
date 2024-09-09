@@ -28,7 +28,6 @@ export const roomHandler = (socket: Socket) => {
             socket.emit("get-users", {
                 roomId,
                 participants: rooms[roomId]
-    
             }
         )}
         

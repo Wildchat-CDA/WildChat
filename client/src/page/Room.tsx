@@ -19,7 +19,6 @@ export const Room = () => {
       <div>
        
         <VideoPlayer stream={stream} />
-
        
         {Object.values(peers as PeerState).map((peer, index) => (
           <VideoPlayer key={index} stream={peer.stream} />
