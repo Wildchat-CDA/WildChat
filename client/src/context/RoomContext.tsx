@@ -3,8 +3,8 @@ import socketIOClient from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
 import Peer from "peerjs";
-import { addPeerAction, removePeerAction } from "./PeerAction";
-import { peerReducer } from "./PeerReducer"; 
+import { addAllPeersAction, addPeerAction, IPeer, removePeerAction } from "../reducer/PeerReducer";
+import { peerReducer } from "../reducer/PeerReducer"; 
 
 
 const WS = "http://localhost:3000";  
@@ -32,9 +32,15 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
   };
 
   
-  const getUsers = ({ participants }: { participants: string[] }) => {
-    console.log("participants", {participants});
-  };
+  const getUsers = ({
+    participants
+}: {
+    participants: Record<string, IPeer>;
+}) => {
+    dispatch(addAllPeersAction(participants));
+    
+    console.log("participants is", participants)
+};
  
   const removePeer = (peerId: string) => {
     dispatch(removePeerAction(peerId));

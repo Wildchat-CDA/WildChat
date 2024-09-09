@@ -1,4 +1,26 @@
-import { ADD_PEER, REMOVE_PEER } from "./PeerAction";
+export const ADD_PEER = "ADD_PEER" as const;
+export const REMOVE_PEER = "REMOVE_PEER" as const
+export const ADD_ALL_PEERS = "ADD_ALL_PEERS" as const;
+
+ export interface IPeer {
+  userName: string;
+  peerId: string;
+}
+
+export const addPeerAction = (peerId: string, stream: MediaStream) => ({
+    type: ADD_PEER,
+    payload: {peerId, stream},
+});
+
+export const addAllPeersAction = (participants: Record<string, IPeer>) => ({
+  type: ADD_ALL_PEERS,
+  payload: {participants},
+});
+
+export const removePeerAction = (peerId: string) => ({
+    type: REMOVE_PEER,
+    payload: {peerId},
+});
 
 export type PeerState = Record<string, { stream: MediaStream }>;
 

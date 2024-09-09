@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 
 export default function ButtonHP({
-    mute = false,
-    setMute
+    muted = false,
+    setMuted
 }) {
 
     const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -28,26 +28,20 @@ export default function ButtonHP({
     const toggleMute = () => {
       if (mediaStreamRef.current) {
         mediaStreamRef.current.getAudioTracks().forEach(track => {
-          track.enabled = !mute;
+          track.enabled = !muted;
         });
-        setMute(!mute);
+        setMuted(!muted);
       }
     };
   
 
     const handleMute = async () => {
-        let audioContext = await new (window.AudioContext);
-        console.log("here son is ", audioContext)
-        if (audioContext.state === 'running') {
-            audioContext.suspend(); // Mute all audio
-          } else if (audioContext.state === 'suspended') {
-            audioContext.resume(); // Unmute all audio
-          }
-        setMute(!mute);
+        setMuted(!muted);
+       
     }
   return (
     <div>
-        <img src={mute ? './no-mute.png' : "./mute.png"} onClick={handleMute} style={{background: "white", cursor: "pointer"}} /> 
+        <img src={muted ? '/no-mute.png' : "/mute.png"} onClick={handleMute} style={{background: "white", cursor: "pointer", width: "30px"}} /> 
     </div>
   )
 }

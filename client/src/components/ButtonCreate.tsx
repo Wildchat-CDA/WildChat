@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { RoomContext } from "../context/RoomContext"
 
 export const Join: React.FC = () => {
@@ -6,6 +6,10 @@ export const Join: React.FC = () => {
     const createRoom = () => {
         ws.emit("create-room")
     }
+
+    useEffect(() => {
+    createRoom()
+    }, [])
 
     return(
         <button 
