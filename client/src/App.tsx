@@ -5,7 +5,7 @@ import ButtonHP from './components/ButtonHP';
 import { Join } from './components/ButtonCreate';
 import { RoomContext } from './context/RoomContext';
 
-const WS = "http://localhost:3000";
+const WS = "http://localhost:3000/";
 
 function App() {
   const [mute, setMute] = useState(false);
