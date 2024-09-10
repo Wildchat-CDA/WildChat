@@ -8,6 +8,7 @@ import InputMessage from './components/message/InputMessage/InputMessage';
 import ShowMessage from './components/message/ShowMessage/ShowMessage';
 import Modal from './components/message/modal/Modal';
 import Section from './components/channel/section/Section';
+import PageSection from './pages/PageSection';
 
 function App() {
   function handleViewChange(view: string) {
@@ -25,7 +26,7 @@ function App() {
     <>
       {/* <ShowMessage />
       <InputMessage /> */}
-      {<Section />}
+      <PageSection />
     </>
   );
 }
