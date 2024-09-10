@@ -1,4 +1,4 @@
-export async function fetchRooms(): Promise<any> {
+export async function fetchGetSection(): Promise<any> {
   try {
     const response = await fetch('http://localhost:3000/section/topic', {
       method: 'GET',

@@ -1,14 +1,12 @@
 .library-container {
   width: 100%;
   height: 50%;
-  border: 1px solid black;
   padding-left: 20px;
   background-color: var(--color-primary);
   color: var(--color-font);
 
   .topic-container {
     display: flex;
-    border: 1px solid blue;
     padding: 10px;
     width: 25%;
     min-width: 70px;

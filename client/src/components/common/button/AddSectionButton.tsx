@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AddSectionButton = (props) => {
+const AddSectionButton = () => {
   return (
     <div>
       <img src='/icons/add-new.png' alt='Croix ajouter' />

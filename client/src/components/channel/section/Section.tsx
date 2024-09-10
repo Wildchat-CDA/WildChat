@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { fetchRooms } from '../../../services/room/fetch/FetchRoom';
+import { fetchGetSection } from '../../../services/section/fetch/FetchGetSection';
 import Room from '../room/Room';
 import './Section.css';
-import AddSectionButton from '../button/AddSectionButton';
+import AddSectionButton from '../../common/button/AddSectionButton';
 
 const Section = () => {
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
 
   useEffect(() => {
-    fetchRooms()
+    fetchGetSection()
       .then(setAllRoomsAndChannels)
       .catch((err) =>
         console.error('Erreur lors du chargement des rooms :', err)
