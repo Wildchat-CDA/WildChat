@@ -23,7 +23,7 @@ export class SectionService {
   }
 
   async findAll(): Promise<Section[]> {
-    return await this.sectionRepository.find();
+    return await this.sectionRepository.find({ relations: ['channels'] });
   }
 
   async addSection(channelId: number, sectionId: number) {
