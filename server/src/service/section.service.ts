@@ -23,7 +23,7 @@ export class SectionService {
   }
 
   async findAll(): Promise<Section[]> {
-    return await this.sectionRepository.find();
+    return await this.sectionRepository.find({ relations: ['channels'] });
   }
 
   async addSection(channelId: number, sectionId: number) {
@@ -142,5 +142,21 @@ export class SectionService {
     return await this.sectionRepository.find({
       relations: ['channels'],
     });
+  }
+
+  async createChannelIntopic(sectionId: number, channelData: Channel) {
+    const section = await this.sectionRepository.findOneBy({ id: sectionId });
+
+    if (!section) {
+      throw new Error('Topic not found');
+    } else {
+      const channel = this.channelRepository.create({
+        ...channelData,
+        uuid: uuidv4(),
+      });
+      channel.sections = [section];
+
+      return this.channelRepository.save(channel);
+    }
   }
 }
