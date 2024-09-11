@@ -6,6 +6,7 @@ import { v4 as uuidV4 } from "uuid";
 import Peer from "peerjs";
 import { addAllPeersAction, addPeerAction, IPeer, removePeerAction } from "../reducer/PeerReducer";
 import { peerReducer, PeerState } from "../reducer/PeerReducer"; 
+import GlobalCall from "../GlobalCall";
 
 //const WS = "http://localhost:3000";  
 
@@ -50,7 +51,7 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
 
       socket.on("room-created", enterRoom);
       socket.on("get-users", getUsers);    
-    socket.on("user-disconnected", removePeer); 
+      socket.on("user-disconnected", removePeer); 
 
     return () => {
       socket.off("room-created", enterRoom);
@@ -59,16 +60,20 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
     };
   }, []);
 
+  
   useEffect(() => {
     if (!me) return;   
     if (!stream) return; 
 
-    socket.on("user-joined", ({ peerId }: { peerId: string }) => {
+    const joinHandler = ({ peerId }: { peerId: string }) => {
       const call = me.call(peerId, stream);
       call.on("stream", (peerStream) => {
         dispatch(addPeerAction(peerId, peerStream)); 
       });
-    });
+    }
+  
+
+    socket.on("user-joined", joinHandler);
 
     me.on("call", (call) => {
       call.answer(stream); 
@@ -78,13 +83,14 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
     });
 
     return () => {
-      //socket.off("user-joined");
+      socket.off("user-joined", joinHandler);
       //me.off("call");
     };
   }, [me, stream]);
 
   return (
     <RoomContext.Provider value={{ socket, me, stream, peers }}>
+      <GlobalCall></GlobalCall>
       {children}
     </RoomContext.Provider>
   );

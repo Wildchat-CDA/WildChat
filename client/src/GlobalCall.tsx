@@ -7,7 +7,7 @@ import socket from "./services/webSocketService"
 
 // const WS = "http://localhost:3000/";
 
-function App() {
+function GlobalCall() {
   //const [mute, setMute] = useState(false);
   
   // useEffect(() => {
@@ -42,4 +42,4 @@ function App() {
   );
 }
 
-export default App;
+export default GlobalCall;
