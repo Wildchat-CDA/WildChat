@@ -4,7 +4,17 @@ import { Server } from 'socket.io';
 import { roomHandler } from './room/room';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  
+  const app = await NestFactory.create(AppModule)
+
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
+  
+  await app.listen(3000);
 
   const server = app.getHttpServer(); 
   const io = new Server(server, {
@@ -23,17 +33,6 @@ async function bootstrap() {
       console.log('User disconnected');
     });
   });
-
-
-  app.enableCors({
-    // TODO changer l'url et dans le env
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  });
-
-  await app.listen(3000);
 }
 
 bootstrap();

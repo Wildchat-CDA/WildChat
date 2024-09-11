@@ -3,33 +3,33 @@ import './App.css';
 import { io } from 'socket.io-client';
 import { Join } from './components/ButtonCreate';
 import { RoomContext } from './context/RoomContext';
+import socket from "./services/webSocketService"
 
-const WS = "http://localhost:3000/";
+// const WS = "http://localhost:3000/";
 
 function App() {
-  const [mute, setMute] = useState(false);
+  //const [mute, setMute] = useState(false);
   
-  useEffect(() => {
-    const socket = io(WS);
+  // useEffect(() => {
+  //    const socket = io(WS);
 
-    socket.on('connect', () => {
-      console.log('Connected to WebSocket server');
-    });
+  //   socket.on('connect', () => {
+  //     console.log('Connected to WebSocket server');
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     createRoom()
-    console.log("here")
    }, []);
  
 
-     const {ws} = useContext(RoomContext)
+     const {socket} = useContext(RoomContext)
      const createRoom = () => {
-         ws.emit("create-room")
+      socket.emit("create-room")
      }
 
   return (

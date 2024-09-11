@@ -7,13 +7,13 @@ import ButtonHP from "../components/ButtonHP";
 
 export const Room = () => {
   const { id } = useParams();
-  const { ws, me, stream, peers } = useContext(RoomContext);
+  const { socket, me, stream, peers } = useContext(RoomContext);
   const [muted, setMuted] = useState(false);
 
   
   useEffect(() => {
-    if (me) ws.emit("join-room", { roomId: id, peerId: me._id });
-  }, [id, me, ws]);
+    if (me) socket.emit("join-room", { roomId: id, peerId: me._id });
+  }, [id, me, socket]);
 
   return (
     <>

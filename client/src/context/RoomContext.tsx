@@ -1,16 +1,17 @@
 import React, { createContext, useState, useEffect, useReducer } from "react";
 import socketIOClient from "socket.io-client";
 import { useNavigate } from "react-router-dom";
+import socket from "../services/webSocketService"
 import { v4 as uuidV4 } from "uuid";
 import Peer from "peerjs";
 import { addAllPeersAction, addPeerAction, IPeer, removePeerAction } from "../reducer/PeerReducer";
 import { peerReducer, PeerState } from "../reducer/PeerReducer"; 
 
-const WS = "http://localhost:3000";  
+//const WS = "http://localhost:3000";  
 
 export const RoomContext = createContext<null | any>(null);
 
-const ws = socketIOClient(WS);
+// const ws = socketIOClient(WS);
 
 export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
@@ -47,14 +48,14 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
         console.error(error);
       });
 
-    ws.on("room-created", enterRoom);
-    ws.on("get-users", getUsers);    
-    ws.on("user-disconnected", removePeer); 
+      socket.on("room-created", enterRoom);
+      socket.on("get-users", getUsers);    
+    socket.on("user-disconnected", removePeer); 
 
     return () => {
-      ws.off("room-created", enterRoom);
-      ws.off("get-users", getUsers);
-      ws.off("user-disconnected", removePeer);
+      socket.off("room-created", enterRoom);
+      socket.off("get-users", getUsers);
+      socket.off("user-disconnected", removePeer);
     };
   }, []);
 
@@ -62,7 +63,7 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
     if (!me) return;   
     if (!stream) return; 
 
-    ws.on("user-joined", ({ peerId }: { peerId: string }) => {
+    socket.on("user-joined", ({ peerId }: { peerId: string }) => {
       const call = me.call(peerId, stream);
       call.on("stream", (peerStream) => {
         dispatch(addPeerAction(peerId, peerStream)); 
@@ -77,13 +78,13 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
     });
 
     return () => {
-      ws.off("user-joined");
-      me.off("call");
+      //socket.off("user-joined");
+      //me.off("call");
     };
   }, [me, stream]);
 
   return (
-    <RoomContext.Provider value={{ ws, me, stream, peers }}>
+    <RoomContext.Provider value={{ socket, me, stream, peers }}>
       {children}
     </RoomContext.Provider>
   );
