@@ -1,7 +1,8 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import webSocketService from '../services/webSocketService';
 
 interface HandRaiseData {
-  userId: number;
+  userId: string;
   userName: string;
   type: "self" | "table";
   table: string;
@@ -10,7 +11,8 @@ interface HandRaiseData {
 
 interface HandRaiseContextType {
   raisedHands: HandRaiseData[];
-  setRaisedHands: React.Dispatch<React.SetStateAction<HandRaiseData[]>>;
+  raiseHand: (userId: string, userName: string, type: "self" | "table", table: string) => void;
+  lowerHand: (userId: string, type: "self" | "table") => void;
 }
 
 const HandRaiseContext = createContext<HandRaiseContextType | undefined>(undefined);
@@ -18,8 +20,31 @@ const HandRaiseContext = createContext<HandRaiseContextType | undefined>(undefin
 export const HandRaiseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [raisedHands, setRaisedHands] = useState<HandRaiseData[]>([]);
 
+  useEffect(() => {
+    webSocketService.onHandRaised((data) => {
+      setRaisedHands(prev => [...prev, { ...data, timestamp: Date.now() }]);
+    });
+
+    webSocketService.onHandLowered((data) => {
+      setRaisedHands(prev => prev.filter(hand => !(hand.userId === data.userId && hand.type === data.type)));
+    });
+
+    return () => {
+      webSocketService.off("hand_raised", () => {});
+      webSocketService.off("hand_lowered", () => {});
+    };
+  }, []);
+
+  const raiseHand = (userId: string, userName: string, type: "self" | "table", table: string) => {
+    webSocketService.raiseHand(userId, userName, type, table);
+  };
+
+  const lowerHand = (userId: string, type: "self" | "table") => {
+    webSocketService.lowerHand(userId, type);
+  };
+
   return (
-    <HandRaiseContext.Provider value={{ raisedHands, setRaisedHands }}>
+    <HandRaiseContext.Provider value={{ raisedHands, raiseHand, lowerHand }}>
       {children}
     </HandRaiseContext.Provider>
   );

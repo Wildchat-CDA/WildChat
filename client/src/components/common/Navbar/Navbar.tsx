@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
-import { useHandRaise } from '../../../context/HandRaiseContext';
+import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
 import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
@@ -29,21 +29,25 @@ function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
 
 function Navbar({ isMobile }: NavbarProps) {
   const { userRole } = useUserRole();
-  const { userHandState, toggleHandRaise } = useHandRaise();
+  const { isHandRaised, raiseHand, lowerHand } = useHandRaise("1", "Current User", "Table-1");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleRaiseHand = (type: 'forSelf' | 'forTable') => {
-    toggleHandRaise(type);
+  const handleRaiseHand = (type: 'self' | 'table') => {
+    if (isHandRaised[type]) {
+      lowerHand(type);
+    } else {
+      raiseHand(type);
+    }
     setShowDropdown(false);
   };
 
   const dropdownItems = [
-    { icon: 'graduate-hat.png', text: 'Pour soi', onClick: () => handleRaiseHand('forSelf') },
-    { icon: 'multiple-users-silhouette.png', text: 'Pour la table', onClick: () => handleRaiseHand('forTable') }
+    { icon: 'graduate-hat.png', text: 'Pour soi', onClick: () => handleRaiseHand('self') },
+    { icon: 'multiple-users-silhouette.png', text: 'Pour la table', onClick: () => handleRaiseHand('table') }
   ];
 
   const renderNavItems = () => {
@@ -68,14 +72,14 @@ function Navbar({ isMobile }: NavbarProps) {
           </>
         );
       }
-    } else { // student
+    } else {
       const handRaiseItem = (
         <div className="hand-raise-container">
           <NavItem
             icon="palm.png"
             text="Lever la main"
             onClick={toggleDropdown}
-            isActive={userHandState.forSelf || userHandState.forTable}
+            isActive={isHandRaised.self || isHandRaised.table}
           />
           {showDropdown && <Dropdown items={dropdownItems} />}
         </div>

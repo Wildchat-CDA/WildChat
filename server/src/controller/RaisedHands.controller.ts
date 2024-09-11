@@ -17,7 +17,7 @@ export class RaisedHandsController {
       userId: number;
       userName: string;
       type: 'self' | 'table';
-      table: number;
+      table: 'string';
     },
   ) {
     await this.redisService.raiseHand(data);
