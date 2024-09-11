@@ -1,33 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { HandRaiseProvider } from './context/HandRaiseContext';
-import HeaderNavbarDev from './components/common/HeaderNavbarDev/HeaderNavbarDev/HeaderNavbarDev';
-import Navbar from './components/common/Navbar/Navbar';
-import RaisedHandsList from './components/teacher/RaisedHandsList';
-import InputMessage from './components/message/InputMessage/InputMessage';
-import ShowMessage from './components/message/ShowMessage/ShowMessage';
-import Modal from './components/message/modal/Modal';
-import Section from './components/channel/section/Section';
-import PageSection from './pages/PageSection';
+import { UserRoleProvider } from './context/UserRoleContext';
+import DesktopLayout from './components/layout/DesktopLayout';
+import MobileLayout from './components/layout/MobileLayout';
+import ContentMain from './components/common/ContentMain';
+import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
 
 function App() {
-  function handleViewChange(view: string) {
-    console.log(`Vue changée pour : ${view}`);
-  }
+  const [screenSize, setScreenSize] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setScreenSize(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = screenSize <= 768;
+
+  const mainContent = (
+    <>
+      <ContentSidebar />
+      <ContentMain />
+    </>
+  );
 
   return (
-    // <HandRaiseProvider>
-    //   <div>
-    //     <HeaderNavbarDev onViewChange={handleViewChange} />
-    //     <Navbar />
-    //     <RaisedHandsList />
-    //   </div>
-    // </HandRaiseProvider>
-    <>
-      {/* <ShowMessage />
-      <InputMessage /> */}
-      <PageSection />
-    </>
+    <UserRoleProvider>
+      <HandRaiseProvider>
+        {isMobile ? (
+          <MobileLayout>{mainContent}</MobileLayout>
+        ) : (
+          <DesktopLayout>{mainContent}</DesktopLayout>
+        )}
+      </HandRaiseProvider>
+    </UserRoleProvider>
   );
 }
 

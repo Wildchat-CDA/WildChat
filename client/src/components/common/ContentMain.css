@@ -1,0 +1,6 @@
+.content-main {
+  width: calc(67% - 60px);
+  position: fixed;
+  right: 0;
+  top: 36px;
+}
