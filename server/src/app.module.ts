@@ -20,6 +20,7 @@ import { ConfigService } from './service/config.service';
 import { ChatGateway } from './service/ChatGateway';
 import { RedisService } from './service/redis.service';
 import { RedisController } from './controller/redis.controller';
+import { RaisedHandsController } from './controller/RaisedHands.controller';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { RedisController } from './controller/redis.controller';
     ChannelController,
     TypeController,
     ConfigController,
+    RaisedHandsController,
   ],
   providers: [
     AppService,

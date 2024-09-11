@@ -133,4 +133,46 @@ export class RedisService {
       );
     }
   }
+  public async raiseHand(data: {
+    userId: number;
+    userName: string;
+    type: 'self' | 'table';
+    table: string;
+  }) {
+    const key = `raisedHands:${data.type}`;
+    await this._client.hSet(
+      key,
+      data.userId.toString(),
+      JSON.stringify({
+        userName: data.userName,
+        table: data.table,
+        timestamp: Date.now(),
+      }),
+    );
+  }
+
+  public async lowerHand(data: { userId: number; type: 'self' | 'table' }) {
+    const key = `raisedHands:${data.type}`;
+    await this._client.hDel(key, data.userId.toString());
+  }
+
+  public async getRaisedHands() {
+    const selfHands = await this._client.hGetAll('raisedHands:self');
+    const tableHands = await this._client.hGetAll('raisedHands:table');
+
+    const formatHands = (
+      hands: Record<string, string>,
+      type: 'self' | 'table',
+    ) =>
+      Object.entries(hands).map(([userId, data]) => ({
+        userId: parseInt(userId),
+        type,
+        ...JSON.parse(data),
+      }));
+
+    return [
+      ...formatHands(selfHands, 'self'),
+      ...formatHands(tableHands, 'table'),
+    ];
+  }
 }

@@ -40,4 +40,28 @@ export class ChatGateway
     await this.redisService.postMessage(data);
     this.server.emit('message', data);
   }
+
+  @SubscribeMessage('raiseHand')
+  async handleRaiseHand(
+    @MessageBody()
+    data: {
+      userId: number;
+      userName: string;
+      type: 'self' | 'table';
+      table: string;
+    },
+  ) {
+    await this.redisService.raiseHand(data);
+    const raisedHands = await this.redisService.getRaisedHands();
+    this.server.emit('raisedHandsUpdate', raisedHands);
+  }
+
+  @SubscribeMessage('lowerHand')
+  async handleLowerHand(
+    @MessageBody() data: { userId: number; type: 'self' | 'table' },
+  ) {
+    await this.redisService.lowerHand(data);
+    const raisedHands = await this.redisService.getRaisedHands();
+    this.server.emit('raisedHandsUpdate', raisedHands);
+  }
 }
