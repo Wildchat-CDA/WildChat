@@ -29,7 +29,7 @@ function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
 
 function Navbar({ isMobile }: NavbarProps) {
   const { userRole } = useUserRole();
-  const { userHandState, toggleHandRaise } = useHandRaise();
+  // const { userHandState, toggleHandRaise } = useHandRaise();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => {
@@ -37,7 +37,7 @@ function Navbar({ isMobile }: NavbarProps) {
   };
 
   const handleRaiseHand = (type: 'forSelf' | 'forTable') => {
-    toggleHandRaise(type);
+    // toggleHandRaise(type);
     setShowDropdown(false);
   };
 
@@ -75,7 +75,7 @@ function Navbar({ isMobile }: NavbarProps) {
             icon="palm.png"
             text="Lever la main"
             onClick={toggleDropdown}
-            isActive={userHandState.forSelf || userHandState.forTable}
+            // isActive={userHandState.forSelf || userHandState.forTable}
           />
           {showDropdown && <Dropdown items={dropdownItems} />}
         </div>

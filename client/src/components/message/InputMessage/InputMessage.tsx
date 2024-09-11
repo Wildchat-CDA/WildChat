@@ -3,12 +3,13 @@ import { handleKeyDown } from '../../../services/eventHandlerService';
 import socket from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
+import { useActiveChannel } from '../../../context/ChannelContext';
 
 const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const name = 'Théo'; // TODO: Use context for user
-  const roomId = 1; // TODO: Retrieve roomId from context or props
+  const { currentChannel } = useActiveChannel();
 
   const adjustHeight = () => {
     if (textAreaRef.current) {
@@ -24,7 +25,7 @@ const InputMessage = () => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.length !== 0) {
-      const payload = { name, message: input, roomId };
+      const payload = { name, message: input, roomId: currentChannel };
       socket.emit('message', payload);
       setInput('');
     }

@@ -7,6 +7,7 @@ import { IMessagePostPayload } from '../../../../../common/interface/messageInte
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
 import Modal from '../modal/Modal';
+import { useActiveChannel } from '../../../context/ChannelContext';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -16,11 +17,13 @@ const ShowMessage: React.FC = () => {
   const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
+  const { currentChannel } = useActiveChannel();
+
   const name = 'Théo'; // TODO Need to use an userContext
 
   useEffect(() => {
     // Load messages with redis (init)
-    LoadMessage()
+    LoadMessage(currentChannel)
       .then(setMessages)
       .catch((error) =>
         console.error('Erreur lors du chargement des messages :', error)
@@ -34,7 +37,7 @@ const ShowMessage: React.FC = () => {
     return () => {
       socket.off('message', handleMessage);
     };
-  }, []);
+  }, [currentChannel]);
 
   const scrollRef = useScrollToBottom(messages);
 
@@ -72,7 +75,7 @@ const ShowMessage: React.FC = () => {
             <span className='name'>{message.name} </span>
             {currentIndex === index &&
             activeEdit === true &&
-            name !== message.name ? (
+            name == message.name ? (
               <MessageEditor
                 name={message.name}
                 message={message.message}

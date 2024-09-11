@@ -1,9 +1,11 @@
 import { IMessageGet } from '../../../../../common/interface/messageInterface';
 
 // Load message with redis
-export async function LoadMessage(): Promise<IMessageGet[]> {
+export async function LoadMessage(currentChannel): Promise<IMessageGet[]> {
   try {
-    const response = await fetch('http://localhost:3000/room/1');
+    const response = await fetch(
+      `http://localhost:3000/room/${currentChannel}`
+    );
 
     if (!response.ok) {
       throw new Error(
