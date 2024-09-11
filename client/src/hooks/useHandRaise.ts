@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useHandRaise as useHandRaiseContext } from "../context/HandRaiseContext";
 
-const useHandRaise = (userId: string, userName: string, table: string) => {
+const useHandRaise = (userId: number, userName: string, table: string) => {
   const { raisedHands, raiseHand, lowerHand } = useHandRaiseContext();
   const [isHandRaised, setIsHandRaised] = useState<{
     self: boolean;
@@ -11,24 +11,24 @@ const useHandRaise = (userId: string, userName: string, table: string) => {
   useEffect(() => {
     setIsHandRaised({
       self: raisedHands.some(
-        (hand) => hand.userId === userId && hand.type === "self"
+        (hand) => hand.userId === userId.toString() && hand.type === "self"
       ),
       table: raisedHands.some(
-        (hand) => hand.userId === userId && hand.type === "table"
+        (hand) => hand.userId === userId.toString() && hand.type === "table"
       ),
     });
   }, [raisedHands, userId]);
 
   const raiseHandCallback = useCallback(
     (type: "self" | "table") => {
-      raiseHand(userId, userName, type, table);
+      raiseHand(userId.toString(), userName, type, table);
     },
     [userId, userName, table, raiseHand]
   );
 
   const lowerHandCallback = useCallback(
     (type: "self" | "table") => {
-      lowerHand(userId, type);
+      lowerHand(userId.toString(), type);
     },
     [userId, lowerHand]
   );

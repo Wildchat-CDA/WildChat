@@ -53,7 +53,7 @@ export class ChatGateway
   ) {
     await this.redisService.raiseHand(data);
     const raisedHands = await this.redisService.getRaisedHands();
-    this.server.emit('raisedHandsUpdate', raisedHands);
+    this.server.emit('raiseHand', raisedHands);
   }
 
   @SubscribeMessage('lowerHand')

@@ -4,7 +4,7 @@ class WebSocketService {
   private socket: Socket;
 
   constructor() {
-    // TODO changer l'url avec un env
+    // TODO changer l'url plus tard avec un env pour sécuriser
     this.socket = io("http://localhost:3000");
   }
 
@@ -26,7 +26,7 @@ class WebSocketService {
     type: "self" | "table",
     table: string
   ) {
-    this.socket.emit("raise_hand", { userId, userName, type, table });
+    this.socket.emit("raiseHand", { userId, userName, type, table });
   }
 
   lowerHand(userId: string, type: "self" | "table") {
@@ -48,6 +48,11 @@ class WebSocketService {
     callback: (data: { userId: string; type: "self" | "table" }) => void
   ) {
     this.socket.on("hand_lowered", callback);
+  }
+
+  getRaisedHands(callback: (data: any[]) => void) {
+    this.socket.emit("get_raised_hands");
+    this.socket.on("raised_hands_list", callback);
   }
 }
 

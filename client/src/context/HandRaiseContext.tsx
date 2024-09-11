@@ -21,17 +21,26 @@ export const HandRaiseProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [raisedHands, setRaisedHands] = useState<HandRaiseData[]>([]);
 
   useEffect(() => {
-    webSocketService.onHandRaised((data) => {
+    const handleHandRaised = (data: Omit<HandRaiseData, 'timestamp'>) => {
       setRaisedHands(prev => [...prev, { ...data, timestamp: Date.now() }]);
-    });
+    };
 
-    webSocketService.onHandLowered((data) => {
+    const handleHandLowered = (data: { userId: string; type: "self" | "table" }) => {
       setRaisedHands(prev => prev.filter(hand => !(hand.userId === data.userId && hand.type === data.type)));
-    });
+    };
+
+    const handleRaisedHandsList = (data: Omit<HandRaiseData, 'timestamp'>[]) => {
+      setRaisedHands(data.map(hand => ({ ...hand, timestamp: Date.now() })));
+    };
+
+    webSocketService.onHandRaised(handleHandRaised);
+    webSocketService.onHandLowered(handleHandLowered);
+    webSocketService.getRaisedHands(handleRaisedHandsList);
 
     return () => {
-      webSocketService.off("hand_raised", () => {});
-      webSocketService.off("hand_lowered", () => {});
+      webSocketService.off("hand_raised", handleHandRaised);
+      webSocketService.off("hand_lowered", handleHandLowered);
+      webSocketService.off("raised_hands_list", handleRaisedHandsList);
     };
   }, []);
 

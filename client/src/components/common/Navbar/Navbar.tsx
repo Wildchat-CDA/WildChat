@@ -29,7 +29,7 @@ function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
 
 function Navbar({ isMobile }: NavbarProps) {
   const { userRole } = useUserRole();
-  const { isHandRaised, raiseHand, lowerHand } = useHandRaise("1", "Current User", "Table-1");
+  const { isHandRaised, raiseHand, lowerHand } = useHandRaise(1, "Current User", "Table-1");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => {
