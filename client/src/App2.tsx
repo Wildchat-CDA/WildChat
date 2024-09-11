@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { io } from 'socket.io-client';
-import ButtonHP from './components/ButtonHP';
 import { Join } from './components/ButtonCreate';
 import { RoomContext } from './context/RoomContext';
 
@@ -24,7 +23,7 @@ function App() {
 
   useEffect(() => {
     createRoom()
-    console.log("hehetdgdgd")
+    console.log("here")
    }, []);
  
 
