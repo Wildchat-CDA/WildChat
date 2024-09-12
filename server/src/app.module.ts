@@ -17,6 +17,10 @@ import { TypeController } from './controller/type.controller';
 import { TypeService } from './service/type.service';
 import { ConfigController } from './controller/config.controller';
 import { ConfigService } from './service/config.service';
+import { ChatGateway } from './service/ChatGateway';
+import { RedisService } from './service/redis.service';
+import { RedisController } from './controller/redis.controller';
+import { RaisedHandsController } from './controller/RaisedHands.controller';
 
 @Module({
   imports: [
@@ -39,6 +43,8 @@ import { ConfigService } from './service/config.service';
     ChannelController,
     TypeController,
     ConfigController,
+    RedisController,
+    RaisedHandsController,
   ],
   providers: [
     AppService,
@@ -46,6 +52,8 @@ import { ConfigService } from './service/config.service';
     ChannelService,
     TypeService,
     ConfigService,
+    ChatGateway,
+    RedisService,
   ],
 })
 export class AppModule {}

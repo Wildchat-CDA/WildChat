@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;700&display=swap");
+
+.main-navbar {
+  position: fixed;
+  background-color: #232428;
+  z-index: 1000;
+  color: white;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.logo-container svg {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+.logo-text {
+  font-family: "Nunito", sans-serif;
+  font-weight: 200;
+  font-size: 14px;
+  margin-left: 10px;
+  margin-top: 5px;
+  text-align: center;
+  color: white;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* padding: 10px; */
+  transition: all 0.3s ease;
+}
+
+.icon-wrapper {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-text {
+  font-family: "Nunito", sans-serif;
+  font-weight: 200;
+  font-size: 12px;
+  margin-top: 5px;
+  color: white;
+  transition: font-weight 0.3s ease;
+}
+
+.nav-item:hover .icon-wrapper {
+  border: 3px solid white;
+}
+
+.nav-item:hover .nav-text {
+  font-weight: 700;
+}
+
+.nav-item.active .icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (min-width: 768px) {
+  .main-navbar {
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 60px;
+    padding-top: 20px;
+  }
+
+  .logo-container {
+    margin-bottom: 20px;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-navbar {
+    flex-direction: row;
+    justify-content: space-around;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+  }
+
+  .logo-container {
+    display: none;
+  }
+
+  .nav-text {
+    display: none;
+  }
+}
+
+.main-navbar.teacher {
+  border: red;
+  /* ici des styles spécifiques pour le rôle professeur si nécessaire */
+}
+
+.main-navbar.student {
+  border: red;
+
+  /*  ici des styles spécifiques pour le rôle étudiant si nécessaire */
+}

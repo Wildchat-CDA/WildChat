@@ -1,0 +1,6 @@
+.input-message {
+  width: 95%;
+  padding: 10px;
+  margin: auto;
+  background-color: var(--color-secondary);
+}

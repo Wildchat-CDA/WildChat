@@ -154,7 +154,6 @@ export class SectionService {
     }
   }
 
- 
   async editChannelInSection(
     sectionId: number,
     channelId: number,
