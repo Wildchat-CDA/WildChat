@@ -7,11 +7,12 @@ import Peer from "peerjs";
 import { addAllPeersAction, addPeerAction, IPeer, removePeerAction } from "../reducer/PeerReducer";
 import { peerReducer, PeerState } from "../reducer/PeerReducer"; 
 import GlobalCall from "../GlobalCall";
+//import { Room } from "../page/Room";
 
 export const RoomContext = createContext<null | any>(null);
 
 export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const [me, setMe] = useState<Peer>();
   const [stream, setStream] = useState<MediaStream>();
@@ -20,13 +21,14 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
 
   const enterRoom = ({ roomId }: { roomId: string }) => {
     console.log({ roomId });
-    navigate(`/room/${roomId}`); 
+ //   navigate(`/room/${roomId}`); 
   };
 
   const getUsers = ({ participants }: { participants: Record<string, IPeer>; }) => {
     dispatch(addAllPeersAction(participants));
     console.log("participants is", participants);
   };
+ 
 
   const removePeer = (peerId: string) => {
     dispatch(removePeerAction(peerId));
@@ -45,12 +47,12 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
         console.error(error);
       });
 
-      socket.on("room-created", enterRoom);
+//      socket.on("room-created", enterRoom);
       socket.on("get-users", getUsers);    
       socket.on("user-disconnected", removePeer); 
 
     return () => {
-      socket.off("room-created", enterRoom);
+     // socket.off("room-created", enterRoom);
       socket.off("get-users", getUsers);
       socket.off("user-disconnected", removePeer);
     };
@@ -86,7 +88,8 @@ export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }
 
   return (
     <RoomContext.Provider value={{ socket, me, stream, peers }}>
-      <GlobalCall></GlobalCall>
+      {/* <GlobalCall></GlobalCall> */}
+      {/* <Room/> */}
       {children}
     </RoomContext.Provider>
   );

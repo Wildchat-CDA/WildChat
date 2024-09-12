@@ -71,4 +71,5 @@ export class ChatGateway
     const raisedHands = await this.redisService.getRaisedHands();
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
+
 }

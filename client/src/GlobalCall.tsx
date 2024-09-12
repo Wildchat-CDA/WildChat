@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import './App.css';
+import './App.css'; // pq en dehors du App.tsx
 import { io } from 'socket.io-client';
 import { Join } from './components/ButtonCreate';
 import { RoomContext, RoomProvider } from './context/RoomContext';
 import socket from "./services/webSocketService"
 
-// const WS = "http://localhost:3000/";
+//const WS = "http://localhost:3000/";
 
 function GlobalCall() {
   //const [mute, setMute] = useState(false);

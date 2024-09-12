@@ -5,7 +5,7 @@ import { VideoPlayer } from "../components/VideoPlayer";
 import { PeerState } from "../reducer/PeerReducer";
 import ButtonHP from "../components/ButtonHP";
 
-export const Room = () => {
+ const Room = () => {
   const { id } = useParams();
   const { socket, me, stream, peers } = useContext(RoomContext);
   const [muted, setMuted] = useState(false);
@@ -31,3 +31,5 @@ export const Room = () => {
     </>
   );
 };
+
+export default Room;
