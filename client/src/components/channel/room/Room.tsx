@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Room.css';
-import { useActiveChannel } from '../../../context/ChannelContext';
+import { ISectionChannel } from '../../../types/sectionTypes';
 
-function Room({ rooms }) {
-  console.log('ROOMS : ', rooms);
-  const { setCurrentChannel, currentChannel } = useActiveChannel();
-  console.log('current : ', currentChannel);
+function Room({ rooms, setCurrentSection }) {
+  const handleRoom = (room) => {
+    setCurrentSection((prevState: ISectionChannel) => ({
+      ...prevState,
+      channelTitle: room.title,
+      uuid: room.uuid,
+    }));
+  };
 
   return (
     <div className='rooms-container'>
@@ -13,10 +17,7 @@ function Room({ rooms }) {
         console.log('room :', room);
         return (
           <div>
-            <span
-              className='room-span'
-              onClick={() => setCurrentChannel(room.uuid)}
-            >
+            <span className='room-span' onClick={() => handleRoom(room)}>
               {room.title}{' '}
             </span>
           </div>

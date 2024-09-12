@@ -3,13 +3,13 @@ import { handleKeyDown } from '../../../services/eventHandlerService';
 import socket from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
-import { useActiveChannel } from '../../../context/ChannelContext';
+import { useNavigation } from '../../../context/NavigationContext';
 
 const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const name = 'Théo'; // TODO: Use context for user
-  const { currentChannel } = useActiveChannel();
+  const { currentChannel } = useNavigation();
 
   const adjustHeight = () => {
     if (textAreaRef.current) {

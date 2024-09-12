@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { HandRaiseProvider } from './context/HandRaiseContext';
 import { UserRoleProvider } from './context/UserRoleContext';
-import { ActiveChannelProvider } from './context/ChannelContext';
+import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
 import ContentMain from './components/common/ContentMain';
@@ -29,13 +29,13 @@ function App() {
   return (
     <UserRoleProvider>
       <HandRaiseProvider>
-        <ActiveChannelProvider>
+        <NavigationProvider>
           {isMobile ? (
             <MobileLayout>{mainContent}</MobileLayout>
           ) : (
             <DesktopLayout>{mainContent}</DesktopLayout>
           )}
-        </ActiveChannelProvider>
+        </NavigationProvider>
       </HandRaiseProvider>
     </UserRoleProvider>
   );

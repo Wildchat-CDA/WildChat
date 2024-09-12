@@ -3,10 +3,13 @@ import { fetchGetSection } from '../../../services/section/fetch/FetchGetSection
 import Room from '../room/Room';
 import './Section.css';
 import AddSectionButton from '../../common/button/AddSectionButton';
+import { useNavigation } from '../../../context/NavigationContext';
+import { ISection } from '../../../types/sectionTypes';
 
 const Section = () => {
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
+  const { setCurrentSection } = useNavigation();
 
   useEffect(() => {
     fetchGetSection()
@@ -16,7 +19,15 @@ const Section = () => {
       );
   }, []);
 
-  const handleShow = (index: number) => {
+  const handleShow = (section: ISection, index: number) => {
+    const sectionPayload = {
+      sectionTitle: section.title,
+      channelTitle: '',
+      uuid: '',
+    };
+
+    setCurrentSection(sectionPayload);
+    console.log('section : ', section);
     setActiveSection((prevActiveSections) => {
       // Vérifie si l'index est déjà présent
       const indexExists = prevActiveSections.includes(index);
@@ -26,7 +37,6 @@ const Section = () => {
         ? prevActiveSections.filter((item) => item !== index)
         : [...prevActiveSections, index];
 
-      console.log('je passe', newActiveSections);
       return newActiveSections;
     });
   };
@@ -39,12 +49,12 @@ const Section = () => {
       </div>
 
       <div>
-        {allRoomsAndChannels.map((section, index) => (
+        {allRoomsAndChannels.map((section: ISection, index) => (
           <div key={section.order} className='section-column'>
             <div className='title-container'>
               <div
                 className='img-vector_container'
-                onClick={() => handleShow(index)}
+                onClick={() => handleShow(section, index)}
                 aria-label='Ouvrir la section'
               >
                 <img
@@ -56,7 +66,12 @@ const Section = () => {
               <h5 className='section-title'>{section.title}</h5>
             </div>
 
-            {activeSection.includes(index) && <Room rooms={section.channels} />}
+            {activeSection.includes(index) && (
+              <Room
+                rooms={section.channels}
+                setCurrentSection={setCurrentSection}
+              />
+            )}
           </div>
         ))}{' '}
       </div>

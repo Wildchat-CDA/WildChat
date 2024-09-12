@@ -7,7 +7,7 @@ import { IMessagePostPayload } from '../../../../../common/interface/messageInte
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
 import Modal from '../modal/Modal';
-import { useActiveChannel } from '../../../context/ChannelContext';
+import { useNavigation } from '../../../context/NavigationContext';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -17,13 +17,13 @@ const ShowMessage: React.FC = () => {
   const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
-  const { currentChannel } = useActiveChannel();
+  const { currentSection } = useNavigation();
 
   const name = 'Théo'; // TODO Need to use an userContext
 
   useEffect(() => {
     // Load messages with redis (init)
-    LoadMessage(currentChannel)
+    LoadMessage(currentSection)
       .then(setMessages)
       .catch((error) =>
         console.error('Erreur lors du chargement des messages :', error)
@@ -37,7 +37,7 @@ const ShowMessage: React.FC = () => {
     return () => {
       socket.off('message', handleMessage);
     };
-  }, [currentChannel]);
+  }, [currentSection]);
 
   const scrollRef = useScrollToBottom(messages);
 
@@ -66,7 +66,11 @@ const ShowMessage: React.FC = () => {
   return (
     <div className='messages-container'>
       <div className='h-room_container'>
-        <h3 className='h-room'># : Nom de la room</h3>
+        {currentSection && (
+          <h3 className='h-room'>
+            #{currentSection.sectionTitle} : {currentSection.channelTitle}{' '}
+          </h3>
+        )}
       </div>
 
       <div className='messages-column' aria-live='polite'>

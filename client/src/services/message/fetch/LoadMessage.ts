@@ -1,10 +1,13 @@
 import { IMessageGet } from '../../../../../common/interface/messageInterface';
+import { ISectionChannel } from '../../../types/sectionTypes';
 
 // Load message with redis
-export async function LoadMessage(currentChannel): Promise<IMessageGet[]> {
+export async function LoadMessage(
+  currentChannel: ISectionChannel | null
+): Promise<IMessageGet[]> {
   try {
     const response = await fetch(
-      `http://localhost:3000/room/${currentChannel}`
+      `http://localhost:3000/room/${currentChannel ? currentChannel.uuid : ''}`
     );
 
     if (!response.ok) {
