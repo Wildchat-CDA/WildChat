@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { MessageUpdatePaylod } from '../../../types/messageTypes';
-import { editMessage } from '../../../services/message/EditMessage';
+import React, { useState, useRef } from 'react';
+import { IMessageUpdateProps } from '../../../types/messageTypes';
+import { editMessage } from '../../../services/message/fetch/EditMessage';
 
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';
 
-const MessageEditor: React.FC<MessageUpdatePaylod> = ({
+const MessageEditor: React.FC<IMessageUpdateProps> = ({
   name,
   message,
   index,
@@ -21,9 +21,11 @@ const MessageEditor: React.FC<MessageUpdatePaylod> = ({
 
   // Saving new message with all infos i need
   const handleSaveClick = () => {
-    editMessage({ name, index, message: newMessage, roomId });
-    setActiveEdit(false);
-    updateMessage(newMessage, index);
+    if (newMessage.length !== 0) {
+      editMessage({ name, index, message: newMessage, roomId });
+      setActiveEdit(false);
+      updateMessage(newMessage, index);
+    }
   };
 
   return (
@@ -37,7 +39,7 @@ const MessageEditor: React.FC<MessageUpdatePaylod> = ({
       <div className='valid-or-cancel_edit'>
         <span> échap pour </span>
         <button onClick={cancelEdit}>annuler</button>
-        <span> ° entrée pour </span>
+        <span> entrée pour </span>
         <button onClick={handleSaveClick}>enregistrer</button>
       </div>
     </div>

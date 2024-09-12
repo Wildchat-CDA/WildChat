@@ -1,5 +1,4 @@
 .header-navbar-dev {
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -50,7 +49,7 @@
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 26px;
   width: 26px;
   left: 4px;

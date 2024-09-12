@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import { HandRaiseProvider } from "./context/HandRaiseContext";
-import { UserRoleProvider } from "./context/UserRoleContext";
-import DesktopLayout from "./components/layout/DesktopLayout";
-import MobileLayout from "./components/layout/MobileLayout";
-import ContentMain from "./components/common/ContentMain";
-import ContentSidebar from "./components/common/ContentSidebar/ContentSidebar";
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import { HandRaiseProvider } from './context/HandRaiseContext';
+import { UserRoleProvider } from './context/UserRoleContext';
+import { NavigationProvider } from './context/NavigationContext';
+import DesktopLayout from './components/layout/DesktopLayout';
+import MobileLayout from './components/layout/MobileLayout';
+import ContentMain from './components/common/mainContent/contentMain/ContentMain';
+import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
+import MainContent from './components/common/mainContent/MainContent';
 
 function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
@@ -18,26 +20,21 @@ function App() {
 
   const isMobile = screenSize <= 768;
 
-  const mainContent = (
-    <>
-      <ContentSidebar />
-      <ContentMain />
-    </>
-  );
-
   return (
     <UserRoleProvider>
 
       <HandRaiseProvider>
-        {isMobile ? (
-          <MobileLayout>
-            {mainContent}
-          </MobileLayout>
-        ) : (
-          <DesktopLayout>
-            {mainContent}
-          </DesktopLayout>
-        )}
+        <NavigationProvider>
+          {isMobile ? (
+            <MobileLayout>
+              <MainContent />
+            </MobileLayout>
+          ) : (
+            <DesktopLayout>
+              <MainContent />
+            </DesktopLayout>
+          )}
+        </NavigationProvider>
       </HandRaiseProvider>
       
     </UserRoleProvider>
