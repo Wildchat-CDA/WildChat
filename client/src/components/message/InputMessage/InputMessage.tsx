@@ -9,7 +9,7 @@ const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const name = 'Théo'; // TODO: Use context for user
-  const { currentChannel } = useNavigation();
+  const { currentSection } = useNavigation();
 
   const adjustHeight = () => {
     if (textAreaRef.current) {
@@ -25,7 +25,11 @@ const InputMessage = () => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.length !== 0) {
-      const payload = { name, message: input, roomId: currentChannel };
+      const payload = {
+        name,
+        message: input,
+        roomId: currentSection ? currentSection.uuid : '',
+      };
       socket.emit('message', payload);
       setInput('');
     }

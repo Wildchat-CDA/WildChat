@@ -5,8 +5,9 @@ import { UserRoleProvider } from './context/UserRoleContext';
 import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
-import ContentMain from './components/common/ContentMain';
+import ContentMain from './components/common/mainContent/contentMain/ContentMain';
 import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
+import MainContent from './components/common/mainContent/MainContent';
 
 function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
@@ -19,21 +20,25 @@ function App() {
 
   const isMobile = screenSize <= 768;
 
-  const mainContent = (
-    <>
-      <ContentSidebar />
-      <ContentMain />
-    </>
-  );
+  // const mainContent = (
+  //   <div className='test'>
+  //     <ContentSidebar />
+  //     <ContentMain />
+  //   </div>
+  // );
 
   return (
     <UserRoleProvider>
       <HandRaiseProvider>
         <NavigationProvider>
           {isMobile ? (
-            <MobileLayout>{mainContent}</MobileLayout>
+            <MobileLayout>
+              <MainContent />
+            </MobileLayout>
           ) : (
-            <DesktopLayout>{mainContent}</DesktopLayout>
+            <DesktopLayout>
+              <MainContent />
+            </DesktopLayout>
           )}
         </NavigationProvider>
       </HandRaiseProvider>

@@ -1,5 +1,6 @@
 .input-message-container {
   width: 100%;
+  height: 100%;
 }
 
 .visually-hidden {
@@ -14,14 +15,14 @@
 }
 
 .input-message {
+  height: 100%;
   width: 100%;
   min-height: 50px;
   max-height: 300px; /* Ajustez si nécessaire */
   padding: 10px;
-  margin: 10px 0;
+border: none;
   background-color: var(--color-secondary);
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border-top: 1px solid var(--color-border);
   box-sizing: border-box;
   overflow: auto;
   resize: none;
