@@ -8,21 +8,21 @@ const FICTIVE_USER = {
   table: "Table test"
 };
 
+function formatTime(timestamp: number): string {
+  const now = Date.now();
+  const diffInMinutes = Math.floor((now - timestamp) / (1000 * 60));
+  if (diffInMinutes < 1) {
+    return "Il y a moins d'une minute";
+  } else if (diffInMinutes === 1) {
+    return "Il y a 1 minute";
+  } else {
+    return `Il y a ${diffInMinutes} minutes`;
+  }
+}
+
 function RaisedHandsList() {
   const { raisedHands } = useHandRaise(FICTIVE_USER.id, FICTIVE_USER.name, FICTIVE_USER.table);
   
-  function formatTime(timestamp: number): string {
-    const now = Date.now();
-    const diffInMinutes = Math.floor((now - timestamp) / (1000 * 60));
-    if (diffInMinutes < 1) {
-      return "Il y a moins d'une minute";
-    } else if (diffInMinutes === 1) {
-      return "Il y a 1 minute";
-    } else {
-      return `Il y a ${diffInMinutes} minutes`;
-    }
-  }
-
   return (
     <div className="raised-hands-list">
       <h1>Mains levées</h1>

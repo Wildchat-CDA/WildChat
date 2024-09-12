@@ -1,10 +1,17 @@
 import { io, Socket } from "socket.io-client";
 
+interface HandRaiseData {
+  userId: number;
+  userName: string;
+  type: "self" | "table";
+  table: string;
+  timestamp: number;
+}
+
 class WebSocketService {
   private socket: Socket;
 
   constructor() {
-    // TODO changer l'url plus tard avec un env pour sécuriser
     this.socket = io("http://localhost:3000");
   }
 
@@ -21,7 +28,7 @@ class WebSocketService {
   }
 
   raiseHand(
-    userId: string,
+    userId: number,
     userName: string,
     type: "self" | "table",
     table: string
@@ -29,30 +36,12 @@ class WebSocketService {
     this.socket.emit("raiseHand", { userId, userName, type, table });
   }
 
-  lowerHand(userId: string, type: "self" | "table") {
-    this.socket.emit("lower_hand", { userId, type });
+  lowerHand(userId: number, type: "self" | "table") {
+    this.socket.emit("lowerHand", { userId, type });
   }
 
-  onHandRaised(
-    callback: (data: {
-      userId: string;
-      userName: string;
-      type: "self" | "table";
-      table: string;
-    }) => void
-  ) {
-    this.socket.on("hand_raised", callback);
-  }
-
-  onHandLowered(
-    callback: (data: { userId: string; type: "self" | "table" }) => void
-  ) {
-    this.socket.on("hand_lowered", callback);
-  }
-
-  getRaisedHands(callback: (data: any[]) => void) {
-    this.socket.emit("get_raised_hands");
-    this.socket.on("raised_hands_list", callback);
+  onRaisedHandsUpdate(callback: (data: HandRaiseData[]) => void) {
+    this.socket.on("raisedHandsUpdate", callback);
   }
 }
 

@@ -11,24 +11,24 @@ const useHandRaise = (userId: number, userName: string, table: string) => {
   useEffect(() => {
     setIsHandRaised({
       self: raisedHands.some(
-        (hand) => hand.userId === userId.toString() && hand.type === "self"
+        (hand) => hand.userId === userId && hand.type === "self"
       ),
       table: raisedHands.some(
-        (hand) => hand.userId === userId.toString() && hand.type === "table"
+        (hand) => hand.userId === userId && hand.type === "table"
       ),
     });
   }, [raisedHands, userId]);
 
   const raiseHandCallback = useCallback(
     (type: "self" | "table") => {
-      raiseHand(userId.toString(), userName, type, table);
+      raiseHand(userId, userName, type, table);
     },
     [userId, userName, table, raiseHand]
   );
 
   const lowerHandCallback = useCallback(
     (type: "self" | "table") => {
-      lowerHand(userId.toString(), type);
+      lowerHand(userId, type);
     },
     [userId, lowerHand]
   );
