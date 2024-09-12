@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { RedisService } from '../service/redis.service';
 
-@Controller('raised-hands')
+@Controller('raisedHands')
 export class RaisedHandsController {
   constructor(private readonly redisService: RedisService) {}
 
@@ -17,7 +17,7 @@ export class RaisedHandsController {
       userId: number;
       userName: string;
       type: 'self' | 'table';
-      table: string;
+      table: 'string';
     },
   ) {
     await this.redisService.raiseHand(data);

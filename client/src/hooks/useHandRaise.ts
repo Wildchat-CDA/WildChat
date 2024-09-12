@@ -1,32 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useHandRaise as useHandRaiseContext } from "../context/HandRaiseContext";
-import webSocketService from "../services/webSocketService";
-
-interface HandRaiseData {
-  userId: number;
-  userName: string;
-  type: "self" | "table";
-  table: string;
-  timestamp: number;
-}
 
 const useHandRaise = (userId: number, userName: string, table: string) => {
-  const { raisedHands, setRaisedHands } = useHandRaiseContext();
+  const { raisedHands, raiseHand, lowerHand } = useHandRaiseContext();
   const [isHandRaised, setIsHandRaised] = useState<{
     self: boolean;
     table: boolean;
   }>({ self: false, table: false });
-
-  useEffect(() => {
-    const handleRaisedHandsUpdate = (updatedRaisedHands: HandRaiseData[]) => {
-      setRaisedHands(updatedRaisedHands);
-    };
-
-    webSocketService.on("raisedHandsUpdate", handleRaisedHandsUpdate);
-    return () => {
-      webSocketService.off("raisedHandsUpdate", handleRaisedHandsUpdate);
-    };
-  }, [setRaisedHands]);
 
   useEffect(() => {
     setIsHandRaised({
@@ -39,21 +19,26 @@ const useHandRaise = (userId: number, userName: string, table: string) => {
     });
   }, [raisedHands, userId]);
 
-  const raiseHand = useCallback(
+  const raiseHandCallback = useCallback(
     (type: "self" | "table") => {
-      webSocketService.emit("raiseHand", { userId, userName, type, table });
+      raiseHand(userId, userName, type, table);
     },
-    [userId, userName, table]
+    [userId, userName, table, raiseHand]
   );
 
-  const lowerHand = useCallback(
+  const lowerHandCallback = useCallback(
     (type: "self" | "table") => {
-      webSocketService.emit("lowerHand", { userId, type });
+      lowerHand(userId, type);
     },
-    [userId]
+    [userId, lowerHand]
   );
 
-  return { raisedHands, isHandRaised, raiseHand, lowerHand };
+  return {
+    raisedHands,
+    isHandRaised,
+    raiseHand: raiseHandCallback,
+    lowerHand: lowerHandCallback,
+  };
 };
 
 export default useHandRaise;

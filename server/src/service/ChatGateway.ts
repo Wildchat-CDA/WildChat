@@ -11,6 +11,14 @@ import { Server, Socket } from 'socket.io';
 import { RedisService } from './redis.service';
 import { IMessagePostPayload } from '../../../common/interface/messageInterface';
 
+interface HandRaiseData {
+  userId: number;
+  userName: string;
+  type: 'self' | 'table';
+  table: string;
+  timestamp: number;
+}
+
 @WebSocketGateway({
   cors: true,
 })
@@ -44,14 +52,13 @@ export class ChatGateway
   @SubscribeMessage('raiseHand')
   async handleRaiseHand(
     @MessageBody()
-    data: {
-      userId: number;
-      userName: string;
-      type: 'self' | 'table';
-      table: string;
-    },
+    data: Omit<HandRaiseData, 'timestamp'>,
   ) {
-    await this.redisService.raiseHand(data);
+    const handRaiseData: HandRaiseData = {
+      ...data,
+      timestamp: Date.now(),
+    };
+    await this.redisService.raiseHand(handRaiseData);
     const raisedHands = await this.redisService.getRaisedHands();
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
