@@ -44,13 +44,34 @@ export class SectionController {
 
   @Post(
     '/:sectionId/topic/channel',
-  ) /**La création de channel pour les topics */
+  ) /**La création de channel pour les topics et la salle de classe */
   async createChannelInTopic(
     @Param('sectionId') sectionId: number,
     @Body() channel: Channel,
   ): Promise<Channel> {
     try {
       return await this.sectionService.createChannelIntopic(sectionId, channel);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Put(
+    '/:sectionId/topic/channel/:channelId',
+  ) /**La modification d'un channel pour les topics et la salle de classe */
+  async editChannelInSection(
+    @Param('sectionId') sectionId: number,
+    @Param('channelId') channelId: number,
+    @Body('title') newTitle: string,
+    @Body('slot') newSlot: number,
+  ): Promise<Channel> {
+    try {
+      return await this.sectionService.editChannelInSection(
+        sectionId,
+        channelId,
+        newTitle,
+        newSlot,
+      );
     } catch (error) {
       throw new NotFoundException(error.message);
     }

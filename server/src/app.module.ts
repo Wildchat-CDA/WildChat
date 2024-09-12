@@ -44,6 +44,7 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
     ChannelController,
     TypeController,
     ConfigController,
+    RedisController,
     RaisedHandsController,
   ],
   providers: [
@@ -54,6 +55,8 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
     ChannelService,
     TypeService,
     ConfigService,
+    ChatGateway,
+    RedisService,
   ],
 })
 export class AppModule {}

@@ -159,4 +159,28 @@ export class SectionService {
       return this.channelRepository.save(channel);
     }
   }
+
+  async editChannelInSection(
+    sectionId: number,
+    channelId: number,
+    newtTitle: string,
+    newSlot: number,
+  ): Promise<any> {
+    const channel = await this.channelRepository.findOneBy({ id: channelId });
+    const section = await this.sectionRepository.findOneBy({ id: sectionId });
+
+    console.log(channel, 'channel');
+    console.log(section, 'section');
+
+    if (!section) throw new Error('channel not found');
+    if (!channel) throw new Error('channel not found');
+
+    const updatedChannel = await this.channelRepository.update(channelId, {
+      title: newtTitle,
+      slot: newSlot,
+    });
+
+    console.log(updatedChannel, 'nouveau channel');
+    return updatedChannel;
+  }
 }

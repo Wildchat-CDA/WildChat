@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { Config } from 'src/entity/config.entity';
@@ -41,6 +42,20 @@ export class ChannelService {
     const config = await this.configRepository.findOneBy({ id: configId });
 
     channel.config = config;
+
+    return await this.channelRepository.save(channel);
+  }
+
+  async editConfig(channelId: number, config: Config) {
+    const channel = await this.channelRepository.findOneBy({ id: channelId });
+
+    if (!channel) throw new NotFoundException(Error);
+
+    const newConfig = this.configRepository.create(config);
+
+    await this.configRepository.save(newConfig);
+
+    channel.config = newConfig;
 
     return await this.channelRepository.save(channel);
   }
