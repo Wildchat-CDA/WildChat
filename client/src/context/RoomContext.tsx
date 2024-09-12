@@ -8,11 +8,7 @@ import { addAllPeersAction, addPeerAction, IPeer, removePeerAction } from "../re
 import { peerReducer, PeerState } from "../reducer/PeerReducer"; 
 import GlobalCall from "../GlobalCall";
 
-//const WS = "http://localhost:3000";  
-
 export const RoomContext = createContext<null | any>(null);
-
-// const ws = socketIOClient(WS);
 
 export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();

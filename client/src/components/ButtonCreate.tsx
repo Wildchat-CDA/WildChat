@@ -14,7 +14,7 @@ export const Join: React.FC = () => {
     return(
         <button 
             onClick={createRoom}>
-            Call
+            +
         </button>
     )
 }

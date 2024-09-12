@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { io } from 'socket.io-client';
 import { Join } from './components/ButtonCreate';
-import { RoomContext } from './context/RoomContext';
+import { RoomContext, RoomProvider } from './context/RoomContext';
 import socket from "./services/webSocketService"
 
 // const WS = "http://localhost:3000/";

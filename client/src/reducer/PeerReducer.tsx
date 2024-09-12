@@ -7,7 +7,7 @@ export interface IPeer {
   peerId: string;
 }
 
-export const addPeerAction = (peerId: string, stream: MediaStream) => ({
+export const addPeerAction = (peerId: string= "2e949416-52c1-425b-ae79-68bc9f4f4ec7", stream: MediaStream) => ({
   type: ADD_PEER,
   payload: { peerId, stream },
 });

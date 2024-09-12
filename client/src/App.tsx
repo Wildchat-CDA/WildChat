@@ -27,6 +27,7 @@ function App() {
 
   return (
     <UserRoleProvider>
+
       <HandRaiseProvider>
         {isMobile ? (
           <MobileLayout>
@@ -38,6 +39,7 @@ function App() {
           </DesktopLayout>
         )}
       </HandRaiseProvider>
+      
     </UserRoleProvider>
   );
 }
