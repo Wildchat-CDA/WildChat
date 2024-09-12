@@ -8,13 +8,11 @@ export const Join: React.FC = () => {
     }
 
     useEffect(() => {
-    createRoom()
+    //createRoom()
     }, [])
 
     return(
-        <button 
-            onClick={createRoom}>
-            +
+        <button >
            
         </button>
     )

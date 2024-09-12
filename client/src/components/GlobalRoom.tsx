@@ -3,14 +3,11 @@ import { useParams } from "react-router-dom";
 import { RoomContext } from "../context/RoomContext";
 import { VideoPlayer } from "../components/VideoPlayer";
 import { PeerState } from "../reducer/PeerReducer";
-import ButtonHP from "../components/ButtonHP";
 
- const Room = () => {
+ const GlobalRoom = ({muted}) => {
   const { id } = useParams();
   const { socket, me, stream, peers } = useContext(RoomContext);
-  const [muted, setMuted] = useState(false);
 
-  
   useEffect(() => {
     if (me) socket.emit("join-room", { roomId: id, peerId: me._id });
   }, [id, me, socket]);
@@ -26,10 +23,8 @@ import ButtonHP from "../components/ButtonHP";
           <VideoPlayer key={index} stream={peer.stream} muted={muted}  />
         ))}
       </div>
-
-      <ButtonHP muted={muted} setMuted={setMuted} />
     </>
   );
 };
 
-export default Room;
+export default GlobalRoom

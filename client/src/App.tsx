@@ -6,11 +6,13 @@ import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
 import ContentMain from './components/common/mainContent/contentMain/ContentMain';
-import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
+//import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
 import MainContent from './components/common/mainContent/MainContent';
 
 function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
+  const [muted, setMuted] = useState(false);
+
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -27,11 +29,11 @@ function App() {
         <NavigationProvider>
           {isMobile ? (
             <MobileLayout>
-              <MainContent />
+              <MainContent muted={muted} />
             </MobileLayout>
           ) : (
-            <DesktopLayout>
-              <MainContent />
+            <DesktopLayout muted={muted} setMuted={setMuted} >
+              <MainContent muted={muted} />
             </DesktopLayout>
           )}
         </NavigationProvider>

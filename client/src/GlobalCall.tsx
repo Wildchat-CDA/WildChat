@@ -23,14 +23,14 @@ function GlobalCall() {
   // }, []);
 
   useEffect(() => {
-    createRoom()
+    //createRoom()
    }, []);
  
 
-     const {socket} = useContext(RoomContext)
-     const createRoom = () => {
-      socket.emit("create-room")
-     }
+    // const {socket} = useContext(RoomContext)
+     //const createRoom = () => {
+      //socket.emit("create-room")
+    // }
 
   return (
     <>

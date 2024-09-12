@@ -3,8 +3,9 @@ import RaisedHandsList from '../../../teacher/RaisedHandsList';
 import { useUserRole } from '../../../../context/UserRoleContext';
 import './ContentSidebar.css';
 import Section from '../../../channel/section/Section';
+import GlobalRoom from '../../../GlobalRoom';
 
-function ContentSidebar() {
+function ContentSidebar({muted}) {
   const { userRole } = useUserRole();
 
   return (
@@ -12,6 +13,7 @@ function ContentSidebar() {
       {userRole === 'teacher' && <RaisedHandsList />}
       <Section />
       {/* Autres composants de la sidebar si nécessaire */}
+      <GlobalRoom muted={muted} />
     </aside>
   );
 }
