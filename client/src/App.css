@@ -36,11 +36,6 @@ textarea {
   color: var(--color-font);
 }
 
-.test {
-  background-color: red;
-  display: flex;
-  flex-direction: row;
-}
 .name {
   color: var(--color-font);
   font-weight: var(--font-name);

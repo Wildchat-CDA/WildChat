@@ -20,13 +20,6 @@ function App() {
 
   const isMobile = screenSize <= 768;
 
-  // const mainContent = (
-  //   <div className='test'>
-  //     <ContentSidebar />
-  //     <ContentMain />
-  //   </div>
-  // );
-
   return (
     <UserRoleProvider>
       <HandRaiseProvider>
