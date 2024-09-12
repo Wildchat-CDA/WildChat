@@ -39,6 +39,7 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
   ],
   controllers: [
     AppController,
+    RedisController,
     SectionController,
     ChannelController,
     TypeController,
@@ -48,6 +49,8 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
   ],
   providers: [
     AppService,
+    ChatGateway,
+    RedisService,
     SectionService,
     ChannelService,
     TypeService,

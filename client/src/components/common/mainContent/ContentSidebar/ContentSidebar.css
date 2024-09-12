@@ -1,11 +1,7 @@
 .content-sidebar {
-  position: fixed;
-  top: 54px;
-  left: 60px;
-  bottom: 0;
   width: 33%;
+  margin-left: 45px;
   overflow-y: auto;
-  background-color: #1e1e1e;
   transition: width 0.3s ease;
 }
 

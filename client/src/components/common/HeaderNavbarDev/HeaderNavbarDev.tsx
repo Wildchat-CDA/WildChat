@@ -11,16 +11,20 @@ function HeaderNavbarDev() {
   }
 
   return (
-    <nav className={`header-navbar-dev ${userRole === 'teacher' ? 'teacher-view' : 'student-view'}`}>
-      <div className="navbar-content">
+    <nav
+      className={`header-navbar-dev ${
+        userRole === 'teacher' ? 'teacher-view' : 'student-view'
+      }`}
+    >
+      <div className='navbar-content'>
         <span>Dev Mode: {userRole === 'teacher' ? 'Professeur' : 'Élève'}</span>
-        <label className="switch">
+        <label className='switch'>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={userRole === 'teacher'}
             onChange={handleViewChange}
           />
-          <span className="slider"></span>
+          <span className='slider'></span>
         </label>
       </div>
     </nav>

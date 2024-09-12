@@ -1,35 +1,87 @@
 .messages-container {
-  background-color: var(--color-primary);
-  color: var(--color-font);
   width: 100%;
-  height: 500px;
-  overflow-y: auto;
-
-  .message-el {
-    display: flex;
-    flex-direction: column;
-    padding: 15px 10px;
-    position: relative;
-  }
-
-  .message-el:hover {
-    background-color: var(--color-primary-hover);
-
-    .edit-span {
-      display: block;
+  .h-room_container {
+    width: auto;
+    height: auto;
+    padding: 15px;
+    overflow-x: hidden;
+    background-color: var(--color-primary);
+    border-bottom: 1px solid var(--color-border);
+    .h-room {
+      color: var(--color-font);
     }
   }
 
-  .message-name {
-    color: var(--color-name);
-    font-weight: bold;
+  .messages-column {
+    background-color: var(--color-primary);
+    color: var(--color-font);
+    width: 100%;
+    height: 80vh;
+
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+
+    .message-el {
+      display: flex;
+      flex-direction: column;
+      padding: 15px 10px;
+      position: relative;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .message-el:hover {
+      background-color: var(--color-primary-hover);
+
+      .edit-span,
+      .delete-span {
+        opacity: 1;
+      }
+    }
+
+    .span-action_container {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+      justify-content: center;
+
+      .icon-delete {
+        width: 20px;
+        height: auto;
+        padding-top: 5px;
+        border: none;
+      }
+
+      .icon-edit {
+        width: 20px;
+        height: auto;
+      }
+    }
+
+    .span-action {
+      opacity: 0;
+      right: 30px;
+      color: var(--color-font);
+      cursor: pointer;
+    }
   }
 
-  .edit-span {
-    display: none;
-    right: 30px;
-    color: var(--color-font);
-    position: absolute;
-    cursor: pointer;
+  .messages-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .messages-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 8px;
+  }
+
+  .messages-container::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  .messages-container::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: 8px;
   }
 }

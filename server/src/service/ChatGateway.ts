@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RedisService } from './redis.service';
-import { Payload } from 'src/types/payload.types';
+import { IMessagePostPayload } from '../../../common/interface/messageInterface';
 
 interface HandRaiseData {
   userId: number;
@@ -43,7 +43,7 @@ export class ChatGateway
   }
 
   @SubscribeMessage('message')
-  async handleMessage(@MessageBody() data: Payload) {
+  async handleMessage(@MessageBody() data: IMessagePostPayload) {
     console.log(data, 'Message received');
     await this.redisService.postMessage(data);
     this.server.emit('message', data);

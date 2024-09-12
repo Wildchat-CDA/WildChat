@@ -81,4 +81,9 @@ export class SectionController {
   async createClassRoomWithChannels(): Promise<Section> {
     return await this.sectionService.createClassRoomWithChannels();
   }
+
+  @Get('/topic')
+  async findAllTopicAndSection() {
+    return await this.sectionService.findAllTopicAndSection();
+  }
 }
