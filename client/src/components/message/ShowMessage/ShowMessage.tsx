@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { LoadMessage } from '../../../services/message/fetch/LoadMessage';
 import socket from '../../../services/webSocketService';
 import '../../../App.css';
@@ -90,9 +92,8 @@ const ShowMessage: React.FC = () => {
                 updateMessage={updateMessage}
               />
             ) : (
-              <span>{message.message}</span>
-            )}
-            {name !== message.name && (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.message}</ReactMarkdown>            )}
+            {name === message.name && (
               <div className='span-action_container'>
                 <span
                   aria-label='Modifier ce message'
