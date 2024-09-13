@@ -21,6 +21,8 @@ import { ChatGateway } from './service/ChatGateway';
 import { RedisService } from './service/redis.service';
 import { RedisController } from './controller/redis.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
+import { RoomController } from './controller/room.controller';
+import { RoomService } from './service/room.service';
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
     ConfigController,
     RedisController,
     RaisedHandsController,
+    RoomController,
   ],
   providers: [
     AppService,
@@ -57,6 +60,7 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
     ConfigService,
     ChatGateway,
     RedisService,
+    RoomService
   ],
 })
 export class AppModule {}

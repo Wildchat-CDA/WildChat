@@ -10,6 +10,8 @@ import {
 import { Server, Socket } from 'socket.io';
 import { RedisService } from './redis.service';
 import { IMessagePostPayload } from '../../../common/interface/messageInterface';
+import { RoomService } from './room.service';
+
 
 interface HandRaiseData {
   userId: number;
@@ -72,4 +74,18 @@ export class ChatGateway
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
 
+}
+
+export class WebsocketGateway {
+  @WebSocketServer()
+  server: Server;
+
+  constructor(private readonly roomService: RoomService) {}
+
+  @SubscribeMessage('join-room')
+  joinRoom(@MessageBody() peerID: string) {
+    console.log(`New PeerID is ${peerID}`);
+    this.roomService.addClient(peerID);
+    this.server.emit('user-joined-room', { peerID });
+  }
 }
