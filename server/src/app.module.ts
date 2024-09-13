@@ -36,7 +36,7 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
-  ],
+    ],
   controllers: [
     AppController,
     RedisController,
