@@ -3,10 +3,10 @@ import ContentSidebar from './ContentSidebar/ContentSidebar';
 import ContentMain from './contentMain/ContentMain';
 import './MainContent.css';
 
-const MainContent = ({muted}) => {
+const MainContent = () => {
   return (
     <div className='main-content'>
-      <ContentSidebar muted={muted} />
+      <ContentSidebar />
       <ContentMain />
     </div>
   );

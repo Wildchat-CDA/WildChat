@@ -2,16 +2,17 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import Peer, { MediaConnection } from "peerjs";
 import io, { Socket } from "socket.io-client";
 import { User, ChannelInfo, JoinChannelResponse } from '../types/audioTypes';
+//import { useUserRole } from "./UserRoleContext";
 
 const SOCKET_SERVER = 'http://localhost:3000';
 
 export const AudioContext = createContext<any>(null);
 
-export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
+export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode, isMuted: boolean }> = ({ children, isMuted }) => {
   const [myPeerID, setMyPeerID] = useState<string>("");
   const [channelUUID, setChannelUUID] = useState<string>("");
   const [connectedUsers, setConnectedUsers] = useState<User[]>([]);
-
+  
   const localAudioRef = useRef<HTMLAudioElement>(null);
   const remoteAudioRef = useRef<HTMLAudioElement>(null);
   const peerRef = useRef<Peer | null>(null);
@@ -141,12 +142,18 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode 
     callUser,
     handleIncomingCall
   };
+ 
+  const isMute = () => {
+    
+  }
+
+  isMute()
 
   return (
     <AudioContext.Provider value={contextValue}>
       {children}
-      <audio ref={localAudioRef} autoPlay muted playsInline />
-      <audio ref={remoteAudioRef} autoPlay playsInline />
+      <audio ref={localAudioRef} autoPlay  playsInline muted={isMuted} />
+      <audio ref={remoteAudioRef} autoPlay playsInline muted={isMuted} />
     </AudioContext.Provider>
   );
 };

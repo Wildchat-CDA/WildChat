@@ -8,7 +8,7 @@ import './Navbar.css';
 interface NavbarProps {
   isMobile: boolean;
   muted: boolean;
-  setMuted: (v) => void;
+  setMuted: () => void;
 
 }
 

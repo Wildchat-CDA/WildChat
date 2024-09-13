@@ -5,7 +5,7 @@ import HeaderNavbarDev from "../common/HeaderNavbarDev/HeaderNavbarDev"
 interface DesktopLayoutProps {
   children: React.ReactNode;
   muted: boolean;
-  setMuted: (v) => void;
+  setMuted: (v:boolean) => void;
 }
 
 function DesktopLayout({ children, muted, setMuted  }: DesktopLayoutProps) {

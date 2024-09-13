@@ -8,6 +8,7 @@ import MobileLayout from './components/layout/MobileLayout';
 import ContentMain from './components/common/mainContent/contentMain/ContentMain';
 //import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
 import MainContent from './components/common/mainContent/MainContent';
+import { AudioProvider } from './context/AudioContext';
 
 function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
@@ -23,23 +24,25 @@ function App() {
   const isMobile = screenSize <= 768;
 
   return (
+    <AudioProvider isMuted={muted}>
     <UserRoleProvider>
 
       <HandRaiseProvider>
         <NavigationProvider>
           {isMobile ? (
-            <MobileLayout>
-              <MainContent muted={muted} />
+            <MobileLayout muted={muted} setMuted={setMuted}>
+              <MainContent />
             </MobileLayout>
           ) : (
             <DesktopLayout muted={muted} setMuted={setMuted} >
-              <MainContent muted={muted} />
+              <MainContent />
             </DesktopLayout>
           )}
         </NavigationProvider>
       </HandRaiseProvider>
       
     </UserRoleProvider>
+    </AudioProvider>
   );
 }
 
