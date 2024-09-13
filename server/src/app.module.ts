@@ -21,6 +21,7 @@ import { ChatGateway } from './service/ChatGateway';
 import { RedisService } from './service/redis.service';
 import { RedisController } from './controller/redis.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
+import { HackmdModule } from './module/hack.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
+    HackmdModule,
   ],
   controllers: [
     AppController,

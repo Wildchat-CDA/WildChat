@@ -10,6 +10,17 @@ import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
 import Modal from '../modal/Modal';
 import { useNavigation } from '../../../context/NavigationContext';
+import { fetchHackMd } from '../../../services/fetchHackMd';
+
+const isHackMdUrl = (url: string): boolean => {
+  return /^https:\/\/hackmd\.io\/@[\w-]+\/[\w-]+$/.test(url);
+};
+
+type HackMdState = {
+  content: string | null;
+  loading: boolean;
+  error: string | null;
+};
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -18,20 +29,19 @@ const ShowMessage: React.FC = () => {
   const [currentMessage, setCurrentMessage] = useState<string>();
   const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-
+  const [hackmdStates, setHackmdStates] = useState<{[key: string]: HackMdState}>({});
+  
   const { currentSection } = useNavigation();
 
-  const name = 'Théo'; // TODO Need to use an userContext
+  const name = 'Théo';
 
   useEffect(() => {
-    // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)
       .catch((error) =>
         console.error('Erreur lors du chargement des messages :', error)
       );
 
-    // Load new messages with socket.Io
     const handleMessage = (payload) =>
       setMessages((preMessages) => [...preMessages, payload]);
     socket.on('message', handleMessage);
@@ -43,11 +53,34 @@ const ShowMessage: React.FC = () => {
 
   const scrollRef = useScrollToBottom(messages);
 
+  useEffect(() => {
+    messages.forEach((message) => {
+      if (isHackMdUrl(message.message) && !hackmdStates[message.message]) {
+        setHackmdStates(prev => ({
+          ...prev,
+          [message.message]: { content: null, loading: true, error: null }
+        }));
+        fetchHackMd(message.message)
+          .then((content) => {
+            setHackmdStates(prev => ({
+              ...prev,
+              [message.message]: { content, loading: false, error: null }
+            }));
+          })
+          .catch((error) => {
+            console.error('Erreur lors de la récupération du contenu HackMD:', error);
+            setHackmdStates(prev => ({
+              ...prev,
+              [message.message]: { content: null, loading: false, error: error.message }
+            }));
+          });
+      }
+    });
+  }, [messages]);
+
   const handleEdit = (index: number) => {
     setActiveEdit(true);
     setCurrentIndex(index);
-    console.log('NAME : ', name);
-    console.log('MESSAGE NAME : ', messages);
   };
 
   const activeDelete = (roomId, index) => {
@@ -56,7 +89,6 @@ const ShowMessage: React.FC = () => {
     setActiveModalDelete(true);
   };
 
-  // Update message in message Array
   const updateMessage = (msg: string, index: number) => {
     setMessages((prevMessages) =>
       prevMessages.map((message, i) =>
@@ -92,7 +124,22 @@ const ShowMessage: React.FC = () => {
                 updateMessage={updateMessage}
               />
             ) : (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.message}</ReactMarkdown>            )}
+              isHackMdUrl(message.message) ? (
+                hackmdStates[message.message]?.loading ? (
+                  <p>Loading...</p>
+                ) : hackmdStates[message.message]?.error ? (
+                  <p>Error: {hackmdStates[message.message].error}</p>
+                ) : (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {hackmdStates[message.message]?.content || ''}
+                  </ReactMarkdown>
+                )
+              ) : (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {message.message}
+                </ReactMarkdown>
+              )
+            )}
             {name === message.name && (
               <div className='span-action_container'>
                 <span
