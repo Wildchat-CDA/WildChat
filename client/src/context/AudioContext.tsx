@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import Peer, { MediaConnection } from "peerjs";
 import io, { Socket } from "socket.io-client";
-import { User, ChannelInfo, JoinChannelResponse } from '../../types/audioTypes';
+import { User, ChannelInfo, JoinChannelResponse } from '../types/audioTypes';
 
 const SOCKET_SERVER = 'http://localhost:3000';
 
-export function AudioCall(): JSX.Element {
+export const AudioContext = createContext<any>(null);
+
+export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const [myPeerID, setMyPeerID] = useState<string>("");
   const [channelUUID, setChannelUUID] = useState<string>("");
   const [connectedUsers, setConnectedUsers] = useState<User[]>([]);
@@ -22,7 +24,7 @@ export function AudioCall(): JSX.Element {
       
       peerRef.current.on("open", (peerID) => {
         setMyPeerID(peerID);
-        console.log(peerID, "open PEER ID");
+        console.log(peerID, "Peer ID ouvert");
 
         socketRef.current = io(SOCKET_SERVER);
         socketRef.current.emit('join-channel', { peerID }, (response: JoinChannelResponse) => {
@@ -39,7 +41,7 @@ export function AudioCall(): JSX.Element {
           localAudioRef.current.srcObject = stream;
         }
       } catch (err) {
-        console.error("Error accessing media devices:", err);
+        console.error("Erreur d'accès aux périphériques médias :", err);
       }
     };
 
@@ -61,8 +63,9 @@ export function AudioCall(): JSX.Element {
       }
     });
 
-    socketRef.current.on('user-left', (data: { users: User[] }) => {
+    socketRef.current.on('user-leave', (data: { users: User[] }) => {
       setConnectedUsers(data.users);
+      console.log("User left. Updated user list:", data.users);
     });
 
     socketRef.current.emit('request-channel-info', (info: ChannelInfo) => {
@@ -88,6 +91,12 @@ export function AudioCall(): JSX.Element {
     if (peerRef.current) {
       peerRef.current.on("call", handleIncomingCall);
     }
+
+    return () => {
+      if (peerRef.current) {
+        peerRef.current.off("call", handleIncomingCall);
+      }
+    };
   }, []);
 
   const handleIncomingCall = (call: MediaConnection) => {
@@ -112,21 +121,21 @@ export function AudioCall(): JSX.Element {
     }
   };
 
+  const contextValue = {
+    myPeerID,
+    channelUUID,
+    connectedUsers,
+    localAudioRef,
+    remoteAudioRef,
+    callUser,
+    handleIncomingCall
+  };
+
   return (
-    <div>
-      <h2>Audio Call</h2>
-      <p>Channel UUID: {channelUUID || "Waiting for channel..."}</p>
-      <p>My Peer ID: {myPeerID || "Connecting..."}</p>
-      <p>Connected Users: {connectedUsers.length}</p>
-      <ul>
-        {connectedUsers.map((user) => (
-          <li key={user.uuid}>
-            {user.peerID === myPeerID ? `${user.peerID} (You)` : user.peerID}
-          </li>
-        ))}
-      </ul>
-      <audio ref={localAudioRef} autoPlay  playsInline />
+    <AudioContext.Provider value={contextValue}>
+      {children}
+      <audio ref={localAudioRef} autoPlay playsInline />
       <audio ref={remoteAudioRef} autoPlay playsInline />
-    </div>
+    </AudioContext.Provider>
   );
-}
+};

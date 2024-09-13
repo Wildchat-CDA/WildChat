@@ -6,13 +6,10 @@ import { v4 as uuidV4 } from "uuid";
 import Peer from "peerjs";
 import { addAllPeersAction, addPeerAction, IPeer, removePeerAction } from "../reducer/PeerReducer";
 import { peerReducer, PeerState } from "../reducer/PeerReducer"; 
-import GlobalCall from "../GlobalCall";
-//import { Room } from "../page/Room";
 
 export const RoomContext = createContext<null | any>(null);
 
 export const RoomProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-  //const navigate = useNavigate();
 
 
 const WS = "http://localhost:3000";
