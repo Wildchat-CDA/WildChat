@@ -26,9 +26,7 @@ const ShowMessage: React.FC = () => {
   useEffect(() => {
     // Load messages with redis (init)
     LoadMessage(currentSection)
-      .then((data) => {
-        setMessages(data);
-      })
+      .then(setMessages)
       .catch((error) =>
         console.error('Erreur lors du chargement des messages :', error)
       );
@@ -92,7 +90,10 @@ const ShowMessage: React.FC = () => {
                 updateMessage={updateMessage}
               />
             ) : (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.message}</ReactMarkdown>            )}
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.message}
+              </ReactMarkdown>
+            )}
             {name === message.name && (
               <div className='span-action_container'>
                 <span
