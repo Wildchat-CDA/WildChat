@@ -5,9 +5,7 @@ import { RoomService } from '../service/room.service';
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
-  /**
-   * Get All peerIds from General room
-   */
+  /** Get All peerIds from General room   */
   @Get()
   getAllPeerIds(): string[] {
     return this.roomService.peerIdList;

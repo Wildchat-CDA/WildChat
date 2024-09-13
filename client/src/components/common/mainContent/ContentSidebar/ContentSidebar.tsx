@@ -4,6 +4,7 @@ import { useUserRole } from '../../../../context/UserRoleContext';
 import './ContentSidebar.css';
 import Section from '../../../channel/section/Section';
 import GlobalRoom from '../../../GlobalRoom';
+import { VideoCall } from '../../../video/VideoCall';
 
 function ContentSidebar({muted}) {
   const { userRole } = useUserRole();
@@ -13,7 +14,8 @@ function ContentSidebar({muted}) {
       {userRole === 'teacher' && <RaisedHandsList />}
       <Section />
       {/* Autres composants de la sidebar si nécessaire */}
-      <GlobalRoom muted={muted} />
+      {/* <GlobalRoom muted={muted} /> */}
+      <VideoCall/>
     </aside>
   );
 }

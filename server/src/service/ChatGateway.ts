@@ -12,7 +12,6 @@ import { RedisService } from './redis.service';
 import { IMessagePostPayload } from '../../../common/interface/messageInterface';
 import { RoomService } from './room.service';
 
-
 interface HandRaiseData {
   userId: number;
   userName: string;
@@ -73,7 +72,6 @@ export class ChatGateway
     const raisedHands = await this.redisService.getRaisedHands();
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
-
 }
 
 export class WebsocketGateway {
