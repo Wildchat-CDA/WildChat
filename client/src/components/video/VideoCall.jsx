@@ -35,7 +35,7 @@ export function VideoCall() {
     });
 
     navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         streamRef.current = stream;
         localVideoRef.current.srcObject = stream;

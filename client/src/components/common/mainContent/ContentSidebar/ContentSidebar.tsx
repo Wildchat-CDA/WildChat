@@ -4,7 +4,8 @@ import { useUserRole } from '../../../../context/UserRoleContext';
 import './ContentSidebar.css';
 import Section from '../../../channel/section/Section';
 import GlobalRoom from '../../../GlobalRoom';
-import { VideoCall } from '../../../video/VideoCall';
+import { AudioCall } from '../../../audio/AudioCall';
+
 
 function ContentSidebar({muted}) {
   const { userRole } = useUserRole();
@@ -15,7 +16,7 @@ function ContentSidebar({muted}) {
       <Section />
       {/* Autres composants de la sidebar si nécessaire */}
       {/* <GlobalRoom muted={muted} /> */}
-      <VideoCall/>
+      <AudioCall/>
     </aside>
   );
 }
