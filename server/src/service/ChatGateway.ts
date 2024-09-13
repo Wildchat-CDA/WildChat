@@ -115,11 +115,12 @@ export class ChatGateway
       this.roomService.removeUser(data.peerID);
       client.leave(this.roomService.channelUUID);
 
-      this.server.to(this.roomService.channelUUID).emit('user-leave', {
+      this.server.to(this.roomService.channelUUID).emit('user-disconnected', {
         peerID: data.peerID,
         uuid: user.uuid,
         users: this.roomService.users,
       });
+      this.socketToPeerMap.delete(client.id);
     }
   }
 

@@ -1,45 +1,45 @@
-import React, { useContext, useEffect, useState } from 'react';
-import './App.css'; // pq en dehors du App.tsx
-import { io } from 'socket.io-client';
-import { Join } from './components/ButtonCreate';
-import { RoomContext, RoomProvider } from './context/RoomContext';
-import socket from "./services/webSocketService"
+// import React, { useContext, useEffect, useState } from 'react';
+// import './App.css'; // pq en dehors du App.tsx
+// import { io } from 'socket.io-client';
+// import { Join } from './components/common/button/ButtonCreate';
+// import { RoomContext, RoomProvider } from './context/RoomContext';
+// import socket from "./services/webSocketService"
 
-//const WS = "http://localhost:3000/";
+// //const WS = "http://localhost:3000/";
 
-function GlobalCall() {
-  //const [mute, setMute] = useState(false);
+// function GlobalCall() {
+//   //const [mute, setMute] = useState(false);
   
-  // useEffect(() => {
-  //    const socket = io(WS);
+//   // useEffect(() => {
+//   //    const socket = io(WS);
 
-  //   socket.on('connect', () => {
-  //     console.log('Connected to WebSocket server');
-  //   });
+//   //   socket.on('connect', () => {
+//   //     console.log('Connected to WebSocket server');
+//   //   });
 
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
+//   //   return () => {
+//   //     socket.disconnect();
+//   //   };
+//   // }, []);
 
-  useEffect(() => {
-    //createRoom()
-   }, []);
+//   useEffect(() => {
+//     //createRoom()
+//    }, []);
  
 
-    // const {socket} = useContext(RoomContext)
-     //const createRoom = () => {
-      //socket.emit("create-room")
-    // }
+//     // const {socket} = useContext(RoomContext)
+//      //const createRoom = () => {
+//       //socket.emit("create-room")
+//     // }
 
-  return (
-    <>
-      <div>
-        <button>new call</button>
-        <Join/>
-      </div>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <div>
+//         <button>new call</button>
+//         <Join/>
+//       </div>
+//     </>
+//   );
+// }
 
-export default GlobalCall;
+// export default GlobalCall;
