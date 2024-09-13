@@ -51,7 +51,9 @@ export class RedisService {
 
       return messages.map((msg) => {
         const [name, message] = msg.split(' : ');
-        return { name, message, roomId: parseInt(roomId, 10) };
+        const result = { name, message, roomId: roomId };
+        console.log(typeof roomId);
+        return result;
       });
     } catch (error) {
       console.error('Failed to get messages:', error);
@@ -109,6 +111,7 @@ export class RedisService {
   }
 
   public async deleteMessage(data: IMessageDeletePayload): Promise<void> {
+    console.log('data : ', data);
     try {
       const currentMessages = await this._client.lRange(
         `room:${data.roomId}`,

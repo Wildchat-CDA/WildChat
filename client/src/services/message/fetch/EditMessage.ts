@@ -23,7 +23,6 @@ export async function editMessage(
       );
     }
 
-    console.log('Message update successful:', messageUpdate);
   } catch (error) {
     console.error('Failed to update message:', error);
     throw new Error('Failed to update the message. Please try again later.');

@@ -24,7 +24,9 @@ const ShowMessage: React.FC = () => {
   useEffect(() => {
     // Load messages with redis (init)
     LoadMessage(currentSection)
-      .then(setMessages)
+      .then((data) => {
+        setMessages(data);
+      })
       .catch((error) =>
         console.error('Erreur lors du chargement des messages :', error)
       );
@@ -44,8 +46,6 @@ const ShowMessage: React.FC = () => {
   const handleEdit = (index: number) => {
     setActiveEdit(true);
     setCurrentIndex(index);
-    console.log('NAME : ', name);
-    console.log('MESSAGE NAME : ', messages);
   };
 
   const activeDelete = (roomId, index) => {
@@ -92,7 +92,7 @@ const ShowMessage: React.FC = () => {
             ) : (
               <span>{message.message}</span>
             )}
-            {name !== message.name && (
+            {name === message.name && (
               <div className='span-action_container'>
                 <span
                   aria-label='Modifier ce message'

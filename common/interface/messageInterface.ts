@@ -1,7 +1,7 @@
 export interface IMessagePostPayload {
   name: string;
   message: string;
-  roomId: number;
+  roomId: string;
 }
 
 export interface IMessageGet extends IMessagePostPayload {}

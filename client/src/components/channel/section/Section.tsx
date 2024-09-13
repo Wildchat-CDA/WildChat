@@ -27,7 +27,6 @@ const Section = () => {
     };
 
     setCurrentSection(sectionPayload);
-    console.log('section : ', section);
     setActiveSection((prevActiveSections) => {
       // Vérifie si l'index est déjà présent
       const indexExists = prevActiveSections.includes(index);

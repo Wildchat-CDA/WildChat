@@ -10,7 +10,6 @@ export async function fetchGetSection(): Promise<any> {
       );
     }
     const payload = await response.json();
-    console.log('ROOM : ', payload);
     return payload;
   } catch (error) {
     console.error('Failed to load room:', error);

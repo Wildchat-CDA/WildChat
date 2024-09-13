@@ -14,7 +14,6 @@ export async function fetchPostSection(data): Promise<any> {
       );
     }
     const payload = await response.json();
-    console.log('ROOM:', payload);
     return payload;
   } catch (error) {
     console.error('Failed to create section:', error);
