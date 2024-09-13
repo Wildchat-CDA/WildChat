@@ -29,4 +29,6 @@ export class Channel {
 
   @ManyToMany(() => Section, (section: Section) => section.channels)
   sections: Array<Section>;
+  @JoinColumn()
+  section: Section;
 }

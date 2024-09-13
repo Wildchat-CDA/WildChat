@@ -5,6 +5,7 @@ import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';
 import { Type } from '../entity/type.entity';
+import { NotFoundException } from '@nestjs/common';
 
 export class SectionService {
   constructor(
