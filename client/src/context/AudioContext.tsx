@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import Peer, { MediaConnection } from "peerjs";
 import io, { Socket } from "socket.io-client";
 import { User, ChannelInfo, JoinChannelResponse } from '../types/audioTypes';
-//import { useUserRole } from "./UserRoleContext";
 
 const SOCKET_SERVER = 'http://localhost:3000';
 

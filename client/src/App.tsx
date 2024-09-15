@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { HandRaiseProvider } from './context/HandRaiseContext';
-import { UserRoleProvider } from './context/UserRoleContext';
+import { UserRoleProvider} from './context/UserRoleContext';
 import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
@@ -12,8 +12,7 @@ import { AudioProvider } from './context/AudioContext';
 
 function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
-  const [muted, setMuted] = useState(false);
-
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -25,7 +24,7 @@ function App() {
 
   return (
     <AudioProvider isMuted={muted}>
-    <UserRoleProvider>
+      <UserRoleProvider>
 
       <HandRaiseProvider>
         <NavigationProvider>

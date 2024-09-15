@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
 import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
@@ -8,7 +8,7 @@ import './Navbar.css';
 interface NavbarProps {
   isMobile: boolean;
   muted: boolean;
-  setMuted: () => void;
+  setMuted: (v: boolean) => void;
 
 }
 
@@ -34,6 +34,13 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   const { userRole } = useUserRole();
   const { isHandRaised, raiseHand, lowerHand } = useHandRaise(1, "Current User", "Table-1");
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleMuted = () => {
+    if(userRole === "teacher"){
+      setMuted(!muted)
+    }
+
+  }
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -71,7 +78,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
             <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
             <NavItem icon="students.png" text="Élèves connectés" onClick={() => {/* ... */}} />
             <NavItem icon="palm.png" text="Mains levées" onClick={() => {/* ... */}} />
-            <NavItem icon={!!muted ? "NoSpeak.png" : "speak.png"} text="Prendre la parole" onClick={() => setMuted(!muted)} />
+            <NavItem icon={!!muted ? "NoSpeak.png" : "speak.png"} text="Prendre la parole" onClick={handleMuted} />
           </>
         );
       }
