@@ -4,12 +4,14 @@ import HeaderNavbarDev from "../common/HeaderNavbarDev/HeaderNavbarDev"
 
 interface DesktopLayoutProps {
   children: React.ReactNode;
+  muted: boolean;
+  setMuted: (v:boolean) => void;
 }
 
-function DesktopLayout({ children }: DesktopLayoutProps) {
+function DesktopLayout({ children, muted, setMuted  }: DesktopLayoutProps) {
   return (
     <div className="desktop-layout">
-      <Navbar isMobile={false} />
+      <Navbar isMobile={false} muted={muted} setMuted={setMuted} />
       <HeaderNavbarDev/>
       <div className="desktop-content">
         {children}
