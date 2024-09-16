@@ -7,7 +7,6 @@ export const useScrollToBottom = (dependencyArray: any) => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    console.log('je passe');
   }, [dependencyArray]);
 
   return scrollRef;

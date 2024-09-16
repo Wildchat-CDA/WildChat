@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { HandRaiseProvider } from './context/HandRaiseContext';
-import { UserRoleProvider} from './context/UserRoleContext';
+import { UserRoleProvider } from './context/UserRoleContext';
 import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
-import ContentMain from './components/common/mainContent/contentMain/ContentMain';
-//import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
+import { ModalProvider } from './context/ModalContext';
 import MainContent from './components/common/mainContent/MainContent';
 import { AudioProvider } from './context/AudioContext';
 
@@ -25,22 +24,22 @@ function App() {
   return (
     <AudioProvider isMuted={muted}>
       <UserRoleProvider>
-
-      <HandRaiseProvider>
-        <NavigationProvider>
-          {isMobile ? (
-            <MobileLayout muted={muted} setMuted={setMuted}>
-              <MainContent />
-            </MobileLayout>
-          ) : (
-            <DesktopLayout muted={muted} setMuted={setMuted} >
-              <MainContent />
-            </DesktopLayout>
-          )}
-        </NavigationProvider>
-      </HandRaiseProvider>
-      
-    </UserRoleProvider>
+        <HandRaiseProvider>
+          <NavigationProvider>
+            <ModalProvider>
+              {isMobile ? (
+                <MobileLayout muted={muted} setMuted={setMuted}>
+                  <MainContent />
+                </MobileLayout>
+              ) : (
+                <DesktopLayout muted={muted} setMuted={setMuted}>
+                  <MainContent />
+                </DesktopLayout>
+              )}
+            </ModalProvider>
+          </NavigationProvider>
+        </HandRaiseProvider>
+      </UserRoleProvider>
     </AudioProvider>
   );
 }

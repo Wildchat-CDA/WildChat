@@ -3,10 +3,10 @@ import { ISectionChannel } from '../types/sectionTypes';
 
 // Définition du type pour le contexte
 interface NavigationContextType {
-  currentSection: ISectionChannel | null;
-  setCurrentSection: React.Dispatch<
-    React.SetStateAction<ISectionChannel | null>
-  >;
+  currentSection: ISectionChannel;
+  setCurrentSection: React.Dispatch<React.SetStateAction<ISectionChannel>>;
+  refresh: number;
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // Création du contexte avec un type par défaut
@@ -29,13 +29,20 @@ interface NavigationProviderProps {
 
 // Composant provider pour le contexte de navigation
 export function NavigationProvider({ children }: NavigationProviderProps) {
-  const [currentSection, setCurrentSection] = useState<ISectionChannel | null>(
-    null
-  );
+  const [currentSection, setCurrentSection] = useState<ISectionChannel>({
+    sectionTitle: '',
+    channelTitle: '',
+    uuid: '',
+    messageIndex: null,
+    currentMessage: '',
+  });
+  const [refresh, setRefresh] = useState<number>(0);
 
   const value = {
     currentSection,
     setCurrentSection,
+    refresh,
+    setRefresh,
   };
 
   return (
