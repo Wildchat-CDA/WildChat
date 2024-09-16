@@ -111,7 +111,6 @@ export class RedisService {
   }
 
   public async deleteMessage(data: IMessageDeletePayload): Promise<void> {
-    console.log('data : ', data);
     try {
       const currentMessages = await this._client.lRange(
         `room:${data.roomId}`,
