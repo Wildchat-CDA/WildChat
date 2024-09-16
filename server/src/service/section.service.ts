@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Section } from '../entity/section.entity';
-import { Repository } from 'typeorm';
+import { BeforeInsert, Repository } from 'typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';

@@ -54,9 +54,11 @@ export class ChannelService {
   async deleteChannel(id: number): Promise<DeleteResult> {
     const channel = await this.channelRepository.findOneBy({ id: id });
 
-    if (!channel) throw new NotFoundException(Error);
+    if (!channel) {
+      throw new NotFoundException('Channel not found');
+    }
 
-    return await this.channelRepository.delete(channel);
+    return await this.channelRepository.delete(id);
   }
 
   async addConfig(channelId: number, configId: number) {

@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  BeforeInsert,
 } from 'typeorm';
+
+import { Repository } from 'typeorm';
 
 import { Channel } from './channel.entity';
 
@@ -24,4 +27,28 @@ export class Section {
   })
   @JoinTable()
   channels: Array<Channel>;
+
+  constructor(private readonly sectionRepository: Repository<Section>) {}
+
+  // @BeforeInsert()
+  // async getSectionsByOrder() {
+  //   const lastSection = await this.sectionRepository.findOne({
+  //     order: { order: 'DESC' },
+  //   });
+
+  //   console.log(lastSection, 'last section');
+  // }
+
+  @BeforeInsert()
+  async updateOrder() {
+    const lastSection = await this.sectionRepository.findOne({
+      order: { order: 'DESC' },
+    });
+
+    if (lastSection) {
+      this.order = lastSection.order + 1;
+    } else {
+      this.order = 1;
+    }
+  }
 }
