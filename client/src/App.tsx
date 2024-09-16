@@ -5,12 +5,13 @@ import { UserRoleProvider } from './context/UserRoleContext';
 import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
-import ContentMain from './components/common/mainContent/contentMain/ContentMain';
 import { ModalProvider } from './context/ModalContext';
 import MainContent from './components/common/mainContent/MainContent';
+import { AudioProvider } from './context/AudioContext';
 
 function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -21,23 +22,25 @@ function App() {
   const isMobile = screenSize <= 768;
 
   return (
-    <UserRoleProvider>
-      <HandRaiseProvider>
-        <NavigationProvider>
-          <ModalProvider>
-            {isMobile ? (
-              <MobileLayout>
-                <MainContent />
-              </MobileLayout>
-            ) : (
-              <DesktopLayout>
-                <MainContent />
-              </DesktopLayout>
-            )}
-          </ModalProvider>
-        </NavigationProvider>
-      </HandRaiseProvider>
-    </UserRoleProvider>
+    <AudioProvider isMuted={muted}>
+      <UserRoleProvider>
+        <HandRaiseProvider>
+          <NavigationProvider>
+            <ModalProvider>
+              {isMobile ? (
+                <MobileLayout muted={muted} setMuted={setMuted}>
+                  <MainContent />
+                </MobileLayout>
+              ) : (
+                <DesktopLayout muted={muted} setMuted={setMuted}>
+                  <MainContent />
+                </DesktopLayout>
+              )}
+            </ModalProvider>
+          </NavigationProvider>
+        </HandRaiseProvider>
+      </UserRoleProvider>
+    </AudioProvider>
   );
 }
 

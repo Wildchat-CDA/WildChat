@@ -49,7 +49,7 @@ const ShowMessage: React.FC = () => {
     setCurrentIndex(index);
   };
 
-  const activeDelete = (message, index) => {
+  const activeDelete = (message: string, index) => {
     setActiveModal(ModalTypeEnum.DeleteMessage);
     setCurrentIndex(index);
     setCurrentSection((prevState: ISectionChannel) => ({
