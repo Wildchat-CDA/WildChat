@@ -22,7 +22,6 @@ export function AudioCall(): JSX.Element {
       
       peerRef.current.on("open", (peerID) => {
         setMyPeerID(peerID);
-        console.log(peerID, "open PEER ID");
 
         socketRef.current = io(SOCKET_SERVER);
         socketRef.current.emit('join-channel', { peerID }, (response: JoinChannelResponse) => {

@@ -57,7 +57,6 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
 
     socketRef.current.on('user-joined', (data: { users: User[] }) => {
       setConnectedUsers(data.users);
-      console.log("Liste des utilisateurs mise à jour:", data.users);
       const newUser = data.users.find(user => user.peerID !== myPeerID);
       if (newUser && streamRef.current) {
         callUser(newUser.peerID);
@@ -66,7 +65,6 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
 
     socketRef.current.on('user-disconnected', (data: { peerID: string, uuid: string, users: User[] }) => {
       setConnectedUsers(data.users);
-      console.log("Liste des utilisateurs mise à jour:", data.users);
       
       const connection = connectionsRef.current.get(data.peerID);
       if (connection) {
@@ -78,7 +76,6 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
     socketRef.current.emit('request-channel-info', (info: ChannelInfo) => {
       setChannelUUID(info.channelUUID);
       setConnectedUsers(info.users);
-      console.log("Liste des utilisateurs mise à jour:", info.users);
     });
   };
 

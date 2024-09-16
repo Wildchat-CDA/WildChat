@@ -39,7 +39,6 @@ export function VideoCall(): JSX.Element {
   useEffect(() => {
     peer.on("open", (peerID: string) => {
       setMyPeerID(peerID);
-      console.log(peerID, "open PEER ID");
     });
 
     navigator.mediaDevices
