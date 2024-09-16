@@ -6,7 +6,7 @@ import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
 import ContentMain from './components/common/mainContent/contentMain/ContentMain';
-import ContentSidebar from './components/common/ContentSidebar/ContentSidebar';
+import { ModalProvider } from './context/ModalContext';
 import MainContent from './components/common/mainContent/MainContent';
 
 function App() {
@@ -24,15 +24,17 @@ function App() {
     <UserRoleProvider>
       <HandRaiseProvider>
         <NavigationProvider>
-          {isMobile ? (
-            <MobileLayout>
-              <MainContent />
-            </MobileLayout>
-          ) : (
-            <DesktopLayout>
-              <MainContent />
-            </DesktopLayout>
-          )}
+          <ModalProvider>
+            {isMobile ? (
+              <MobileLayout>
+                <MainContent />
+              </MobileLayout>
+            ) : (
+              <DesktopLayout>
+                <MainContent />
+              </DesktopLayout>
+            )}
+          </ModalProvider>
         </NavigationProvider>
       </HandRaiseProvider>
     </UserRoleProvider>

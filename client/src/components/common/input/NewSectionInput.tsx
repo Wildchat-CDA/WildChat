@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { fetchPostSection } from '../../../services/section/fetch/FetchPostSection';
+import { useNavigation } from '../../../context/NavigationContext';
 
-const NewSectionInput: React.FC = () => {
-  // État pour stocker la valeur de l'input
+const NewSectionInput = ({ setActiveModal }) => {
+  const { setRefresh } = useNavigation();
   const [inputValue, setInputValue] = useState<string>('');
 
-  // Fonction pour gérer le changement de valeur dans l'input
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   // Fonction pour soumettre la valeur actuelle
   const handleSubmit = () => {
-    fetchPostSection(inputValue);
+    fetchPostSection(inputValue).then(() =>
+      setRefresh((prevState) => prevState + 1)
+    );
     alert(`Valeur soumise : ${inputValue}`);
+    setActiveModal(null);
   };
 
   return (

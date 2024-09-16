@@ -1,23 +1,14 @@
-import './Modal.css';
 import React from 'react';
-import { deleteMessage } from '../../../services/message/fetch/DeleteMessage';
+import './Modal.css';
+import { useModal } from '../../../context/ModalContext';
 
-const Modal = ({
-  currentIndex,
-  selectedRoomId,
-  setMessages,
-  setActiveModalDelete,
-  currentMessage,
-}) => {
-  
-
-
+const Modal = ({ children }) => {
+  const { activeModal } = useModal();
+  if (activeModal === null) return null;
   return (
     <div className='modal-bg'>
       <div className='modal-container'>
-        <div className='modal-main_container'>
-         
-        </div>
+        <div className='modal-content'>{children}</div>
       </div>
     </div>
   );

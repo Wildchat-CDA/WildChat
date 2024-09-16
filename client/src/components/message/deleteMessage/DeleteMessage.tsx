@@ -1,14 +1,21 @@
 import React from 'react';
+import { useNavigation } from '../../../context/NavigationContext';
 
-const DeleteMessage = ({ currentMessage, handleCancel, handleDelete }) => {
+import { deleteMessage } from '../../../services/message/fetch/DeleteMessage';
+
+const DeleteMessage = ({ setMessages, setActiveModal }) => {
+  const { currentSection } = useNavigation();
   const handleDelete = () => {
-    const data = { roomId: selectedRoomId, index: currentIndex };
+    const data = {
+      roomId: currentSection.uuid,
+      index: currentSection.messageIndex,
+    };
     deleteMessage(data)
       .then(() => {
         setMessages((prevMessages) =>
-          prevMessages.filter((_, i) => i !== currentIndex)
+          prevMessages.filter((_, i) => i !== data.index)
         );
-        setActiveModalDelete(false);
+        setActiveModal(null);
       })
       .catch((error) => {
         console.error('Erreur lors de la suppression du message :', error);
@@ -16,7 +23,7 @@ const DeleteMessage = ({ currentMessage, handleCancel, handleDelete }) => {
   };
 
   const handleCancel = () => {
-    setActiveModalDelete(false);
+    setActiveModal(null);
   };
   return (
     <div>
@@ -25,7 +32,7 @@ const DeleteMessage = ({ currentMessage, handleCancel, handleDelete }) => {
 
       <div className='modal-name_container'>
         <span className='name'>BOB</span> <br />
-        <span>{currentMessage}</span>
+        <span>{currentSection.currentMessage}</span>
       </div>
 
       <div className='modal-btn_container'>

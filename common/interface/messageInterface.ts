@@ -11,6 +11,6 @@ export interface IMessageUpdatePayload extends IMessagePostPayload {
 }
 
 export interface IMessageDeletePayload {
-  roomId: number | null;
-  index: number | undefined;
+  roomId: string;
+  index: number | null;
 }
