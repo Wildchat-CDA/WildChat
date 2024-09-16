@@ -24,7 +24,7 @@ export class SectionService {
 
   async findAll(): Promise<Section[]> {
     return await this.sectionRepository.find({
-      relations: ['channels', 'config'],
+      relations: ['channels'],
     });
   }
 
@@ -80,9 +80,9 @@ export class SectionService {
 
   async createClassRoomWithChannels(): Promise<any> {
     const sections = [
-      { title: 'Tableau des annonces', order: 1 },
-      { title: 'Bureaux', order: 2 },
-      { title: 'Tables', order: 3 },
+      { title: 'Tableau des annonces', isClassRoom: true, order: 1 },
+      { title: 'Bureaux', isClassRoom: true, order: 2 },
+      { title: 'Tables', isClassRoom: true, order: 3 },
     ];
 
     const channelsPerSection = {
@@ -100,6 +100,7 @@ export class SectionService {
       const section = await this.sectionRepository.save({
         title: sectionData.title,
         order: sectionData.order,
+        isClassRoom: sectionData.isClassRoom,
         relations: ['channels'],
       });
 
@@ -136,6 +137,20 @@ export class SectionService {
 
   async findAllTopicAndSection() {
     return await this.sectionRepository.find({
+      relations: ['channels'],
+    });
+  }
+
+  async findAllTopicAndSectionForClassRoom() {
+    return await this.sectionRepository.find({
+      where: { isClassRoom: true },
+      relations: ['channels'],
+    });
+  }
+
+  async findAllTopicAndSectionForLibrary() {
+    return await this.sectionRepository.find({
+      where: { isClassRoom: false },
       relations: ['channels'],
     });
   }

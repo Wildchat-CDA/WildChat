@@ -4,11 +4,9 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
-  ManyToOne,
 } from 'typeorm';
 
 import { Channel } from './channel.entity';
-import { Config } from './config.entity';
 
 @Entity()
 export class Section {
@@ -17,6 +15,9 @@ export class Section {
 
   @Column({ length: 150 })
   title: string;
+
+  @Column({ default: false })
+  isClassRoom: boolean;
 
   @Column()
   order: number;
@@ -27,6 +28,10 @@ export class Section {
   @JoinTable()
   channels: Array<Channel>;
 
-  @ManyToOne(() => Config, (config) => config.sections)
-  config: Config;
+  // @JoinTable()
+  // type: Type;
+
+  // @ManyToOne(() => Config, (config) => config.sections)
+  // @JoinColumn({ name: 'configId' })
+  // config: Config;
 }

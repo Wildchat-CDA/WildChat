@@ -1,12 +1,5 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Type } from './type.entity';
-import { Section } from './section.entity';
 
 @Entity()
 export class Config {
@@ -18,7 +11,4 @@ export class Config {
 
   @ManyToOne(() => Type, (type) => type.configs)
   type: Type;
-
-  @OneToMany(() => Section, (section) => section.config)
-  sections: Array<Section>;
 }

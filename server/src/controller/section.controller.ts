@@ -6,7 +6,6 @@ import {
   Param,
   Put,
   NotFoundException,
-
 } from '@nestjs/common';
 import { SectionService } from '../service/section.service';
 import { Section } from 'src/entity/section.entity';
@@ -59,7 +58,7 @@ export class SectionController {
 
   @Put(
     '/:sectionId/topic/channel/:channelId',
-  ) /**La modification d'un channel pour les topics et la salle de classe */
+  ) /**La modification d'un channel pour les topics de la bibliothèque et de la salle de classe */
   async editChannelInSection(
     @Param('sectionId') sectionId: number,
     @Param('channelId') channelId: number,
@@ -83,7 +82,21 @@ export class SectionController {
     return await this.sectionService.createClassRoomWithChannels();
   }
 
-  @Get('/topic')
+  @Get(
+    '/classroom',
+  ) /**Liste de toutes les sections et channels de la salle de classe */
+  async findAllTopicAndSectionForClassRoom() {
+    return await this.sectionService.findAllTopicAndSectionForClassRoom();
+  }
+
+  @Get(
+    '/library',
+  ) /**Liste de toutes les sections et channels de la bibliothèque */
+  async findAllTopicAndSectionForLibrary() {
+    return await this.sectionService.findAllTopicAndSectionForLibrary();
+  }
+
+  @Get('/topic') /**Liste de toutes les sections et de toutes les channels */
   async findAllTopicAndSection() {
     return await this.sectionService.findAllTopicAndSection();
   }
