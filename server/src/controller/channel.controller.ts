@@ -4,12 +4,14 @@ import {
   Get,
   Body,
   Param,
+  Delete,
   Put,
   NotFoundException,
 } from '@nestjs/common';
 import { ChannelService } from '../service/channel.service';
 import { Channel } from 'src/entity/channel.entity';
 import { Config } from 'src/entity/config.entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('/channel')
 export class ChannelController {
@@ -23,6 +25,24 @@ export class ChannelController {
   @Get('/')
   async findAll(): Promise<Channel[]> {
     return await this.channelService.findAll();
+  }
+
+  @Get('/:id')
+  async findById(@Param('id') id: number): Promise<Channel> {
+    return await this.channelService.findById(id);
+  }
+
+  @Put('/:id')
+  async update(
+    @Body() channel: Channel,
+    @Param('id') id: number,
+  ): Promise<UpdateResult> {
+    return await this.channelService.update(channel, id);
+  }
+
+  @Delete('/:id')
+  async deleteChannel(@Param('id') id: number): Promise<DeleteResult> {
+    return await this.channelService.deleteChannel(id);
   }
 
   @Put('/:channelId/config/:configId')

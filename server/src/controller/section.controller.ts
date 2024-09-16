@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { SectionService } from '../service/section.service';
 import { Section } from 'src/entity/section.entity';
