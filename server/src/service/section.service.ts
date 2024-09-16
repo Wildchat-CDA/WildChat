@@ -1,11 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Section } from '../entity/section.entity';
-import { BeforeInsert, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';
 import { Type } from '../entity/type.entity';
-import { NotFoundException } from '@nestjs/common';
 
 export class SectionService {
   constructor(
@@ -66,13 +65,9 @@ export class SectionService {
 
       newChannel.config = newConfig;
 
-      // console.log(newChannel, 'nouveau channel');
-
       await this.configRepository.save(newConfig);
 
       const savedChannel = await this.channelRepository.save(newChannel);
-
-      // console.log(savedChannel, 'channel saved');
 
       newChannels.push(savedChannel);
     }
@@ -107,8 +102,6 @@ export class SectionService {
       });
 
       const channels = channelsPerSection[sectionData.title];
-
-      console.log(channels, 'channels');
 
       const newChannels = [];
 
@@ -170,9 +163,6 @@ export class SectionService {
     const channel = await this.channelRepository.findOneBy({ id: channelId });
     const section = await this.sectionRepository.findOneBy({ id: sectionId });
 
-    console.log(channel, 'channel');
-    console.log(section, 'section');
-
     if (!section) throw new Error('channel not found');
     if (!channel) throw new Error('channel not found');
 
@@ -181,7 +171,6 @@ export class SectionService {
       slot: newSlot,
     });
 
-    console.log(updatedChannel, 'nouveau channel');
     return updatedChannel;
   }
 }
