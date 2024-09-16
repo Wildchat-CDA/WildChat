@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { fetchPostSection } from '../../../services/section/fetch/FetchPostSection';
 import { useNavigation } from '../../../context/NavigationContext';
+import './NewSectionInput.css';
 
 const NewSectionInput = ({ setActiveModal }) => {
   const { setRefresh } = useNavigation();
@@ -20,7 +21,7 @@ const NewSectionInput = ({ setActiveModal }) => {
   };
 
   return (
-    <div>
+    <div className='newSection-container'>
       <label htmlFor='sectionInput'>Nouvelle section :</label>
       <input
         id='sectionInput'
@@ -29,7 +30,10 @@ const NewSectionInput = ({ setActiveModal }) => {
         onChange={handleChange}
         aria-label='Saisir le nom de la nouvelle section'
       />
-      <button onClick={handleSubmit}>Valider</button>
+      <div className='newSection-btn_container'>
+        <button onClick={handleSubmit}>Valider</button>
+        <button>Annuler</button>
+      </div>
     </div>
   );
 };

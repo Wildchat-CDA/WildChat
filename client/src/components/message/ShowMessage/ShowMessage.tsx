@@ -47,7 +47,6 @@ const ShowMessage: React.FC = () => {
   const handleEdit = (index: number) => {
     setActiveEdit(true);
     setCurrentIndex(index);
-    console.log('currentSection : ', currentSection);
   };
 
   const activeDelete = (message, index) => {
