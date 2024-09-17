@@ -1,11 +1,12 @@
 import './ContentMain.css';
-import React from 'react';
 import ChatPage from '../../../../pages/ChatPage';
+import { useNavigation } from '../../../../context/NavigationContext';
 
 function ContentMain() {
+  const { activeContentMainComp } = useNavigation();
   return (
     <main className='content-main'>
-      <ChatPage />
+      {activeContentMainComp && <ChatPage />}
     </main>
   );
 }

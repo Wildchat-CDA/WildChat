@@ -1,4 +1,5 @@
 .content-main {
   width: 67%;
-  height: auto;
+  height: 100%;
+  background-color: var(--color-secondary);
 }

@@ -7,6 +7,8 @@ interface NavigationContextType {
   setCurrentSection: React.Dispatch<React.SetStateAction<ISectionChannel>>;
   refresh: number;
   setRefresh: React.Dispatch<React.SetStateAction<number>>;
+  activeContentMainComp: boolean;
+  setActiveContentMainComp: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Création du contexte avec un type par défaut
@@ -37,12 +39,16 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     currentMessage: '',
   });
   const [refresh, setRefresh] = useState<number>(0);
+  const [activeContentMainComp, setActiveContentMainComp] =
+    useState<boolean>(false);
 
   const value = {
     currentSection,
     setCurrentSection,
     refresh,
     setRefresh,
+    activeContentMainComp,
+    setActiveContentMainComp,
   };
 
   return (

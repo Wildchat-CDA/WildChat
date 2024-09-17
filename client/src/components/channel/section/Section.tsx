@@ -13,7 +13,8 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 const Section = () => {
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
-  const { setCurrentSection, refresh } = useNavigation();
+  const { setCurrentSection, refresh, setActiveContentMainComp } =
+    useNavigation();
   const { setActiveModal, activeModal } = useModal();
 
   useEffect(() => {
@@ -27,6 +28,9 @@ const Section = () => {
   }, [refresh]);
 
   const handleShow = (section: ISection, index: number) => {
+    setActiveContentMainComp((prevState) =>
+      prevState === true ? false : false
+    );
     const sectionPayload = {
       sectionTitle: section.title,
       channelTitle: '',
@@ -84,10 +88,12 @@ const Section = () => {
             </div>
 
             {activeSection.includes(index) && (
-              <Room
-                rooms={section.channels}
-                setCurrentSection={setCurrentSection}
-              />
+              <div onClick={() => setActiveContentMainComp(true)}>
+                <Room
+                  rooms={section.channels}
+                  setCurrentSection={setCurrentSection}
+                />
+              </div>
             )}
           </div>
         ))}{' '}
