@@ -13,7 +13,7 @@ const MainContent = ({ isMobile }: IMainContentProps) => {
   console.log('activeContentMain : ', activeContentMainComp);
 
   return isMobile === true ? (
-    <div className='main-content mobile'>
+    <div className='main-content'>
       {activeContentMainComp === true ? <ContentMain /> : <ContentSidebar />}
     </div>
   ) : (

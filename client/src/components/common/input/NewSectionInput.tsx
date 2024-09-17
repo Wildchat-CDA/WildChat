@@ -13,10 +13,15 @@ const NewSectionInput = ({ setActiveModal }) => {
 
   // Fonction pour soumettre la valeur actuelle
   const handleSubmit = () => {
-    fetchPostSection(inputValue).then(() =>
-      setRefresh((prevState) => prevState + 1)
-    );
-    alert(`Valeur soumise : ${inputValue}`);
+    if (inputValue.length !== 0) {
+      fetchPostSection(inputValue).then(() => {
+        setRefresh((prevState) => prevState + 1);
+        setActiveModal(null);
+      });
+    } else alert(`Valeur soumise incorrect`);
+  };
+
+  const handleCancel = () => {
     setActiveModal(null);
   };
 
@@ -32,7 +37,7 @@ const NewSectionInput = ({ setActiveModal }) => {
       />
       <div className='newSection-btn_container'>
         <button onClick={handleSubmit}>Valider</button>
-        <button>Annuler</button>
+        <button onClick={handleCancel}>Annuler</button>
       </div>
     </div>
   );
