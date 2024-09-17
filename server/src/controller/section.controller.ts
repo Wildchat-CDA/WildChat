@@ -15,8 +15,9 @@ import { Channel } from 'src/entity/channel.entity';
 export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
 
-  @Post('/')
-  async create(@Body() section: Section): Promise<Section> {
+  @Post('/') /**Pour créer une section */ async create(
+    @Body() section: Section,
+  ): Promise<Section> {
     return await this.sectionService.create(section);
   }
 
@@ -25,7 +26,9 @@ export class SectionController {
     return await this.sectionService.findAll();
   }
 
-  @Put('/:sectionId/channel/:channelId')
+  @Put(
+    '/:sectionId/channel/:channelId',
+  ) /**Pour relier un channel à une section */
   async addSection(
     @Param('channelId') channelId: number,
     @Param('sectionId') sectionId: number,
