@@ -1,8 +1,12 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import './Modal.css';
 import { useModal } from '../../../context/ModalContext';
 
-const Modal = ({ children }) => {
+interface IModalProps {
+  children: ReactNode;
+}
+
+const Modal = ({ children }: IModalProps) => {
   const { activeModal } = useModal();
   if (activeModal === null) return null;
   return (

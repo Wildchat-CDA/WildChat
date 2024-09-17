@@ -1,6 +1,6 @@
-export async function fetchGetSection(): Promise<any> {
+export async function fetchGetSection(type): Promise<any> {
   try {
-    const response = await fetch('http://localhost:3000/section/topic', {
+    const response = await fetch(`http://localhost:3000/section/${type}`, {
       method: 'GET',
     });
 

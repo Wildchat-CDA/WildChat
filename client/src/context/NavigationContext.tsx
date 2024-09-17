@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { ISectionChannel } from '../types/sectionTypes';
 
 // Définition du type pour le contexte
-interface NavigationContextType {
+export interface NavigationContextType {
   currentSection: ISectionChannel;
   setCurrentSection: React.Dispatch<React.SetStateAction<ISectionChannel>>;
   refresh: number;
@@ -32,6 +32,7 @@ interface NavigationProviderProps {
 // Composant provider pour le contexte de navigation
 export function NavigationProvider({ children }: NavigationProviderProps) {
   const [currentSection, setCurrentSection] = useState<ISectionChannel>({
+    sectionId: null,
     sectionTitle: '',
     channelTitle: '',
     uuid: '',

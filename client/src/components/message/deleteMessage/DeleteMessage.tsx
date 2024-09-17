@@ -2,8 +2,14 @@ import React from 'react';
 import { useNavigation } from '../../../context/NavigationContext';
 
 import { deleteMessage } from '../../../services/message/fetch/DeleteMessage';
+import { IModalMessagePayload } from '../../../types/messageTypes';
+import { ModalContextType } from '../../../context/ModalContext';
+interface IDeleteMessageProps {
+  setMessage: IModalMessagePayload['setMessages'];
+  setActiveModal: ModalContextType['setActiveModal'];
+}
 
-const DeleteMessage = ({ setMessages, setActiveModal }) => {
+const DeleteMessage = ({ setMessage, setActiveModal }: IDeleteMessageProps) => {
   const { currentSection } = useNavigation();
   const handleDelete = () => {
     const data = {
@@ -12,7 +18,7 @@ const DeleteMessage = ({ setMessages, setActiveModal }) => {
     };
     deleteMessage(data)
       .then(() => {
-        setMessages((prevMessages) =>
+        setMessage((prevMessages) =>
           prevMessages.filter((_, i) => i !== data.index)
         );
         setActiveModal(null);

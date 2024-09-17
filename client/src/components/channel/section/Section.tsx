@@ -2,25 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { fetchGetSection } from '../../../services/section/fetch/FetchGetSection';
 import Room from '../room/Room';
 import './Section.css';
-import AddSectionButton from '../../common/button/AddSectionButton';
+import AddButton from '../../common/button/AddSectionButton';
 import Modal from '../../common/modal/Modal';
-import NewSectionInput from '../../common/input/NewSectionInput';
+import NewSectionInput from '../../common/input/newSection/NewSectionInput';
 import { useNavigation } from '../../../context/NavigationContext';
 import { useModal } from '../../../context/ModalContext';
 import { ISection } from '../../../types/sectionTypes';
 import { ModalTypeEnum } from '../../../context/ModalContext';
+interface ISectionProps {
+  type: string;
+}
 
-const Section = () => {
+const Section = ({ type }: ISectionProps) => {
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
-  const { setCurrentSection, refresh, setActiveContentMainComp } =
-    useNavigation();
+  const {
+    setCurrentSection,
+    refresh,
+    setActiveContentMainComp,
+    currentSection,
+  } = useNavigation();
   const { setActiveModal, activeModal } = useModal();
 
   useEffect(() => {
-    fetchGetSection()
+    fetchGetSection(type)
       .then((data) => {
         setAllRoomsAndChannels(data);
+        if (type === 'classRoom') {
+          const allIndexes = data.map((_: object, index: number) => index);
+          setActiveSection(allIndexes);
+        }
       })
       .catch((err) =>
         console.error('Erreur lors du chargement des rooms :', err)
@@ -31,7 +42,9 @@ const Section = () => {
     setActiveContentMainComp((prevState) =>
       prevState === true ? false : false
     );
+
     const sectionPayload = {
+      sectionId: section.id,
       sectionTitle: section.title,
       channelTitle: '',
       uuid: '',
@@ -56,15 +69,20 @@ const Section = () => {
   const handleNewSection = () => {
     setActiveModal(ModalTypeEnum.NewSection);
   };
+
+  
   return (
-    <div className='library-container'>
-      <h3>Bibliothèque</h3>
-      <div className='topic-container' onClick={handleNewSection}>
-        <h4 className='topic-title'>Topic </h4>
-        <AddSectionButton />
+    <div className='section-container'>
+      <div className='section-topic-title'>
+        <h3>{type === 'library' ? 'Bibliothèque' : 'Salle de  classe'} </h3>
+        <div className='topic-container'>
+          <h4 className='topic-title'>Topic </h4>
+
+          <AddButton action={handleNewSection} />
+        </div>
       </div>
 
-      <div>
+      <div className='section-topic-column'>
         {activeModal === ModalTypeEnum.NewSection && (
           <Modal>
             <NewSectionInput setActiveModal={setActiveModal} />
@@ -88,12 +106,14 @@ const Section = () => {
             </div>
 
             {activeSection.includes(index) && (
-              <div onClick={() => setActiveContentMainComp(true)}>
-                <Room
-                  rooms={section.channels}
-                  setCurrentSection={setCurrentSection}
-                />
-              </div>
+              <Room
+                rooms={section.channels}
+                setCurrentSection={setCurrentSection}
+                setActiveContentMainComp={setActiveContentMainComp}
+                currentSection={currentSection}
+                setActiveModal={setActiveModal}
+                activeModal={activeModal}
+              />
             )}
           </div>
         ))}{' '}

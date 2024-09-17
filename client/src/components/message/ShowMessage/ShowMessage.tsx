@@ -33,8 +33,11 @@ const ShowMessage: React.FC = () => {
       );
 
     // Load new messages with socket.Io
-    const handleMessage = (payload) =>
+    const handleMessage = (payload: IMessagePostPayload) => {
+      console.log('PAYLOAD : ', payload);
       setMessages((preMessages) => [...preMessages, payload]);
+    };
+
     socket.on('message', handleMessage);
 
     return () => {
@@ -49,7 +52,7 @@ const ShowMessage: React.FC = () => {
     setCurrentIndex(index);
   };
 
-  const activeDelete = (message: string, index) => {
+  const activeDelete = (message: string, index: number) => {
     setActiveModal(ModalTypeEnum.DeleteMessage);
     setCurrentIndex(index);
     setCurrentSection((prevState: ISectionChannel) => ({
@@ -133,7 +136,7 @@ const ShowMessage: React.FC = () => {
         {activeModal === ModalTypeEnum.DeleteMessage && (
           <Modal>
             <DeleteMessage
-              setMessages={setMessages}
+              setMessage={setMessages}
               setActiveModal={setActiveModal}
             />
           </Modal>

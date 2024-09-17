@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { fetchPostSection } from '../../../services/section/fetch/FetchPostSection';
-import { useNavigation } from '../../../context/NavigationContext';
+import { fetchPostSection } from '../../../../services/section/fetch/FetchPostSection';
+import { useNavigation } from '../../../../context/NavigationContext';
 import './NewSectionInput.css';
+import { ModalContextType } from '../../../../context/ModalContext';
 
-const NewSectionInput = ({ setActiveModal }) => {
+interface INewSectionInput {
+  setActiveModal: ModalContextType['setActiveModal'];
+}
+
+const NewSectionInput = ({ setActiveModal }: INewSectionInput) => {
   const { setRefresh } = useNavigation();
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -36,8 +41,8 @@ const NewSectionInput = ({ setActiveModal }) => {
         aria-label='Saisir le nom de la nouvelle section'
       />
       <div className='newSection-btn_container'>
-        <button onClick={handleSubmit}>Valider</button>
         <button onClick={handleCancel}>Annuler</button>
+        <button onClick={handleSubmit}>Valider</button>
       </div>
     </div>
   );
