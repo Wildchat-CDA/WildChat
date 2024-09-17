@@ -24,7 +24,9 @@ export class ConfigController {
     return await this.configService.create(config);
   }
 
-  @Put('/:configId/type/:typeId')
+  @Put(
+    '/:configId/type/:typeId',
+  ) /**Ajouter un type en fonction de l'id à une config */
   async addType(
     @Param('configId') configId: number,
     @Param('typeId') typeId: number,

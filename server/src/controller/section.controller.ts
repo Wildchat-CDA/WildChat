@@ -15,8 +15,9 @@ import { Channel } from 'src/entity/channel.entity';
 export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
 
-  @Post('/')
-  async create(@Body() section: Section): Promise<Section> {
+  @Post('/') /**Pour créer une section */ async create(
+    @Body() section: Section,
+  ): Promise<Section> {
     return await this.sectionService.create(section);
   }
 
@@ -25,7 +26,9 @@ export class SectionController {
     return await this.sectionService.findAll();
   }
 
-  @Put('/:sectionId/channel/:channelId')
+  @Put(
+    '/:sectionId/channel/:channelId',
+  ) /**Pour relier un channel à une section */
   async addSection(
     @Param('channelId') channelId: number,
     @Param('sectionId') sectionId: number,
@@ -58,7 +61,7 @@ export class SectionController {
 
   @Put(
     '/:sectionId/topic/channel/:channelId',
-  ) /**La modification d'un channel pour les topics et la salle de classe */
+  ) /**La modification d'un channel pour les topics de la bibliothèque et de la salle de classe */
   async editChannelInSection(
     @Param('sectionId') sectionId: number,
     @Param('channelId') channelId: number,
@@ -82,7 +85,21 @@ export class SectionController {
     return await this.sectionService.createClassRoomWithChannels();
   }
 
-  @Get('/topic')
+  @Get(
+    '/classroom',
+  ) /**Liste de toutes les sections et channels de la salle de classe */
+  async findAllTopicAndSectionForClassRoom() {
+    return await this.sectionService.findAllTopicAndSectionForClassRoom();
+  }
+
+  @Get(
+    '/library',
+  ) /**Liste de toutes les sections et channels de la bibliothèque */
+  async findAllTopicAndSectionForLibrary() {
+    return await this.sectionService.findAllTopicAndSectionForLibrary();
+  }
+
+  @Get('/topic') /**Liste de toutes les sections et de toutes les channels */
   async findAllTopicAndSection() {
     return await this.sectionService.findAllTopicAndSection();
   }

@@ -16,6 +16,9 @@ export class Section {
   @Column({ length: 150 })
   title: string;
 
+  @Column({ default: false })
+  isClassRoom: boolean;
+
   @Column()
   order: number;
 
@@ -24,4 +27,11 @@ export class Section {
   })
   @JoinTable()
   channels: Array<Channel>;
+
+  // @JoinTable()
+  // type: Type;
+
+  // @ManyToOne(() => Config, (config) => config.sections)
+  // @JoinColumn({ name: 'configId' })
+  // config: Config;
 }

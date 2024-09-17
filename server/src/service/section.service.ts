@@ -23,7 +23,9 @@ export class SectionService {
   }
 
   async findAll(): Promise<Section[]> {
-    return await this.sectionRepository.find({ relations: ['channels'] });
+    return await this.sectionRepository.find({
+      relations: ['channels'],
+    });
   }
 
   async addSection(channelId: number, sectionId: number) {
@@ -65,13 +67,9 @@ export class SectionService {
 
       newChannel.config = newConfig;
 
-      // console.log(newChannel, 'nouveau channel');
-
       await this.configRepository.save(newConfig);
 
       const savedChannel = await this.channelRepository.save(newChannel);
-
-      // console.log(savedChannel, 'channel saved');
 
       newChannels.push(savedChannel);
     }
@@ -82,9 +80,9 @@ export class SectionService {
 
   async createClassRoomWithChannels(): Promise<any> {
     const sections = [
-      { title: 'Tableau des annonces', order: 1 },
-      { title: 'Bureaux', order: 2 },
-      { title: 'Tables', order: 3 },
+      { title: 'Tableau des annonces', isClassRoom: true, order: 1 },
+      { title: 'Bureaux', isClassRoom: true, order: 2 },
+      { title: 'Tables', isClassRoom: true, order: 3 },
     ];
 
     const channelsPerSection = {
@@ -102,12 +100,11 @@ export class SectionService {
       const section = await this.sectionRepository.save({
         title: sectionData.title,
         order: sectionData.order,
+        isClassRoom: sectionData.isClassRoom,
         relations: ['channels'],
       });
 
       const channels = channelsPerSection[sectionData.title];
-
-      console.log(channels, 'channels');
 
       const newChannels = [];
 
@@ -144,6 +141,20 @@ export class SectionService {
     });
   }
 
+  async findAllTopicAndSectionForClassRoom() {
+    return await this.sectionRepository.find({
+      where: { isClassRoom: true },
+      relations: ['channels'],
+    });
+  }
+
+  async findAllTopicAndSectionForLibrary() {
+    return await this.sectionRepository.find({
+      where: { isClassRoom: false },
+      relations: ['channels'],
+    });
+  }
+
   async createChannelIntopic(sectionId: number, channelData: Channel) {
     const section = await this.sectionRepository.findOneBy({ id: sectionId });
 
@@ -169,9 +180,6 @@ export class SectionService {
     const channel = await this.channelRepository.findOneBy({ id: channelId });
     const section = await this.sectionRepository.findOneBy({ id: sectionId });
 
-    console.log(channel, 'channel');
-    console.log(section, 'section');
-
     if (!section) throw new Error('channel not found');
     if (!channel) throw new Error('channel not found');
 
@@ -180,7 +188,6 @@ export class SectionService {
       slot: newSlot,
     });
 
-    console.log(updatedChannel, 'nouveau channel');
     return updatedChannel;
   }
 }
