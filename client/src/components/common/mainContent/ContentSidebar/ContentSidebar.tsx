@@ -8,7 +8,7 @@ function ContentSidebar() {
 
   return (
     <aside className='content-sidebar'>
-      {userRole === 'teacher' && <RaisedHandsList />}
+      {/* {userRole === 'teacher' && <RaisedHandsList />} */}
       <Section />
       <Section />
       {/* Autres composants de la sidebar si nécessaire */}

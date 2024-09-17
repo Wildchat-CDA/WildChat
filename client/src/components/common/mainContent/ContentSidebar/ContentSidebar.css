@@ -10,5 +10,6 @@
     width: 100%;
     height: calc(100% - 60px);
     left: 0;
+    margin: 0;
   }
 }
