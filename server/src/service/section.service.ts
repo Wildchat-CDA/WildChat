@@ -1,10 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Section } from '../entity/section.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';
 import { Type } from '../entity/type.entity';
+import { ConflictException } from '@nestjs/common';
 
 export class SectionService {
   constructor(
@@ -75,6 +76,11 @@ export class SectionService {
     }
 
     section.channels = newChannels;
+
+    if (await this.sectionRepository.findOne({ order: section.order })) {
+      throw new ConflictException('This order number already exists');
+    }
+
     return await this.sectionRepository.save(section);
   }
 
@@ -144,14 +150,14 @@ export class SectionService {
   async findAllTopicAndSectionForClassRoom() {
     return await this.sectionRepository.find({
       where: { isClassRoom: true },
-      relations: ['channels'],
+      relations: ['channels', 'channels.config'],
     });
   }
 
   async findAllTopicAndSectionForLibrary() {
     return await this.sectionRepository.find({
       where: { isClassRoom: false },
-      relations: ['channels'],
+      relations: ['channels', 'channels.config'],
     });
   }
 
@@ -189,5 +195,44 @@ export class SectionService {
     });
 
     return updatedChannel;
+  }
+
+  async update(section: Section, sectionId: number): Promise<UpdateResult> {
+    const sectionToUpdate = await this.sectionRepository.findOneBy({
+      id: sectionId,
+    });
+
+    if (!sectionToUpdate) throw new Error('section not found');
+
+    const sectionUpdated = await this.sectionRepository.update(
+      sectionId,
+      section,
+    );
+
+    return sectionUpdated;
+  }
+
+  async delete(sectionId: number): Promise<void> {
+    const sectionToDelete = await this.sectionRepository.findOne({
+      where: { id: sectionId },
+      relations: ['channels', 'channels.config'],
+    });
+
+    if (!sectionToDelete) throw new Error('section not found');
+
+    const channelsToDelete = sectionToDelete.channels;
+
+    if (channelsToDelete && channelsToDelete.length > 0) {
+      await this.channelRepository.remove(channelsToDelete);
+    }
+
+    for (const channel of channelsToDelete) {
+      const configToDelete = channel.config;
+      if (configToDelete) {
+        await this.configRepository.remove(configToDelete);
+      }
+    }
+
+    await this.sectionRepository.remove(sectionToDelete);
   }
 }

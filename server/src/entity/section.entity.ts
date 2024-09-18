@@ -19,11 +19,12 @@ export class Section {
   @Column({ default: false })
   isClassRoom: boolean;
 
-  @Column()
+  @Column({ unique: true })
   order: number;
 
   @ManyToMany(() => Channel, (channel: Channel) => channel.sections, {
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   channels: Array<Channel>;
