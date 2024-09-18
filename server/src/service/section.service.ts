@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Section } from '../entity/section.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { MoreThanOrEqual, Repository, UpdateResult } from 'typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';
@@ -19,8 +19,20 @@ export class SectionService {
     private readonly typeRepository: Repository<Type>,
   ) {}
 
-  async create(section: Section): Promise<Section> {
-    return await this.sectionRepository.save(section);
+  async create(sectionData: Section): Promise<Section> {
+    const sections = await this.sectionRepository.find({
+      order: { order: 'DESC' },
+      take: 1,
+    });
+
+    const lastSection = sections[0];
+    console.log('last section', lastSection);
+    const newSection = await this.sectionRepository.save({
+      ...sectionData,
+      order: lastSection.order + 1,
+    });
+
+    return await this.sectionRepository.save(newSection);
   }
 
   async findAll(): Promise<Section[]> {
@@ -158,6 +170,7 @@ export class SectionService {
     return await this.sectionRepository.find({
       where: { isClassRoom: true },
       relations: ['channels', 'channels.config'],
+      order: { order: 'ASC' },
     });
   }
 
@@ -165,6 +178,7 @@ export class SectionService {
     return await this.sectionRepository.find({
       where: { isClassRoom: false },
       relations: ['channels', 'channels.config'],
+      order: { order: 'ASC' },
     });
   }
 
@@ -217,6 +231,32 @@ export class SectionService {
     );
 
     return sectionUpdated;
+  }
+
+  async updateSectionsOrder(sectionOrder: Partial<Section>, sectionId: number) {
+    const targetOrder = sectionOrder.order;
+    console.log(targetOrder, 'targetOrder');
+
+    const conflictingSection = await this.sectionRepository.findOne({
+      where: { order: targetOrder },
+    });
+
+    console.log(conflictingSection, 'conflictingSection');
+    if (conflictingSection) {
+      const affectedSections = await this.sectionRepository.find({
+        where: { order: MoreThanOrEqual(targetOrder) },
+        order: { order: 'DESC' },
+      });
+
+      console.log(affectedSections, 'affectedSections');
+      for (const affectedSection of affectedSections) {
+        await this.sectionRepository.update(affectedSection.id, {
+          order: affectedSection.order + 1,
+        });
+      }
+    }
+
+    await this.sectionRepository.update(sectionId, { order: targetOrder });
   }
 
   async delete(sectionId: number): Promise<void> {

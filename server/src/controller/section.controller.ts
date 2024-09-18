@@ -19,9 +19,9 @@ export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
 
   @Post('/') /**Pour créer une section sans channel */ async create(
-    @Body() section: Section,
+    @Body() sectionData: Section,
   ): Promise<Section> {
-    return await this.sectionService.create(section);
+    return await this.sectionService.create(sectionData);
   }
 
   @Get('/')
@@ -35,6 +35,17 @@ export class SectionController {
     @Param('sectionId') sectionId: number,
   ): Promise<UpdateResult> {
     return await this.sectionService.update(section, sectionId);
+  }
+
+  @Put('/:sectionId/order')
+  async updateSectionsOrder(
+    @Body() sectionOrder: Partial<Section>,
+    @Param('sectionId') sectionId: number,
+  ): Promise<void> {
+    return await this.sectionService.updateSectionsOrder(
+      sectionOrder,
+      sectionId,
+    );
   }
 
   @Delete('/:sectionId')
