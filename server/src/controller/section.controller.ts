@@ -6,16 +6,18 @@ import {
   Param,
   Put,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { SectionService } from '../service/section.service';
 import { Section } from 'src/entity/section.entity';
 import { Channel } from 'src/entity/channel.entity';
+import { UpdateResult } from 'typeorm';
 
 @Controller('/section')
 export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
 
-  @Post('/') /**Pour créer une section */ async create(
+  @Post('/') /**Pour créer une section sans channel */ async create(
     @Body() section: Section,
   ): Promise<Section> {
     return await this.sectionService.create(section);
@@ -24,6 +26,19 @@ export class SectionController {
   @Get('/')
   async findAll(): Promise<Section[]> {
     return await this.sectionService.findAll();
+  }
+
+  @Put('/:sectionId')
+  async update(
+    @Body() section: Section,
+    @Param('sectionId') sectionId: number,
+  ): Promise<UpdateResult> {
+    return await this.sectionService.update(section, sectionId);
+  }
+
+  @Delete('/:sectionId')
+  async delete(@Param('sectionId') sectionId: number): Promise<void> {
+    return await this.sectionService.delete(sectionId);
   }
 
   @Put(
@@ -42,7 +57,11 @@ export class SectionController {
 
   @Post('/topic') /**Topic bibliothèque + les channels */
   async createSectionWithChannels(@Body() section: Section): Promise<Section> {
-    return await this.sectionService.createSectionWithChannels(section);
+    try {
+      return await this.sectionService.createSectionWithChannels(section);
+    } catch (error) {
+      if (error) throw new NotFoundException(error.message);
+    }
   }
 
   @Post(
