@@ -1,7 +1,7 @@
 .content-sidebar {
   width: 33%;
   margin-left: 45px;
-  height: 100%;
+  height: calc(100% - 60px);
   transition: width 0.3s ease;
 }
 

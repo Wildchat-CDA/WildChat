@@ -1,8 +1,8 @@
-import React from 'react';
 import ContentSidebar from './ContentSidebar/ContentSidebar';
 import ContentMain from './contentMain/ContentMain';
 import './MainContent.css';
 import { useNavigation } from '../../../context/NavigationContext';
+import Setting from '../../setting/Setting';
 
 interface IMainContentProps {
   isMobile: boolean;

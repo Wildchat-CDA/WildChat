@@ -31,17 +31,15 @@
 
   .title-container {
     display: flex;
-    width: 25%;
+    width: auto;
     justify-content: space-around;
-    /* border: 1px solid blue; */
     min-width: 70px;
 
     .img-vector_container {
       cursor: pointer;
-      width: auto;
+      width: 20px;
       height: auto;
       object-fit: cover;
-      /* margin: 5px 0 ; */
       padding: 5px;
       .icon-vector {
         width: auto;

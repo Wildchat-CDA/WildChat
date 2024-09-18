@@ -9,6 +9,8 @@ import { useNavigation } from '../../../context/NavigationContext';
 import { useModal } from '../../../context/ModalContext';
 import { ISection } from '../../../types/sectionTypes';
 import { ModalTypeEnum } from '../../../context/ModalContext';
+import EditButton from '../../common/button/EditButton';
+import EditSectionInput from '../../common/input/editSection/EdiitSectionInput';
 interface ISectionProps {
   type: string;
 }
@@ -42,17 +44,7 @@ const Section = ({ type }: ISectionProps) => {
     setActiveContentMainComp((prevState) =>
       prevState === true ? false : false
     );
-
-    const sectionPayload = {
-      sectionId: section.id,
-      sectionTitle: section.title,
-      channelTitle: '',
-      uuid: '',
-      messageIndex: null,
-      currentMessage: '',
-    };
-
-    setCurrentSection(sectionPayload);
+    affectedCurrentSection(section);
     setActiveSection((prevActiveSections) => {
       // Vérifie si l'index est déjà présent
       const indexExists = prevActiveSections.includes(index);
@@ -66,13 +58,40 @@ const Section = ({ type }: ISectionProps) => {
     });
   };
 
+  const affectedCurrentSection = (section: ISection) => {
+    const sectionPayload = {
+      sectionId: section.id,
+      sectionTitle: section.title,
+      channelTitle: '',
+      uuid: '',
+      messageIndex: null,
+      currentMessage: '',
+    };
+    setCurrentSection(sectionPayload);
+  };
+
   const handleNewSection = () => {
     setActiveModal(ModalTypeEnum.NewSection);
   };
 
-  
+  const handleEditSection = (section: ISection) => {
+    affectedCurrentSection(section);
+    setActiveModal(ModalTypeEnum.EditSection);
+  };
+
   return (
     <div className='section-container'>
+      {activeModal === ModalTypeEnum.NewSection && (
+        <Modal>
+          <NewSectionInput setActiveModal={setActiveModal} />
+        </Modal>
+      )}
+      {activeModal === ModalTypeEnum.EditSection && (
+        <Modal>
+          <EditSectionInput currentSection={currentSection} setActiveModal={setActiveModal} />
+        </Modal>
+      )}
+
       <div className='section-topic-title'>
         <h3>{type === 'library' ? 'Bibliothèque' : 'Salle de  classe'} </h3>
         <div className='topic-container'>
@@ -83,11 +102,6 @@ const Section = ({ type }: ISectionProps) => {
       </div>
 
       <div className='section-topic-column'>
-        {activeModal === ModalTypeEnum.NewSection && (
-          <Modal>
-            <NewSectionInput setActiveModal={setActiveModal} />
-          </Modal>
-        )}
         {allRoomsAndChannels.map((section: ISection, index) => (
           <div key={section.order} className='section-column'>
             <div className='title-container'>
@@ -103,6 +117,7 @@ const Section = ({ type }: ISectionProps) => {
                 />
               </div>
               <h5 className='section-title'>{section.title}</h5>
+              <EditButton action={() => handleEditSection(section)} />
             </div>
 
             {activeSection.includes(index) && (
