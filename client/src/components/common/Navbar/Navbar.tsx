@@ -65,7 +65,8 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <NavItem icon="navigation.png" text="Navigation" onClick={() => {/* ... */}} />
+            <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
+            <NavItem icon="listStudent.png" text="Liste des présences" onClick={() => {/* ... */}} />
             <NavItem icon="notification.png" text="Notifications" onClick={() => {/* ... */}} />
             <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
             <NavItem icon={!!muted ? "NoSpeak.png" : "speak.png"} text="Prendre la parole" onClick={() => setMuted(!muted)} />
@@ -76,7 +77,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
           <>
             <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
             <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
-            <NavItem icon="students.png" text="Élèves connectés" onClick={() => {/* ... */}} />
+            <NavItem icon="listStudent.png" text="Élèves connectés" onClick={() => {/* ... */}} />
             <NavItem icon="palm.png" text="Mains levées" onClick={() => {/* ... */}} />
             <NavItem icon={!!muted ? "NoSpeak.png" : "speak.png"} text="Prendre la parole" onClick={handleMuted} />
           </>
@@ -98,8 +99,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <NavItem icon="library.png" text="Bibliothèque" onClick={() => {/* ... */}} />
-            <NavItem icon="channels.png" text="Canaux" onClick={() => {/* ... */}} />
+            <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
             <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
             <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
             {handRaiseItem}
