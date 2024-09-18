@@ -41,47 +41,54 @@ export class SectionService {
   }
 
   async createSectionWithChannels(sectionData: any) {
-    const section = await this.sectionRepository.save(sectionData);
-
-    const channels = [
-      'Cours',
-      'Exercices',
-      'Ressources formateur',
-      'Ressources élèves',
-    ];
-
-    const newChannels = [];
-
-    for (let i = 0; i < channels.length; i++) {
-      const newChannel = this.channelRepository.create({
-        uuid: uuidv4(),
-        title: channels[i],
-        slot: 1,
+    if (
+      await this.sectionRepository.findOne({
+        where: { order: sectionData.order },
+      })
+    ) {
+      throw new ConflictException('This order number already exists', {
+        cause: new Error(),
+        description: 'Duplicate entry',
       });
+    } else {
+      const section = await this.sectionRepository.save(sectionData);
 
-      const newConfig = this.configRepository.create({
-        maxSlot: 1,
-        type: await this.typeRepository.findOneBy({ id: 1 }),
-      });
+      const channels = [
+        'Cours',
+        'Exercices',
+        'Ressources formateur',
+        'Ressources élèves',
+      ];
 
-      console.log(newConfig, 'nouvelle config');
+      const newChannels = [];
 
-      newChannel.config = newConfig;
+      for (let i = 0; i < channels.length; i++) {
+        const newChannel = this.channelRepository.create({
+          uuid: uuidv4(),
+          title: channels[i],
+          slot: 1,
+        });
 
-      await this.configRepository.save(newConfig);
+        const newConfig = this.configRepository.create({
+          maxSlot: 1,
+          type: await this.typeRepository.findOneBy({ id: 1 }),
+        });
 
-      const savedChannel = await this.channelRepository.save(newChannel);
+        console.log(newConfig, 'nouvelle config');
 
-      newChannels.push(savedChannel);
+        newChannel.config = newConfig;
+
+        await this.configRepository.save(newConfig);
+
+        const savedChannel = await this.channelRepository.save(newChannel);
+
+        newChannels.push(savedChannel);
+      }
+
+      section.channels = newChannels;
+
+      return await this.sectionRepository.save(section);
     }
-
-    section.channels = newChannels;
-
-    if (await this.sectionRepository.findOne({ order: section.order })) {
-      throw new ConflictException('This order number already exists');
-    }
-
-    return await this.sectionRepository.save(section);
   }
 
   async createClassRoomWithChannels(): Promise<any> {
