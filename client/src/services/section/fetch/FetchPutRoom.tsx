@@ -1,10 +1,10 @@
-export async function fetchPutSection(currentSection, data): Promise<any> {
+export async function fetchPutRoom(currentSection, data): Promise<any> {
   const dataObj = {
     title: data,
   };
   try {
     const response = await fetch(
-      `http://localhost:3000/section/${currentSection.sectionId}`,
+      `http://localhost:3000/section/${currentSection.sectionId}/topic/channel/${currentSection.channelId}`,
       {
         method: 'PUT',
         headers: {
@@ -20,7 +20,7 @@ export async function fetchPutSection(currentSection, data): Promise<any> {
       );
     }
     const payload = await response.json();
-
+    console.log('PAYLOAD : ', payload);
     return payload;
   } catch (error) {
     console.error('Failed to edit section:', error);

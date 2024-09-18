@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { fetchPutSection } from '../../../../services/section/fetch/FetchPostRoom';
+import { fetchPutSection } from '../../../../services/section/fetch/FetchPutSection';
 import { useNavigation } from '../../../../context/NavigationContext';
 
 import { ModalContextType } from '../../../../context/ModalContext';
@@ -25,10 +25,10 @@ const EditSectionInput = ({
   // Fonction pour soumettre la valeur actuelle
   const handleSubmit = () => {
     if (inputValue.length !== 0) {
-      // fetchPutSection(currentSection, inputValue).then(() => {
-      //   setRefresh((prevState) => prevState + 1);
-      //   setActiveModal(null);
-      // });
+      fetchPutSection(currentSection, inputValue).then(() => {
+        setRefresh((prevState) => prevState + 1);
+        setActiveModal(null);
+      });
     } else alert(`Valeur soumise incorrect`);
   };
 

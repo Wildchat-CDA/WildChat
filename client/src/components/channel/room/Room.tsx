@@ -1,15 +1,13 @@
 import './Room.css';
-import { ISectionChannel } from '../../../types/sectionTypes';
-import AddButton from '../../common/button/AddSectionButton';
-
 import Modal from '../../common/modal/Modal';
-import NewChannelInput from '../../common/input/newChannel/NewChannelInput';
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import { ModalContextType } from '../../../context/ModalContext';
 import { NavigationContextType } from '../../../context/NavigationContext';
 import { ISection, IChannel } from '../../../types/sectionTypes';
+import EditButton from '../../common/button/EditButton';
+import EditRoomInput from '../../common/input/editRoom/EditRoomInput';
 interface IRoomProps {
-  rooms: ISection['channels'];
+  section: ISection;
   currentSection: NavigationContextType['currentSection'];
   setCurrentSection: NavigationContextType['setCurrentSection'];
   setActiveContentMainComp: NavigationContextType['setActiveContentMainComp'];
@@ -18,7 +16,7 @@ interface IRoomProps {
 }
 
 function Room({
-  rooms,
+  section,
   setCurrentSection,
   setActiveContentMainComp,
   currentSection,
@@ -26,40 +24,48 @@ function Room({
   activeModal,
 }: IRoomProps) {
   const handleRoom = (room: IChannel) => {
-    setCurrentSection((prevState: ISectionChannel) => ({
-      ...prevState,
-      channelTitle: room.title,
-      uuid: room.uuid,
-    }));
+    affectedCurrentSection(room);
   };
 
-  const newRoom = () => {
-    setActiveModal(ModalTypeEnum.NewRoom);
+  // console.log('section : ', section);
+  const affectedCurrentSection = (room: IChannel) => {
+    setCurrentSection({
+      sectionId: section.id,
+      sectionTitle: section.title,
+      channelTitle: room.title,
+      channelId: room.id,
+      uuid: room.uuid,
+      messageIndex: null,
+      currentMessage: '',
+    });
+  };
+  const handleEditRoom = (room: IChannel) => {
+    affectedCurrentSection(room);
+    setActiveModal(ModalTypeEnum.EditRoom);
   };
 
   return (
     <div className='rooms-container'>
-      {rooms.map((room) => {
-        return (
-          <div>
-            <span
-              className='room-span'
-              onClick={() => {
-                handleRoom(room);
-                setActiveContentMainComp(true);
-              }}
-            >
-              {room.title}{' '}
-            </span>
-          </div>
-        );
-      })}
-      <AddButton action={newRoom} />
-      {activeModal === ModalTypeEnum.NewRoom && (
+      {section.channels.map((room) => (
+        <div className='rooms-column' key={room.id}>
+          <EditButton action={() => handleEditRoom(room)} />
+          <span
+            className='room-span'
+            onClick={() => {
+              handleRoom(room);
+              setActiveContentMainComp(true);
+            }}
+          >
+            {room.title}
+          </span>
+        </div>
+      ))}
+
+      {activeModal === ModalTypeEnum.EditRoom && (
         <Modal>
-          <NewChannelInput
-            setActiveModal={setActiveModal}
+          <EditRoomInput
             currentSection={currentSection}
+            setActiveModal={setActiveModal}
           />
         </Modal>
       )}

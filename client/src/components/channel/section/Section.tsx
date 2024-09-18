@@ -11,13 +11,13 @@ import { ISection } from '../../../types/sectionTypes';
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import EditButton from '../../common/button/EditButton';
 import EditSectionInput from '../../common/input/editSection/EdiitSectionInput';
+import NewChannelInput from '../../common/input/newChannel/NewChannelInput';
+
 interface ISectionProps {
   type: string;
 }
 
 const Section = ({ type }: ISectionProps) => {
-  const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
-  const [activeSection, setActiveSection] = useState<number[]>([]);
   const {
     setCurrentSection,
     refresh,
@@ -25,19 +25,26 @@ const Section = ({ type }: ISectionProps) => {
     currentSection,
   } = useNavigation();
   const { setActiveModal, activeModal } = useModal();
+  const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
+  const [activeSection, setActiveSection] = useState<number[]>([]);
 
   useEffect(() => {
-    fetchGetSection(type)
-      .then((data) => {
-        setAllRoomsAndChannels(data);
-        if (type === 'classRoom') {
-          const allIndexes = data.map((_: object, index: number) => index);
-          setActiveSection(allIndexes);
-        }
-      })
-      .catch((err) =>
-        console.error('Erreur lors du chargement des rooms :', err)
-      );
+    console.log('REFRESR');
+    try {
+      fetchGetSection(type)
+        .then((data) => {
+          setAllRoomsAndChannels(data);
+          if (type === 'classRoom') {
+            const allIndexes = data.map((_: object, index: number) => index);
+            setActiveSection(allIndexes);
+          }
+        })
+        .catch((err) =>
+          console.error('Erreur lors du chargement des rooms :', err)
+        );
+    } catch (error) {
+      console.error(error);
+    }
   }, [refresh]);
 
   const handleShow = (section: ISection, index: number) => {
@@ -59,10 +66,12 @@ const Section = ({ type }: ISectionProps) => {
   };
 
   const affectedCurrentSection = (section: ISection) => {
+    console.log('SECTION : ', section);
     const sectionPayload = {
       sectionId: section.id,
       sectionTitle: section.title,
       channelTitle: '',
+      channelId: 0,
       uuid: '',
       messageIndex: null,
       currentMessage: '',
@@ -79,6 +88,11 @@ const Section = ({ type }: ISectionProps) => {
     setActiveModal(ModalTypeEnum.EditSection);
   };
 
+  const handleNewRoom = (section: ISection) => {
+    affectedCurrentSection(section);
+    setActiveModal(ModalTypeEnum.NewRoom);
+  };
+
   return (
     <div className='section-container'>
       {activeModal === ModalTypeEnum.NewSection && (
@@ -88,7 +102,18 @@ const Section = ({ type }: ISectionProps) => {
       )}
       {activeModal === ModalTypeEnum.EditSection && (
         <Modal>
-          <EditSectionInput currentSection={currentSection} setActiveModal={setActiveModal} />
+          <EditSectionInput
+            currentSection={currentSection}
+            setActiveModal={setActiveModal}
+          />
+        </Modal>
+      )}
+      {activeModal === ModalTypeEnum.NewRoom && (
+        <Modal>
+          <NewChannelInput
+            setActiveModal={setActiveModal}
+            currentSection={currentSection}
+          />
         </Modal>
       )}
 
@@ -96,7 +121,6 @@ const Section = ({ type }: ISectionProps) => {
         <h3>{type === 'library' ? 'Bibliothèque' : 'Salle de  classe'} </h3>
         <div className='topic-container'>
           <h4 className='topic-title'>Topic </h4>
-
           <AddButton action={handleNewSection} />
         </div>
       </div>
@@ -121,14 +145,17 @@ const Section = ({ type }: ISectionProps) => {
             </div>
 
             {activeSection.includes(index) && (
-              <Room
-                rooms={section.channels}
-                setCurrentSection={setCurrentSection}
-                setActiveContentMainComp={setActiveContentMainComp}
-                currentSection={currentSection}
-                setActiveModal={setActiveModal}
-                activeModal={activeModal}
-              />
+              <>
+                <Room
+                  section={section}
+                  setCurrentSection={setCurrentSection}
+                  setActiveContentMainComp={setActiveContentMainComp}
+                  currentSection={currentSection}
+                  setActiveModal={setActiveModal}
+                  activeModal={activeModal}
+                />
+                <AddButton action={() => handleNewRoom(section)} />
+              </>
             )}
           </div>
         ))}{' '}

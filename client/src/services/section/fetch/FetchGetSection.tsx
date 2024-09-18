@@ -9,8 +9,7 @@ export async function fetchGetSection(type): Promise<any> {
         `Error: ${response.status} ${response.statusText} while fetching room's from ${response.url}`
       );
     }
-    const payload = await response.json();
-    return payload;
+    return await response.json();
   } catch (error) {
     console.error('Failed to load room:', error);
     throw new Error('Failed to load room. Please try again later.');

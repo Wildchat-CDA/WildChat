@@ -77,9 +77,9 @@ export class SectionService {
 
     section.channels = newChannels;
 
-    if (await this.sectionRepository.findOne({ order: section.order })) {
-      throw new ConflictException('This order number already exists');
-    }
+    // if (await this.sectionRepository.findOne({ order: section.order })) {
+    //   throw new ConflictException('This order number already exists');
+    // }
 
     return await this.sectionRepository.save(section);
   }

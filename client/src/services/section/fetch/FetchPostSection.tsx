@@ -1,7 +1,8 @@
-export async function fetchPostSection(data): Promise<any> {
+export async function fetchPostSection(data: string): Promise<any> {
   const dataObj = {
     title: data,
-    order: 1,
+    isClassRoom: false,
+    order: 6,
   };
   try {
     const response = await fetch('http://localhost:3000/section/topic', {
