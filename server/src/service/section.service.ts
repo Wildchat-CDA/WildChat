@@ -33,7 +33,6 @@ export class SectionService {
       sections[0].order = 0;
     } else {
       const lastSection = sections[0];
-      console.log('last section', lastSection);
       const newSection = await this.sectionRepository.save({
         ...sectionData,
         order: lastSection.order + 1,
