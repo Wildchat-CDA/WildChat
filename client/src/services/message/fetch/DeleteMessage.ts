@@ -19,8 +19,6 @@ export async function deleteMessage(
         `Error: ${response.status} ${response.statusText} while deleting message at index ${data.index} in room ${data.roomId}`
       );
     }
-
-    console.log('Message deletion successful:', data);
   } catch (error) {
     console.error('Failed to delete message:', error);
     throw new Error('Failed to delete the message. Please try again later.');

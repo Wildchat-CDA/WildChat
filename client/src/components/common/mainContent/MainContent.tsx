@@ -4,6 +4,7 @@ import ContentMain from './contentMain/ContentMain';
 import './MainContent.css';
 
 const MainContent = () => {
+  
   return (
     <div className='main-content'>
       <ContentSidebar />

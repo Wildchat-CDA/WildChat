@@ -15,11 +15,10 @@ export interface IMessageUpdateProps {
   name: string;
   index: number;
   message: string;
-  roomId: number;
+  roomId: string;
   setActiveEdit(newState: boolean): void;
   setMessages(
     newState: (prevState: IMessagePostPayload[]) => IMessagePostPayload[]
   ): void;
   updateMessage(msg: string, index: number): void;
 }
-

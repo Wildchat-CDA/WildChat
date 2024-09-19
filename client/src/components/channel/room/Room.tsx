@@ -14,7 +14,7 @@ function Room({ rooms, setCurrentSection }) {
   return (
     <div className='rooms-container'>
       {rooms.map((room) => {
-        console.log('room :', room);
+       
         return (
           <div>
             <span className='room-span' onClick={() => handleRoom(room)}>

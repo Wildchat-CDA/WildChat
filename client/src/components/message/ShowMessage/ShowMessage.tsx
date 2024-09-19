@@ -8,18 +8,19 @@ import './ShowMessage.css';
 import { IMessagePostPayload } from '../../../../../common/interface/messageInterface';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
-import Modal from '../modal/Modal';
+import Modal from '../../common/modal/Modal';
 import { useNavigation } from '../../../context/NavigationContext';
+import { ISectionChannel } from '../../../types/sectionTypes';
+import DeleteMessage from '../deleteMessage/DeleteMessage';
+import { ModalTypeEnum } from '../../../context/ModalContext';
+import { useModal } from '../../../context/ModalContext';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
-  const [currentMessage, setCurrentMessage] = useState<string>();
-  const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-
-  const { currentSection } = useNavigation();
+  const { setActiveModal, activeModal } = useModal();
+  const { currentSection, setCurrentSection } = useNavigation();
 
   const name = 'Théo'; // TODO Need to use an userContext
 
@@ -46,14 +47,16 @@ const ShowMessage: React.FC = () => {
   const handleEdit = (index: number) => {
     setActiveEdit(true);
     setCurrentIndex(index);
-    console.log('NAME : ', name);
-    console.log('MESSAGE NAME : ', messages);
   };
 
-  const activeDelete = (roomId, index) => {
+  const activeDelete = (message: string, index) => {
+    setActiveModal(ModalTypeEnum.DeleteMessage);
     setCurrentIndex(index);
-    setSelectedRoomId(roomId);
-    setActiveModalDelete(true);
+    setCurrentSection((prevState: ISectionChannel) => ({
+      ...prevState,
+      messageIndex: index,
+      currentMessage: message,
+    }));
   };
 
   // Update message in message Array
@@ -92,7 +95,10 @@ const ShowMessage: React.FC = () => {
                 updateMessage={updateMessage}
               />
             ) : (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.message}</ReactMarkdown>            )}
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.message}
+              </ReactMarkdown>
+            )}
             {name === message.name && (
               <div className='span-action_container'>
                 <span
@@ -110,8 +116,7 @@ const ShowMessage: React.FC = () => {
                   aria-label='Supprimer ce message'
                   className='span-action delete-span'
                   onClick={() => {
-                    activeDelete(message.roomId, index);
-                    setCurrentMessage(message.message);
+                    activeDelete(message.message, index);
                   }}
                 >
                   <img
@@ -124,15 +129,16 @@ const ShowMessage: React.FC = () => {
             )}
           </div>
         ))}
-        {activeModalDelete && (
-          <Modal
-            currentIndex={currentIndex}
-            selectedRoomId={selectedRoomId}
-            setMessages={setMessages}
-            setActiveModalDelete={setActiveModalDelete}
-            currentMessage={currentMessage}
-          />
+
+        {activeModal === ModalTypeEnum.DeleteMessage && (
+          <Modal>
+            <DeleteMessage
+              setMessages={setMessages}
+              setActiveModal={setActiveModal}
+            />
+          </Modal>
         )}
+
         <div ref={scrollRef}></div>
       </div>
     </div>
