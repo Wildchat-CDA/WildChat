@@ -34,7 +34,6 @@ const ShowMessage: React.FC = () => {
 
     // Load new messages with socket.Io
     const handleMessage = (payload: IMessagePostPayload) => {
-      console.log('PAYLOAD : ', payload);
       setMessages((preMessages) => [...preMessages, payload]);
     };
 

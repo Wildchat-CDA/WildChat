@@ -29,7 +29,6 @@ function Room({
     affectedCurrentSection(room);
   };
 
-  // console.log('section : ', section);
   const affectedCurrentSection = (room: IChannel) => {
     setCurrentSection({
       sectionId: section.id,

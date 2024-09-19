@@ -2,6 +2,7 @@ import DeleteAction from '../../button/delete/DeleteAction';
 import { ModalContextType } from '../../../../context/ModalContext';
 import { NavigationContextType } from '../../../../context/NavigationContext';
 import { fetchDeleteRoom } from '../../../../services/section/fetch/FetchDeleteRoom';
+import { useNavigation } from '../../../../context/NavigationContext';
 
 interface IDeleteSectionProps {
   setActiveModal: ModalContextType['setActiveModal'];
@@ -12,9 +13,11 @@ const DeleteRoom = ({
   setActiveModal,
   currentSection,
 }: IDeleteSectionProps) => {
-  console.log('CURREN SECC :', currentSection);
+  const { setRefresh } = useNavigation();
   const handleDelete = () => {
-    fetchDeleteRoom(currentSection);
+    fetchDeleteRoom(currentSection).then(() =>
+      setRefresh((prevState) => prevState + 1)
+    );
     setActiveModal(null);
   };
 

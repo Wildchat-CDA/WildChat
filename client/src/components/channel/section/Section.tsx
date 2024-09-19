@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchGetSection } from '../../../services/section/fetch/FetchGetSection';
 import Room from '../room/Room';
 import './Section.css';
 import AddButton from '../../common/button/add/AddSectionButton';
-import Modal from '../../common/modal/Modal';
-import NewSectionInput from '../../common/input/newSection/NewSectionInput';
 import { useNavigation } from '../../../context/NavigationContext';
 import { useModal } from '../../../context/ModalContext';
 import { ISection } from '../../../types/sectionTypes';
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import EditButton from '../../common/button/edit/EditButton';
-import EditSectionInput from '../../common/input/editSection/EdiitSectionInput';
-import NewChannelInput from '../../common/input/newChannel/NewChannelInput';
 import DeleteButton from '../../common/button/delete/DeleteButton';
-import DeleteSection from '../../common/modal/delete/DeleteSection';
-import DeleteRoom from '../../common/modal/delete/DeleteRoom';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 
 interface ISectionProps {
@@ -27,13 +21,14 @@ const Section = ({ type }: ISectionProps) => {
     refresh,
     setActiveContentMainComp,
     currentSection,
+    setIsClassRoom,
   } = useNavigation();
   const { setActiveModal, activeModal } = useModal();
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
 
   useEffect(() => {
-    console.log('REFRESR');
+
     try {
       fetchGetSection(type)
         .then((data) => {
@@ -70,7 +65,6 @@ const Section = ({ type }: ISectionProps) => {
   };
 
   const affectedCurrentSection = (section: ISection) => {
-    console.log('SECTION : ', section);
     const sectionPayload = {
       sectionId: section.id,
       sectionTitle: section.title,
@@ -84,6 +78,7 @@ const Section = ({ type }: ISectionProps) => {
   };
 
   const handleNewSection = () => {
+    setIsClassRoom(type === 'library' ? false : true);
     setActiveModal(ModalTypeEnum.NewSection);
   };
 

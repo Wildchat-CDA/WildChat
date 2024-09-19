@@ -1,11 +1,17 @@
-export async function fetchPostSection(data: string): Promise<any> {
+export async function fetchPostSection(
+  data: string,
+  isClassRoom: boolean
+): Promise<any> {
   const dataObj = {
     title: data,
-    isClassRoom: false,
-    order: 4,
+    isClassRoom: isClassRoom,
   };
+
+  const urlApi = isClassRoom
+    ? 'http://localhost:3000/section/'
+    : 'http://localhost:3000/section/topic';
   try {
-    const response = await fetch('http://localhost:3000/section/topic', {
+    const response = await fetch(urlApi, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

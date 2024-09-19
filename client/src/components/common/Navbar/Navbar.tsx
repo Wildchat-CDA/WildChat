@@ -63,7 +63,6 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
     setActiveContentMainComp((prevState) =>
       prevState === true ? false : false
     );
-    console.log('lib');
   };
 
   const dropdownItems = [

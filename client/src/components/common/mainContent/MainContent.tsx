@@ -10,7 +10,6 @@ interface IMainContentProps {
 
 const MainContent = ({ isMobile }: IMainContentProps) => {
   const { activeContentMainComp } = useNavigation();
-  console.log('activeContentMain : ', activeContentMainComp);
 
   return isMobile === true ? (
     <div className='main-content'>

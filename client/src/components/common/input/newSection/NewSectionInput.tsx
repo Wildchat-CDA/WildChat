@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { fetchPostSection } from '../../../../services/section/fetch/FetchPostSection';
 import { useNavigation } from '../../../../context/NavigationContext';
 import './NewSectionInput.css';
@@ -9,7 +9,7 @@ interface INewSectionInput {
 }
 
 const NewSectionInput = ({ setActiveModal }: INewSectionInput) => {
-  const { setRefresh } = useNavigation();
+  const { setRefresh, isClassRoom } = useNavigation();
   const [inputValue, setInputValue] = useState<string>('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +19,7 @@ const NewSectionInput = ({ setActiveModal }: INewSectionInput) => {
   // Fonction pour soumettre la valeur actuelle
   const handleSubmit = () => {
     if (inputValue.length !== 0) {
-      fetchPostSection(inputValue).then(() => {
+      fetchPostSection(inputValue, isClassRoom).then(() => {
         setRefresh((prevState) => prevState + 1);
         setActiveModal(null);
       });

@@ -17,7 +17,6 @@ const EditSectionInput = ({
   const { setRefresh } = useNavigation();
   const [inputValue, setInputValue] = useState<string>('');
 
-  console.log('CURRENT SECTION : ', currentSection);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };

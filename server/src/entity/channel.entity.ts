@@ -27,7 +27,9 @@ export class Channel {
   @JoinColumn()
   config: Config;
 
-  @ManyToMany(() => Section, (section: Section) => section.channels)
+  @ManyToMany(() => Section, (section: Section) => section.channels, {
+    onDelete: 'CASCADE',
+  })
   sections: Array<Section>;
 
   @JoinColumn()

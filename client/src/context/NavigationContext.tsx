@@ -9,6 +9,8 @@ export interface NavigationContextType {
   setRefresh: React.Dispatch<React.SetStateAction<number>>;
   activeContentMainComp: boolean;
   setActiveContentMainComp: React.Dispatch<React.SetStateAction<boolean>>;
+  isClassRoom: boolean;
+  setIsClassRoom: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Création du contexte avec un type par défaut
@@ -43,6 +45,7 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
   const [refresh, setRefresh] = useState<number>(0);
   const [activeContentMainComp, setActiveContentMainComp] =
     useState<boolean>(false);
+  const [isClassRoom, setIsClassRoom] = useState<boolean>(false);
 
   const value = {
     currentSection,
@@ -51,6 +54,8 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     setRefresh,
     activeContentMainComp,
     setActiveContentMainComp,
+    isClassRoom,
+    setIsClassRoom,
   };
 
   return (

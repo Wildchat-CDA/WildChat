@@ -17,7 +17,7 @@ const EditRoomInput = ({
   const { setRefresh } = useNavigation();
   const [inputValue, setInputValue] = useState<string>('');
 
-  // console.log('CURRENT ROOM : ', currentSection);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };

@@ -24,7 +24,6 @@ export async function fetchPutRoom(
       );
     }
     const payload = await response.json();
-    console.log('PAYLOAD : ', payload);
     return payload;
   } catch (error) {
     console.error('Failed to edit section:', error);

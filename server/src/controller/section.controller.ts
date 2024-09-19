@@ -51,7 +51,7 @@ export class SectionController {
   @Delete('/:sectionId')
   async delete(@Param('sectionId') sectionId: number): Promise<DeleteResult> {
     try {
-      await this.sectionService.delete(sectionId);
+      return await this.sectionService.delete(sectionId);
     } catch (err) {
       throw new NotFoundException(err.message);
     }

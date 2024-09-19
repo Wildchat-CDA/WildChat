@@ -5,7 +5,7 @@ export async function fetchDeleteRoom(
 ): Promise<number> {
   try {
     const response = await fetch(
-      `http://localhost:3000/section/${currentSection.sectionId}/topic/channel/${currentSection.channelId}`,
+      `http://localhost:3000/channel/${currentSection.channelId}`,
       {
         method: 'DELETE',
         headers: {
