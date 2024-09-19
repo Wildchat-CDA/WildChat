@@ -15,6 +15,7 @@ import NewChannelInput from '../../common/input/newChannel/NewChannelInput';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import DeleteSection from '../../common/modal/delete/DeleteSection';
 import DeleteRoom from '../../common/modal/delete/DeleteRoom';
+import ModalWrapper from '../../common/modal/ModalWrapper';
 
 interface ISectionProps {
   type: string;
@@ -103,36 +104,11 @@ const Section = ({ type }: ISectionProps) => {
 
   return (
     <div className='section-container'>
-      {activeModal === ModalTypeEnum.NewSection && (
-        <Modal>
-          <NewSectionInput setActiveModal={setActiveModal} />
-        </Modal>
-      )}
-      {activeModal === ModalTypeEnum.EditSection && (
-        <Modal>
-          <EditSectionInput
-            currentSection={currentSection}
-            setActiveModal={setActiveModal}
-          />
-        </Modal>
-      )}
-      {activeModal === ModalTypeEnum.NewRoom && (
-        <Modal>
-          <NewChannelInput
-            setActiveModal={setActiveModal}
-            currentSection={currentSection}
-          />
-        </Modal>
-      )}
-      {activeModal === ModalTypeEnum.DeleteSection && (
-        <Modal>
-          <DeleteSection
-            setActiveModal={setActiveModal}
-            currentSection={currentSection}
-          />
-        </Modal>
-      )}
-
+      <ModalWrapper
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        currentSection={currentSection}
+      />
       <div className='section-topic-title'>
         <h3>{type === 'library' ? 'Bibliothèque' : 'Salle de  classe'} </h3>
         <div className='topic-container'>

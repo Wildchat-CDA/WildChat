@@ -1,13 +1,13 @@
 import './Room.css';
-import Modal from '../../common/modal/Modal';
+
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import { ModalContextType } from '../../../context/ModalContext';
 import { NavigationContextType } from '../../../context/NavigationContext';
 import { ISection, IChannel } from '../../../types/sectionTypes';
 import EditButton from '../../common/button/edit/EditButton';
-import EditRoomInput from '../../common/input/editRoom/EditRoomInput';
 import DeleteButton from '../../common/button/delete/DeleteButton';
-import DeleteRoom from '../../common/modal/delete/DeleteRoom';
+import ModalWrapper from '../../common/modal/ModalWrapper';
+
 interface IRoomProps {
   section: ISection;
   currentSection: NavigationContextType['currentSection'];
@@ -68,23 +68,11 @@ function Room({
           </span>
         </div>
       ))}
-      {activeModal === ModalTypeEnum.DeleteRoom && (
-        <Modal>
-          <DeleteRoom
-            setActiveModal={setActiveModal}
-            currentSection={currentSection}
-          />
-        </Modal>
-      )}
-
-      {activeModal === ModalTypeEnum.EditRoom && (
-        <Modal>
-          <EditRoomInput
-            currentSection={currentSection}
-            setActiveModal={setActiveModal}
-          />
-        </Modal>
-      )}
+      <ModalWrapper
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        currentSection={currentSection}
+      />
     </div>
   );
 }

@@ -8,13 +8,12 @@ import './ShowMessage.css';
 import { IMessagePostPayload } from '../../../../../common/interface/messageInterface';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
-import Modal from '../../common/modal/Modal';
 import { useNavigation } from '../../../context/NavigationContext';
 import { ISectionChannel } from '../../../types/sectionTypes';
-import DeleteMessage from '../deleteMessage/DeleteMessage';
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import { useModal } from '../../../context/ModalContext';
 import DeleteButton from '../../common/button/delete/DeleteButton';
+import ModalWrapper from '../../common/modal/ModalWrapper';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -123,16 +122,12 @@ const ShowMessage: React.FC = () => {
             )}
           </div>
         ))}
-
-        {activeModal === ModalTypeEnum.DeleteMessage && (
-          <Modal>
-            <DeleteMessage
-              setMessage={setMessages}
-              setActiveModal={setActiveModal}
-            />
-          </Modal>
-        )}
-
+        <ModalWrapper
+          activeModal={activeModal}
+          setActiveModal={setActiveModal}
+          currentSection={currentSection}
+          setMessage={setMessages}
+        />
         <div ref={scrollRef}></div>
       </div>
     </div>
