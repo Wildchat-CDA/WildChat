@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   NotFoundException,
+  ConflictException,
   Delete,
 } from '@nestjs/common';
 import { SectionService } from '../service/section.service';
@@ -18,9 +19,9 @@ export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
 
   @Post('/') /**Pour créer une section sans channel */ async create(
-    @Body() section: Section,
+    @Body() sectionData: Section,
   ): Promise<Section> {
-    return await this.sectionService.create(section);
+    return await this.sectionService.create(sectionData);
   }
 
   @Get('/')
@@ -36,9 +37,24 @@ export class SectionController {
     return await this.sectionService.update(section, sectionId);
   }
 
+  @Put('/:sectionId/order')
+  async updateSectionsOrder(
+    @Body() sectionOrder: Partial<Section>,
+    @Param('sectionId') sectionId: number,
+  ): Promise<void> {
+    return await this.sectionService.updateSectionsOrder(
+      sectionOrder,
+      sectionId,
+    );
+  }
+
   @Delete('/:sectionId')
   async delete(@Param('sectionId') sectionId: number): Promise<void> {
-    return await this.sectionService.delete(sectionId);
+    try {
+      return await this.sectionService.delete(sectionId);
+    } catch (err) {
+      throw new NotFoundException(err.message);
+    }
   }
 
   @Put(
@@ -60,7 +76,7 @@ export class SectionController {
     try {
       return await this.sectionService.createSectionWithChannels(section);
     } catch (error) {
-      if (error) throw new NotFoundException(error.message);
+      if (error) throw new ConflictException(error.message);
     }
   }
 
