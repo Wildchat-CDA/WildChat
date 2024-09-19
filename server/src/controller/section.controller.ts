@@ -12,7 +12,7 @@ import {
 import { SectionService } from '../service/section.service';
 import { Section } from 'src/entity/section.entity';
 import { Channel } from 'src/entity/channel.entity';
-import { UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('/section')
 export class SectionController {
@@ -37,11 +37,11 @@ export class SectionController {
     return await this.sectionService.update(section, sectionId);
   }
 
-  @Put('/:sectionId/order')
+  @Put('/:sectionId/order') /**Modifier le champ ordre d'une section */
   async updateSectionsOrder(
     @Body() sectionOrder: Partial<Section>,
     @Param('sectionId') sectionId: number,
-  ): Promise<void> {
+  ): Promise<UpdateResult> {
     return await this.sectionService.updateSectionsOrder(
       sectionOrder,
       sectionId,
@@ -49,7 +49,7 @@ export class SectionController {
   }
 
   @Delete('/:sectionId')
-  async delete(@Param('sectionId') sectionId: number): Promise<void> {
+  async delete(@Param('sectionId') sectionId: number): Promise<DeleteResult> {
     try {
       await this.sectionService.delete(sectionId);
     } catch (err) {
@@ -102,7 +102,7 @@ export class SectionController {
     @Param('channelId') channelId: number,
     @Body('title') newTitle: string,
     @Body('slot') newSlot: number,
-  ): Promise<Channel> {
+  ): Promise<UpdateResult> {
     try {
       return await this.sectionService.editChannelInSection(
         sectionId,
@@ -116,7 +116,7 @@ export class SectionController {
   }
 
   @Post('/classRoom') /**Création de la salle de classe avec les channels */
-  async createClassRoomWithChannels(): Promise<Section> {
+  async createClassRoomWithChannels(): Promise<Section[]> {
     return await this.sectionService.createClassRoomWithChannels();
   }
 

@@ -28,11 +28,4 @@ export class Section {
   })
   @JoinTable()
   channels: Array<Channel>;
-
-  // @JoinTable()
-  // type: Type;
-
-  // @ManyToOne(() => Config, (config) => config.sections)
-  // @JoinColumn({ name: 'configId' })
-  // config: Config;
 }
