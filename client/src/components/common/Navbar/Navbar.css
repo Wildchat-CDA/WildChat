@@ -79,7 +79,7 @@
 }
 
 .nav-item:hover .icon-wrapper {
-  background-color: rgba(255, 255, 255, 0.2);
+  border: solid 3px white;
 }
 
 .nav-item:hover .nav-text {
@@ -92,6 +92,7 @@
 
 .nav-item[aria-pressed="true"] .nav-text {
   color: #35a554;
+  background-color: #35a554;
 }
 
 .nav-item:focus {
