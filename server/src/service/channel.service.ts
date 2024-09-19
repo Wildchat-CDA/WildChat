@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { Config } from 'src/entity/config.entity';
 
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 export class ChannelService {
@@ -33,8 +33,32 @@ export class ChannelService {
 
   async findAll(): Promise<Channel[]> {
     return this.channelRepository.find({
-      relations: ['config'],
+      relations: ['config', 'sections'],
     });
+  }
+
+  async findById(id: number): Promise<Channel> {
+    return await this.channelRepository.findOneBy({ id: id });
+  }
+
+  async update(newChannel: Channel, id: number): Promise<UpdateResult> {
+    const channel = await this.channelRepository.findOneBy({ id: id });
+
+    if (!channel) throw new NotFoundException(Error);
+
+    const updatedChannel = await this.channelRepository.update(id, newChannel);
+
+    return updatedChannel;
+  }
+
+  async deleteChannel(id: number): Promise<DeleteResult> {
+    const channel = await this.channelRepository.findOneBy({ id: id });
+
+    if (!channel) {
+      throw new NotFoundException('Channel not found');
+    }
+
+    return await this.channelRepository.delete(id);
   }
 
   async addConfig(channelId: number, configId: number) {
