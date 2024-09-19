@@ -14,6 +14,7 @@ import { ISectionChannel } from '../../../types/sectionTypes';
 import DeleteMessage from '../deleteMessage/DeleteMessage';
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import { useModal } from '../../../context/ModalContext';
+import DeleteButton from '../../common/button/delete/DeleteButton';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -115,19 +116,9 @@ const ShowMessage: React.FC = () => {
                     className='icon-edit'
                   />
                 </span>
-                <span
-                  aria-label='Supprimer ce message'
-                  className='span-action delete-span'
-                  onClick={() => {
-                    activeDelete(message.message, index);
-                  }}
-                >
-                  <img
-                    src='/icons/bdelete.png'
-                    className='icon-delete'
-                    alt='poubelle de supression de messages'
-                  ></img>
-                </span>
+                <DeleteButton
+                  action={() => activeDelete(message.message, index)}
+                />
               </div>
             )}
           </div>

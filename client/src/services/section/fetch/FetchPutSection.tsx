@@ -1,4 +1,8 @@
-export async function fetchPutSection(currentSection, data): Promise<any> {
+import { NavigationContextType } from '../../../context/NavigationContext';
+export async function fetchPutSection(
+  currentSection: NavigationContextType['currentSection'],
+  data: string
+): Promise<any> {
   const dataObj = {
     title: data,
   };

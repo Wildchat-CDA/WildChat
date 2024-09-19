@@ -1,9 +1,9 @@
-import React from 'react';
 import { useNavigation } from '../../../context/NavigationContext';
 
 import { deleteMessage } from '../../../services/message/fetch/DeleteMessage';
 import { IModalMessagePayload } from '../../../types/messageTypes';
 import { ModalContextType } from '../../../context/ModalContext';
+import DeleteAction from '../../common/button/delete/DeleteAction';
 interface IDeleteMessageProps {
   setMessage: IModalMessagePayload['setMessages'];
   setActiveModal: ModalContextType['setActiveModal'];
@@ -40,15 +40,7 @@ const DeleteMessage = ({ setMessage, setActiveModal }: IDeleteMessageProps) => {
         <span className='name'>BOB</span> <br />
         <span>{currentSection.currentMessage}</span>
       </div>
-
-      <div className='modal-btn_container'>
-        <button className='modal-btn modal-btn_cancel' onClick={handleCancel}>
-          Annuler
-        </button>
-        <button className='modal-btn modal-btn_delete' onClick={handleDelete}>
-          Supprimer
-        </button>
-      </div>
+      <DeleteAction handleCancel={handleCancel} handleDelete={handleDelete} />
     </div>
   );
 };

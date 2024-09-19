@@ -4,8 +4,10 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 import { ModalContextType } from '../../../context/ModalContext';
 import { NavigationContextType } from '../../../context/NavigationContext';
 import { ISection, IChannel } from '../../../types/sectionTypes';
-import EditButton from '../../common/button/EditButton';
+import EditButton from '../../common/button/edit/EditButton';
 import EditRoomInput from '../../common/input/editRoom/EditRoomInput';
+import DeleteButton from '../../common/button/delete/DeleteButton';
+import DeleteRoom from '../../common/modal/delete/DeleteRoom';
 interface IRoomProps {
   section: ISection;
   currentSection: NavigationContextType['currentSection'];
@@ -44,10 +46,16 @@ function Room({
     setActiveModal(ModalTypeEnum.EditRoom);
   };
 
+  const handleDeleteRoom = (room: IChannel) => {
+    affectedCurrentSection(room);
+    setActiveModal(ModalTypeEnum.DeleteRoom);
+  };
+
   return (
     <div className='rooms-container'>
       {section.channels.map((room) => (
         <div className='rooms-column' key={room.id}>
+          <DeleteButton action={() => handleDeleteRoom(room)} />
           <EditButton action={() => handleEditRoom(room)} />
           <span
             className='room-span'
@@ -60,6 +68,14 @@ function Room({
           </span>
         </div>
       ))}
+      {activeModal === ModalTypeEnum.DeleteRoom && (
+        <Modal>
+          <DeleteRoom
+            setActiveModal={setActiveModal}
+            currentSection={currentSection}
+          />
+        </Modal>
+      )}
 
       {activeModal === ModalTypeEnum.EditRoom && (
         <Modal>

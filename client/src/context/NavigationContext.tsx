@@ -35,6 +35,7 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     sectionId: null,
     sectionTitle: '',
     channelTitle: '',
+    channelId: null,
     uuid: '',
     messageIndex: null,
     currentMessage: '',

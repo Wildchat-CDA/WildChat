@@ -16,7 +16,7 @@ export interface ISectionChannel {
   sectionId: number | null;
   sectionTitle: string;
   channelTitle: string;
-  channelId:number,
+  channelId: number | null;
   uuid: string;
   messageIndex: number | null;
   currentMessage: string;

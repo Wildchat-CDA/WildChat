@@ -1,7 +1,8 @@
+import { NavigationContextType } from '../../../context/NavigationContext';
 export async function fetchPostRoom(
-  currentSection,
-  data,
-  slotValue
+  currentSection: NavigationContextType['currentSection'],
+  data: string,
+  slotValue: number
 ): Promise<any> {
   const dataObj = {
     title: data,

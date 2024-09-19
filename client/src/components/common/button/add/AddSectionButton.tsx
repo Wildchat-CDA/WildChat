@@ -6,7 +6,7 @@ interface AddButtonProps {
 
 const AddButton = ({ action }: AddButtonProps) => {
   return (
-    <div>
+    <div className='add-btn_container'>
       <img
         src='/icons/add-new.png'
         alt='Croix ajouter'

@@ -2,7 +2,7 @@ export async function fetchPostSection(data: string): Promise<any> {
   const dataObj = {
     title: data,
     isClassRoom: false,
-    order: 6,
+    order: 4,
   };
   try {
     const response = await fetch('http://localhost:3000/section/topic', {

@@ -1,4 +1,8 @@
-export async function fetchPutRoom(currentSection, data): Promise<any> {
+import { NavigationContextType } from '../../../context/NavigationContext';
+export async function fetchPutRoom(
+  currentSection: NavigationContextType['currentSection'],
+  data: string
+): Promise<any> {
   const dataObj = {
     title: data,
   };

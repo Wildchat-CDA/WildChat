@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { fetchGetSection } from '../../../services/section/fetch/FetchGetSection';
 import Room from '../room/Room';
 import './Section.css';
-import AddButton from '../../common/button/AddSectionButton';
+import AddButton from '../../common/button/add/AddSectionButton';
 import Modal from '../../common/modal/Modal';
 import NewSectionInput from '../../common/input/newSection/NewSectionInput';
 import { useNavigation } from '../../../context/NavigationContext';
 import { useModal } from '../../../context/ModalContext';
 import { ISection } from '../../../types/sectionTypes';
 import { ModalTypeEnum } from '../../../context/ModalContext';
-import EditButton from '../../common/button/EditButton';
+import EditButton from '../../common/button/edit/EditButton';
 import EditSectionInput from '../../common/input/editSection/EdiitSectionInput';
 import NewChannelInput from '../../common/input/newChannel/NewChannelInput';
+import DeleteButton from '../../common/button/delete/DeleteButton';
+import DeleteSection from '../../common/modal/delete/DeleteSection';
+import DeleteRoom from '../../common/modal/delete/DeleteRoom';
 
 interface ISectionProps {
   type: string;
@@ -93,6 +96,11 @@ const Section = ({ type }: ISectionProps) => {
     setActiveModal(ModalTypeEnum.NewRoom);
   };
 
+  const handleDeleteSection = (section: ISection) => {
+    setActiveModal(ModalTypeEnum.DeleteSection);
+    affectedCurrentSection(section);
+  };
+
   return (
     <div className='section-container'>
       {activeModal === ModalTypeEnum.NewSection && (
@@ -116,11 +124,19 @@ const Section = ({ type }: ISectionProps) => {
           />
         </Modal>
       )}
+      {activeModal === ModalTypeEnum.DeleteSection && (
+        <Modal>
+          <DeleteSection
+            setActiveModal={setActiveModal}
+            currentSection={currentSection}
+          />
+        </Modal>
+      )}
 
       <div className='section-topic-title'>
         <h3>{type === 'library' ? 'Bibliothèque' : 'Salle de  classe'} </h3>
         <div className='topic-container'>
-          <h4 className='topic-title'>Topic </h4>
+          <em className='topic-title'>Ajouter une section </em>
           <AddButton action={handleNewSection} />
         </div>
       </div>
@@ -141,6 +157,7 @@ const Section = ({ type }: ISectionProps) => {
                 />
               </div>
               <h5 className='section-title'>{section.title}</h5>
+              <DeleteButton action={() => handleDeleteSection(section)} />
               <EditButton action={() => handleEditSection(section)} />
             </div>
 

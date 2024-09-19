@@ -6,6 +6,8 @@ export enum ModalTypeEnum {
   NewRoom = 'newRoom',
   EditSection = 'editSection',
   EditRoom = 'editRoom',
+  DeleteSection = 'deleteSection',
+  DeleteRoom = 'deleteRoom',
 }
 
 type ModalType = ModalTypeEnum | null;
