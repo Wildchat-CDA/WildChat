@@ -1,11 +1,15 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Section } from '../entity/section.entity';
-import { MoreThanOrEqual, Repository, UpdateResult } from 'typeorm';
+import {
+  DeleteResult,
+  MoreThanOrEqual,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';
 import { Type } from '../entity/type.entity';
-import { ConflictException } from '@nestjs/common';
 
 export class SectionService {
   constructor(
@@ -25,14 +29,18 @@ export class SectionService {
       take: 1,
     });
 
-    const lastSection = sections[0];
-    console.log('last section', lastSection);
-    const newSection = await this.sectionRepository.save({
-      ...sectionData,
-      order: lastSection.order + 1,
-    });
+    if (sections.length === 0) {
+      sections[0].order = 0;
+    } else {
+      const lastSection = sections[0];
+      console.log('last section', lastSection);
+      const newSection = await this.sectionRepository.save({
+        ...sectionData,
+        order: lastSection.order + 1,
+      });
 
-    return await this.sectionRepository.save(newSection);
+      return await this.sectionRepository.save(newSection);
+    }
   }
 
   async findAll(): Promise<Section[]> {
@@ -52,58 +60,45 @@ export class SectionService {
     return await this.sectionRepository.save(section);
   }
 
-  async createSectionWithChannels(sectionData: any) {
-    if (
-      await this.sectionRepository.findOne({
-        where: { order: sectionData.order },
-      })
-    ) {
-      throw new ConflictException('This order number already exists', {
-        cause: new Error(),
-        description: 'Duplicate entry',
+  async createSectionWithChannels(sectionData: Section) {
+    const section = await this.create(sectionData);
+
+    const channels = [
+      'Cours',
+      'Exercices',
+      'Ressources formateur',
+      'Ressources élèves',
+    ];
+
+    const newChannels = [];
+
+    for (let i = 0; i < channels.length; i++) {
+      const newChannel = this.channelRepository.create({
+        uuid: uuidv4(),
+        title: channels[i],
+        slot: 1,
       });
-    } else {
-      const section = await this.sectionRepository.save(sectionData);
 
-      const channels = [
-        'Cours',
-        'Exercices',
-        'Ressources formateur',
-        'Ressources élèves',
-      ];
+      const newConfig = this.configRepository.create({
+        maxSlot: 1,
+        type: await this.typeRepository.findOneBy({ id: 1 }),
+      });
 
-      const newChannels = [];
+      newChannel.config = newConfig;
 
-      for (let i = 0; i < channels.length; i++) {
-        const newChannel = this.channelRepository.create({
-          uuid: uuidv4(),
-          title: channels[i],
-          slot: 1,
-        });
+      await this.configRepository.save(newConfig);
 
-        const newConfig = this.configRepository.create({
-          maxSlot: 1,
-          type: await this.typeRepository.findOneBy({ id: 1 }),
-        });
+      const savedChannel = await this.channelRepository.save(newChannel);
 
-        console.log(newConfig, 'nouvelle config');
-
-        newChannel.config = newConfig;
-
-        await this.configRepository.save(newConfig);
-
-        const savedChannel = await this.channelRepository.save(newChannel);
-
-        newChannels.push(savedChannel);
-      }
-
-      section.channels = newChannels;
-
-      return await this.sectionRepository.save(section);
+      newChannels.push(savedChannel);
     }
+
+    section.channels = newChannels;
+
+    return await this.sectionRepository.save(section);
   }
 
-  async createClassRoomWithChannels(): Promise<any> {
+  async createClassRoomWithChannels(): Promise<Section[]> {
     const sections = [
       { title: 'Tableau des annonces', isClassRoom: true, order: 1 },
       { title: 'Bureaux', isClassRoom: true, order: 2 },
@@ -203,7 +198,7 @@ export class SectionService {
     channelId: number,
     newtTitle: string,
     newSlot: number,
-  ): Promise<any> {
+  ): Promise<UpdateResult> {
     const channel = await this.channelRepository.findOneBy({ id: channelId });
     const section = await this.sectionRepository.findOneBy({ id: sectionId });
 
@@ -233,22 +228,22 @@ export class SectionService {
     return sectionUpdated;
   }
 
-  async updateSectionsOrder(sectionOrder: Partial<Section>, sectionId: number) {
+  async updateSectionsOrder(
+    sectionOrder: Partial<Section>,
+    sectionId: number,
+  ): Promise<UpdateResult> {
     const targetOrder = sectionOrder.order;
-    console.log(targetOrder, 'targetOrder');
 
     const conflictingSection = await this.sectionRepository.findOne({
       where: { order: targetOrder },
     });
 
-    console.log(conflictingSection, 'conflictingSection');
     if (conflictingSection) {
       const affectedSections = await this.sectionRepository.find({
         where: { order: MoreThanOrEqual(targetOrder) },
         order: { order: 'DESC' },
       });
 
-      console.log(affectedSections, 'affectedSections');
       for (const affectedSection of affectedSections) {
         await this.sectionRepository.update(affectedSection.id, {
           order: affectedSection.order + 1,
@@ -256,10 +251,12 @@ export class SectionService {
       }
     }
 
-    await this.sectionRepository.update(sectionId, { order: targetOrder });
+    return await this.sectionRepository.update(sectionId, {
+      order: targetOrder,
+    });
   }
 
-  async delete(sectionId: number): Promise<void> {
+  async delete(sectionId: number): Promise<DeleteResult> {
     const sectionToDelete = await this.sectionRepository.findOne({
       where: { id: sectionId },
       relations: ['channels', 'channels.config'],
@@ -280,6 +277,6 @@ export class SectionService {
       }
     }
 
-    await this.sectionRepository.remove(sectionToDelete);
+    return await this.sectionRepository.delete(sectionId);
   }
 }
