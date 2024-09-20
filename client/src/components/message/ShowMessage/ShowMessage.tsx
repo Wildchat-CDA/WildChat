@@ -21,7 +21,7 @@ const ShowMessage: React.FC = () => {
 
   const { currentSection } = useNavigation();
 
-  const name = 'Théo'; // TODO Need to use an userContext
+  const name = 'Théo'; // TODO Need to use an 
 
   useEffect(() => {
     // Load messages with redis (init)
