@@ -1,0 +1,10 @@
+.edit-btn_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .edit-btn_img {
+    width: 15px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+}

@@ -3,11 +3,16 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 export enum ModalTypeEnum {
   DeleteMessage = 'deleteMessage',
   NewSection = 'newSection',
+  NewRoom = 'newRoom',
+  EditSection = 'editSection',
+  EditRoom = 'editRoom',
+  DeleteSection = 'deleteSection',
+  DeleteRoom = 'deleteRoom',
 }
 
 type ModalType = ModalTypeEnum | null;
 
-interface ModalContextType {
+export interface ModalContextType {
   activeModal: ModalType;
   setActiveModal: (modalId: ModalType) => void;
 }

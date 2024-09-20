@@ -1,0 +1,8 @@
+.add-btn_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .add-section_img {
+    cursor: pointer;
+  }
+}
