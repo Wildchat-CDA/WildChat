@@ -1,4 +1,5 @@
 import { NavigationContextType } from '../../../context/NavigationContext';
+//TODO Change PROMISE ANY
 export async function fetchPutSection(
   currentSection: NavigationContextType['currentSection'],
   data: string

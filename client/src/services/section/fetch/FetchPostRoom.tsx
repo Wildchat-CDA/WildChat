@@ -1,4 +1,5 @@
 import { NavigationContextType } from '../../../context/NavigationContext';
+//TODO Change PROMISE ANY
 export async function fetchPostRoom(
   currentSection: NavigationContextType['currentSection'],
   data: string,

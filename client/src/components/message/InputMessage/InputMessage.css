@@ -23,8 +23,6 @@
 .input-message {
   height: 100%;
   width: 100%;
-  /* min-height: 50px;
-  max-height: 300px; Ajustez si nécessaire */
   padding: 10px;
   border: none;
   background-color: var(--color-secondary);

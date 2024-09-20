@@ -1,61 +1,61 @@
 .message-editor {
-  background-color: var(--color-primary); /* Fond du conteneur d'édition */
-  border-radius: 8px; /* Coins arrondis pour le conteneur */
+  background-color: var(--color-primary); 
+  border-radius: 8px; 
   padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère pour un effet de profondeur */
-  width: 90%; /* S'adapte à la largeur du conteneur parent */
-  margin: 0 auto; /* Centre le conteneur */
-  position: relative; /* Pour positionner le menu en bas si nécessaire */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  width: 90%;
+  margin: 0 auto;
+  position: relative; 
 }
 
 .edit-input {
   background-color: var(
     --color-secondary
-  ); /* Couleur de fond de la zone de texte */
+  ); 
   overflow: auto;
-  border: 1px solid var(--color-border); /* Bordure discrète */
-  color: var(--color-font); /* Couleur du texte */
-  width: calc(100% - 20px); /* Largeur avec padding interne */
-  outline: none; /* Retire le contour par défaut */
-  height: 60px; /* Hauteur ajustée pour plus de lignes visibles */
-  line-height: 1.5em; /* Hauteur de ligne pour lisibilité */
-  padding: 10px; /* Espacement interne */
-  border-radius: 5px; /* Coins arrondis pour la zone de texte */
-  resize: none; /* Empêche le redimensionnement de la zone de texte */
+  border: 1px solid var(--color-border);
+  color: var(--color-font); 
+  width: calc(100% - 20px);
+  outline: none;
+  height: 60px; 
+  line-height: 1.5em; 
+  padding: 10px;
+  border-radius: 5px; 
+  resize: none; 
 }
 
 .valid-or-cancel_edit {
-  font-size: 0.8em; /* Taille de police légèrement augmentée */
+  font-size: 0.8em; 
   color: var(
     --color-font-secondary
-  ); /* Couleur secondaire pour les instructions */
-  margin-top: 10px; /* Espace au-dessus du menu */
-  display: flex; /* Utilise flexbox pour aligner les éléments */
-  justify-content: flex-start; /* Aligne les éléments à gauche */
-  align-items: center; /* Aligne les éléments verticalement */
-  gap: 10px; /* Espace entre les éléments */
+  ); 
+  margin-top: 10px; 
+  display: flex; 
+  justify-content: flex-start; 
+  align-items: center; 
+  gap: 10px;
 }
 
 .valid-or-cancel_edit button {
-  background: none; /* Pas de fond */
-  border: none; /* Pas de bordure */
-  color: var(--color-link); /* Couleur du texte */
-  font-size: inherit; /* Prend la taille de la police du conteneur */
-  cursor: pointer; /* Change le curseur au survol */
+  background: none; 
+  border: none; 
+  color: var(--color-link); 
+  font-size: inherit; 
+  cursor: pointer;
 
-  padding: 0; /* Retire les marges internes */
+  padding: 0; 
 }
 
 .valid-or-cancel_edit button:hover {
-  text-decoration: underline; /* Soulignement pour imiter les liens */
+  text-decoration: underline; 
 }
 
 @media (max-width: 600px) {
   .valid-or-cancel_edit span {
-    display: none; /* Masque les instructions textuelles sur les petits écrans */
+    display: none; 
   }
 
   .valid-or-cancel_edit {
-    justify-content: center; /* Centre les boutons */
+    justify-content: center; 
   }
 }

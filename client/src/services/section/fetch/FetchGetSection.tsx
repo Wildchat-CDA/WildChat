@@ -1,3 +1,5 @@
+//TODO CHANGE promise any
+
 export async function fetchGetSection(type: string): Promise<any> {
   try {
     const response = await fetch(`http://localhost:3000/section/${type}`, {

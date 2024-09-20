@@ -1,12 +1,8 @@
 .add-btn_container {
-  /* border: 1px solid blue; */
   display: flex;
   align-items: center;
   justify-content: center;
-
-
   .add-section_img {
     cursor: pointer;
-    /* border: 1px solid yellow; */
   }
 }
