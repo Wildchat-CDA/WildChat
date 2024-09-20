@@ -21,7 +21,6 @@ const ShowMessage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-
   const name = 'Théo'; // TODO Need to use an userContext
 
   useEffect(() => {
