@@ -37,7 +37,7 @@ const InputMessage = () => {
 
   return (
     <div className='input-message-container'>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className='form-container'>
         <label htmlFor='messageInput' className='visually-hidden'>
           Message
         </label>

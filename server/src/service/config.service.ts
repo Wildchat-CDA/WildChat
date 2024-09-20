@@ -14,9 +14,7 @@ export class ConfigService {
 
   async findAll(): Promise<Config[]> {
     return this.configRepository.find({
-      relations: {
-        type: true,
-      },
+      relations: ['type'],
     });
   }
 

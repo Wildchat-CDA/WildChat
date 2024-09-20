@@ -6,18 +6,22 @@ import {
   Param,
   Put,
   NotFoundException,
+  ConflictException,
+  Delete,
 } from '@nestjs/common';
 import { SectionService } from '../service/section.service';
 import { Section } from 'src/entity/section.entity';
 import { Channel } from 'src/entity/channel.entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('/section')
 export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
 
-  @Post('/')
-  async create(@Body() section: Section): Promise<Section> {
-    return await this.sectionService.create(section);
+  @Post('/') /**Pour créer une section sans channel */ async create(
+    @Body() sectionData: Section,
+  ): Promise<Section> {
+    return await this.sectionService.create(sectionData);
   }
 
   @Get('/')
@@ -25,7 +29,37 @@ export class SectionController {
     return await this.sectionService.findAll();
   }
 
-  @Put('/:sectionId/channel/:channelId')
+  @Put('/:sectionId')
+  async update(
+    @Body() section: Section,
+    @Param('sectionId') sectionId: number,
+  ): Promise<UpdateResult> {
+    return await this.sectionService.update(section, sectionId);
+  }
+
+  @Put('/:sectionId/order') /**Modifier le champ ordre d'une section */
+  async updateSectionsOrder(
+    @Body() sectionOrder: Partial<Section>,
+    @Param('sectionId') sectionId: number,
+  ): Promise<UpdateResult> {
+    return await this.sectionService.updateSectionsOrder(
+      sectionOrder,
+      sectionId,
+    );
+  }
+
+  @Delete('/:sectionId')
+  async delete(@Param('sectionId') sectionId: number): Promise<DeleteResult> {
+    try {
+      return await this.sectionService.delete(sectionId);
+    } catch (err) {
+      throw new NotFoundException(err.message);
+    }
+  }
+
+  @Put(
+    '/:sectionId/channel/:channelId',
+  ) /**Pour relier un channel à une section */
   async addSection(
     @Param('channelId') channelId: number,
     @Param('sectionId') sectionId: number,
@@ -39,7 +73,11 @@ export class SectionController {
 
   @Post('/topic') /**Topic bibliothèque + les channels */
   async createSectionWithChannels(@Body() section: Section): Promise<Section> {
-    return await this.sectionService.createSectionWithChannels(section);
+    try {
+      return await this.sectionService.createSectionWithChannels(section);
+    } catch (error) {
+      if (error) throw new ConflictException(error.message);
+    }
   }
 
   @Post(
@@ -58,13 +96,13 @@ export class SectionController {
 
   @Put(
     '/:sectionId/topic/channel/:channelId',
-  ) /**La modification d'un channel pour les topics et la salle de classe */
+  ) /**La modification d'un channel pour les topics de la bibliothèque et de la salle de classe */
   async editChannelInSection(
     @Param('sectionId') sectionId: number,
     @Param('channelId') channelId: number,
     @Body('title') newTitle: string,
     @Body('slot') newSlot: number,
-  ): Promise<Channel> {
+  ): Promise<UpdateResult> {
     try {
       return await this.sectionService.editChannelInSection(
         sectionId,
@@ -78,11 +116,25 @@ export class SectionController {
   }
 
   @Post('/classRoom') /**Création de la salle de classe avec les channels */
-  async createClassRoomWithChannels(): Promise<Section> {
+  async createClassRoomWithChannels(): Promise<Section[]> {
     return await this.sectionService.createClassRoomWithChannels();
   }
 
-  @Get('/topic')
+  @Get(
+    '/classroom',
+  ) /**Liste de toutes les sections et channels de la salle de classe */
+  async findAllTopicAndSectionForClassRoom() {
+    return await this.sectionService.findAllTopicAndSectionForClassRoom();
+  }
+
+  @Get(
+    '/library',
+  ) /**Liste de toutes les sections et channels de la bibliothèque */
+  async findAllTopicAndSectionForLibrary() {
+    return await this.sectionService.findAllTopicAndSectionForLibrary();
+  }
+
+  @Get('/topic') /**Liste de toutes les sections et de toutes les channels */
   async findAllTopicAndSection() {
     return await this.sectionService.findAllTopicAndSection();
   }

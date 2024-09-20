@@ -1,3 +1,9 @@
 .room-span {
   cursor: pointer;
+  margin-left: 15px;
+}
+
+.rooms-column {
+  display: flex;
+  flex-direction: row;
 }

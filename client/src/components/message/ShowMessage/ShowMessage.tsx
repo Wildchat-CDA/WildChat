@@ -8,12 +8,12 @@ import './ShowMessage.css';
 import { IMessagePostPayload } from '../../../../../common/interface/messageInterface';
 import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
-import Modal from '../../common/modal/Modal';
 import { useNavigation } from '../../../context/NavigationContext';
 import { ISectionChannel } from '../../../types/sectionTypes';
-import DeleteMessage from '../deleteMessage/DeleteMessage';
 import { ModalTypeEnum } from '../../../context/ModalContext';
 import { useModal } from '../../../context/ModalContext';
+import DeleteButton from '../../common/button/delete/DeleteButton';
+import ModalWrapper from '../../common/modal/ModalWrapper';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -21,7 +21,6 @@ const ShowMessage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-
   const name = 'Théo'; // TODO Need to use an userContext
 
   useEffect(() => {
@@ -33,8 +32,10 @@ const ShowMessage: React.FC = () => {
       );
 
     // Load new messages with socket.Io
-    const handleMessage = (payload) =>
+    const handleMessage = (payload: IMessagePostPayload) => {
       setMessages((preMessages) => [...preMessages, payload]);
+    };
+
     socket.on('message', handleMessage);
 
     return () => {
@@ -49,7 +50,7 @@ const ShowMessage: React.FC = () => {
     setCurrentIndex(index);
   };
 
-  const activeDelete = (message: string, index) => {
+  const activeDelete = (message: string, index: number) => {
     setActiveModal(ModalTypeEnum.DeleteMessage);
     setCurrentIndex(index);
     setCurrentSection((prevState: ISectionChannel) => ({
@@ -112,33 +113,19 @@ const ShowMessage: React.FC = () => {
                     className='icon-edit'
                   />
                 </span>
-                <span
-                  aria-label='Supprimer ce message'
-                  className='span-action delete-span'
-                  onClick={() => {
-                    activeDelete(message.message, index);
-                  }}
-                >
-                  <img
-                    src='/icons/bdelete.png'
-                    className='icon-delete'
-                    alt='poubelle de supression de messages'
-                  ></img>
-                </span>
+                <DeleteButton
+                  action={() => activeDelete(message.message, index)}
+                />
               </div>
             )}
           </div>
         ))}
-
-        {activeModal === ModalTypeEnum.DeleteMessage && (
-          <Modal>
-            <DeleteMessage
-              setMessages={setMessages}
-              setActiveModal={setActiveModal}
-            />
-          </Modal>
-        )}
-
+        <ModalWrapper
+          activeModal={activeModal}
+          setActiveModal={setActiveModal}
+          currentSection={currentSection}
+          setMessage={setMessages}
+        />
         <div ref={scrollRef}></div>
       </div>
     </div>

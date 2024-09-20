@@ -1,6 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Section } from '../entity/section.entity';
-import { Repository } from 'typeorm';
+import {
+  DeleteResult,
+  MoreThanOrEqual,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Config } from '../entity/config.entity';
@@ -18,12 +23,29 @@ export class SectionService {
     private readonly typeRepository: Repository<Type>,
   ) {}
 
-  async create(section: Section): Promise<Section> {
-    return await this.sectionRepository.save(section);
+  async create(sectionData: Section): Promise<Section> {
+    const sections = await this.sectionRepository.find({
+      order: { order: 'DESC' },
+      take: 1,
+    });
+
+    if (sections.length === 0) {
+      sections[0].order = 0;
+    } else {
+      const lastSection = sections[0];
+      const newSection = await this.sectionRepository.save({
+        ...sectionData,
+        order: lastSection.order + 1,
+      });
+
+      return await this.sectionRepository.save(newSection);
+    }
   }
 
   async findAll(): Promise<Section[]> {
-    return await this.sectionRepository.find({ relations: ['channels'] });
+    return await this.sectionRepository.find({
+      relations: ['channels'],
+    });
   }
 
   async addSection(channelId: number, sectionId: number) {
@@ -37,8 +59,8 @@ export class SectionService {
     return await this.sectionRepository.save(section);
   }
 
-  async createSectionWithChannels(sectionData: any) {
-    const section = await this.sectionRepository.save(sectionData);
+  async createSectionWithChannels(sectionData: Section) {
+    const section = await this.create(sectionData);
 
     const channels = [
       'Cours',
@@ -61,30 +83,25 @@ export class SectionService {
         type: await this.typeRepository.findOneBy({ id: 1 }),
       });
 
-      console.log(newConfig, 'nouvelle config');
-
       newChannel.config = newConfig;
-
-      // console.log(newChannel, 'nouveau channel');
 
       await this.configRepository.save(newConfig);
 
       const savedChannel = await this.channelRepository.save(newChannel);
 
-      // console.log(savedChannel, 'channel saved');
-
       newChannels.push(savedChannel);
     }
 
     section.channels = newChannels;
+
     return await this.sectionRepository.save(section);
   }
 
-  async createClassRoomWithChannels(): Promise<any> {
+  async createClassRoomWithChannels(): Promise<Section[]> {
     const sections = [
-      { title: 'Tableau des annonces', order: 1 },
-      { title: 'Bureaux', order: 2 },
-      { title: 'Tables', order: 3 },
+      { title: 'Tableau des annonces', isClassRoom: true, order: 1 },
+      { title: 'Bureaux', isClassRoom: true, order: 2 },
+      { title: 'Tables', isClassRoom: true, order: 3 },
     ];
 
     const channelsPerSection = {
@@ -102,12 +119,11 @@ export class SectionService {
       const section = await this.sectionRepository.save({
         title: sectionData.title,
         order: sectionData.order,
+        isClassRoom: sectionData.isClassRoom,
         relations: ['channels'],
       });
 
       const channels = channelsPerSection[sectionData.title];
-
-      console.log(channels, 'channels');
 
       const newChannels = [];
 
@@ -144,6 +160,22 @@ export class SectionService {
     });
   }
 
+  async findAllTopicAndSectionForClassRoom() {
+    return await this.sectionRepository.find({
+      where: { isClassRoom: true },
+      relations: ['channels', 'channels.config'],
+      order: { order: 'ASC' },
+    });
+  }
+
+  async findAllTopicAndSectionForLibrary() {
+    return await this.sectionRepository.find({
+      where: { isClassRoom: false },
+      relations: ['channels', 'channels.config'],
+      order: { order: 'ASC' },
+    });
+  }
+
   async createChannelIntopic(sectionId: number, channelData: Channel) {
     const section = await this.sectionRepository.findOneBy({ id: sectionId });
 
@@ -165,12 +197,9 @@ export class SectionService {
     channelId: number,
     newtTitle: string,
     newSlot: number,
-  ): Promise<any> {
+  ): Promise<UpdateResult> {
     const channel = await this.channelRepository.findOneBy({ id: channelId });
     const section = await this.sectionRepository.findOneBy({ id: sectionId });
-
-    console.log(channel, 'channel');
-    console.log(section, 'section');
 
     if (!section) throw new Error('channel not found');
     if (!channel) throw new Error('channel not found');
@@ -180,7 +209,73 @@ export class SectionService {
       slot: newSlot,
     });
 
-    console.log(updatedChannel, 'nouveau channel');
     return updatedChannel;
+  }
+
+  async update(section: Section, sectionId: number): Promise<UpdateResult> {
+    const sectionToUpdate = await this.sectionRepository.findOneBy({
+      id: sectionId,
+    });
+
+    if (!sectionToUpdate) throw new Error('section not found');
+
+    const sectionUpdated = await this.sectionRepository.update(
+      sectionId,
+      section,
+    );
+
+    return sectionUpdated;
+  }
+
+  async updateSectionsOrder(
+    sectionOrder: Partial<Section>,
+    sectionId: number,
+  ): Promise<UpdateResult> {
+    const targetOrder = sectionOrder.order;
+
+    const conflictingSection = await this.sectionRepository.findOne({
+      where: { order: targetOrder },
+    });
+
+    if (conflictingSection) {
+      const affectedSections = await this.sectionRepository.find({
+        where: { order: MoreThanOrEqual(targetOrder) },
+        order: { order: 'DESC' },
+      });
+
+      for (const affectedSection of affectedSections) {
+        await this.sectionRepository.update(affectedSection.id, {
+          order: affectedSection.order + 1,
+        });
+      }
+    }
+
+    return await this.sectionRepository.update(sectionId, {
+      order: targetOrder,
+    });
+  }
+
+  async delete(sectionId: number): Promise<DeleteResult> {
+    const sectionToDelete = await this.sectionRepository.findOne({
+      where: { id: sectionId },
+      relations: ['channels', 'channels.config'],
+    });
+
+    if (!sectionToDelete) throw new Error('section not found');
+
+    const channelsToDelete = sectionToDelete.channels;
+
+    if (channelsToDelete && channelsToDelete.length > 0) {
+      await this.channelRepository.remove(channelsToDelete);
+    }
+
+    for (const channel of channelsToDelete) {
+      const configToDelete = channel.config;
+      if (configToDelete) {
+        await this.configRepository.remove(configToDelete);
+      }
+    }
+
+    return await this.sectionRepository.delete(sectionId);
   }
 }

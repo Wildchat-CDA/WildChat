@@ -29,11 +29,11 @@ function App() {
             <ModalProvider>
               {isMobile ? (
                 <MobileLayout muted={muted} setMuted={setMuted}>
-                  <MainContent />
+                  <MainContent isMobile={true} />
                 </MobileLayout>
               ) : (
                 <DesktopLayout muted={muted} setMuted={setMuted}>
-                  <MainContent />
+                  <MainContent isMobile={false} />
                 </DesktopLayout>
               )}
             </ModalProvider>

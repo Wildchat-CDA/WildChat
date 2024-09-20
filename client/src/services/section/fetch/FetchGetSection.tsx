@@ -1,6 +1,8 @@
-export async function fetchGetSection(): Promise<any> {
+//TODO CHANGE promise any
+
+export async function fetchGetSection(type: string): Promise<any> {
   try {
-    const response = await fetch('http://localhost:3000/section/topic', {
+    const response = await fetch(`http://localhost:3000/section/${type}`, {
       method: 'GET',
     });
 
@@ -9,8 +11,7 @@ export async function fetchGetSection(): Promise<any> {
         `Error: ${response.status} ${response.statusText} while fetching room's from ${response.url}`
       );
     }
-    const payload = await response.json();
-    return payload;
+    return await response.json();
   } catch (error) {
     console.error('Failed to load room:', error);
     throw new Error('Failed to load room. Please try again later.');

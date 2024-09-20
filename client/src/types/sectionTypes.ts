@@ -13,9 +13,15 @@ export interface ISection {
 }
 
 export interface ISectionChannel {
+  sectionId: number | null;
   sectionTitle: string;
   channelTitle: string;
+  channelId: number | null;
   uuid: string;
   messageIndex: number | null;
   currentMessage: string;
+}
+
+export interface IAllSectionAndRoom extends ISectionChannel {
+  order: number;
 }

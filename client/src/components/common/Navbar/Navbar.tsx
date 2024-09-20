@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
 import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
 import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
+import { useNavigation } from '../../../context/NavigationContext';
 
 interface NavbarProps {
   isMobile: boolean;
   muted: boolean;
   setMuted: (v: boolean) => void;
-
 }
 
 interface NavItemProps {
@@ -21,29 +21,52 @@ interface NavItemProps {
 
 function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
   return (
-    <div className={`nav-item ${isActive ? 'active' : ''}`} onClick={onClick}>
-      <div className="icon-wrapper">
-        <img src={`/icons/${icon}`} alt={text} className="nav-icon" />
+    <button
+      className={`nav-item ${isActive ? 'active' : ''}`}
+      onClick={onClick}
+      aria-label={text}
+      aria-pressed={isActive}
+    >
+      <div className='icon-wrapper'>
+        <img
+          src={`/icons/${icon}`}
+          alt=''
+          aria-hidden='true'
+          className='nav-icon'
+        />
       </div>
-      <span className="nav-text">{text}</span>
-    </div>
+      <span className='nav-text'>{text}</span>
+    </button>
   );
 }
 
 function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   const { userRole } = useUserRole();
-  const { isHandRaised, raiseHand, lowerHand } = useHandRaise(1, "Current User", "Table-1");
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { isHandRaised, raiseHand, lowerHand } = useHandRaise(
+    1,
+    'Current User',
+    'Table-1'
+  );
+  const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);
+  const [showMediaDropdown, setShowMediaDropdown] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] =
+    useState(false);
+  const [isVolumeMuted, setIsVolumeMuted] = useState(false);
 
   const handleMuted = () => {
-    if(userRole === "teacher"){
-      setMuted(!muted)
-    }
+    setMuted(!muted);
+  };
 
-  }
+  const toggleHandRaiseDropdown = () => {
+    setShowHandRaiseDropdown(!showHandRaiseDropdown);
+  };
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
+  const toggleMediaDropdown = () => {
+    setShowMediaDropdown(!showMediaDropdown);
+  };
+
+  const toggleNotificationDropdown = () => {
+    setShowNotificationDropdown(!showNotificationDropdown);
   };
 
   const handleRaiseHand = (type: 'self' | 'table') => {
@@ -52,12 +75,43 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
     } else {
       raiseHand(type);
     }
-    setShowDropdown(false);
+    setShowHandRaiseDropdown(false);
   };
 
-  const dropdownItems = [
-    { icon: 'graduate-hat.png', text: 'Pour soi', onClick: () => handleRaiseHand('self') },
-    { icon: 'multiple-users-silhouette.png', text: 'Pour la table', onClick: () => handleRaiseHand('table') }
+  const toggleVolume = () => {
+    setIsVolumeMuted(!isVolumeMuted);
+  };
+
+  const handRaiseDropdownItems = [
+    {
+      icon: 'graduate-hat.png',
+      text: 'Pour soi',
+      onClick: () => handleRaiseHand('self'),
+    },
+    {
+      icon: 'multiple-users-silhouette.png',
+      text: 'Pour la table',
+      onClick: () => handleRaiseHand('table'),
+    },
+  ];
+
+  const mediaDropdownItems = [
+    {
+      icon: muted ? 'unmute.png' : 'microphone.png',
+      text: 'Microphone',
+      onClick: handleMuted,
+    },
+    {
+      icon: isVolumeMuted ? 'mute.png' : 'volume.png',
+      text: 'Volume',
+      onClick: toggleVolume,
+    },
+    { icon: 'ecrou.png', text: 'Réglages', onClick: () => {} },
+  ];
+
+  const notificationDropdownItems = [
+    { icon: 'message.png', text: 'Messages privés', onClick: () => {} },
+    { icon: 'list.png', text: 'Liste des mains levées', onClick: () => {} },
   ];
 
   const renderNavItems = () => {
@@ -65,51 +119,122 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <NavItem icon="navigation.png" text="Navigation" onClick={() => {/* ... */}} />
-            <NavItem icon="notification.png" text="Notifications" onClick={() => {/* ... */}} />
-            <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
-            <NavItem icon={!!muted ? "NoSpeak.png" : "speak.png"} text="Prendre la parole" onClick={() => setMuted(!muted)} />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='listStudent.png'
+              text='Liste des présences'
+              onClick={() => {}}
+            />
+            <div className='nav-item'>
+              <NavItem
+                icon='notification.png'
+                text='Notifications'
+                onClick={toggleNotificationDropdown}
+              />
+              {showNotificationDropdown && (
+                <Dropdown
+                  items={notificationDropdownItems}
+                  aria-label='Menu des notifications'
+                />
+              )}
+            </div>
+            <div className='nav-item'>
+              <NavItem
+                icon='media.png'
+                text='Média'
+                onClick={toggleMediaDropdown}
+              />
+              {showMediaDropdown && (
+                <Dropdown
+                  items={mediaDropdownItems}
+                  aria-label='Menu des médias'
+                />
+              )}
+            </div>
+            <NavItem
+              icon={muted ? 'NoSpeak.png' : 'speak.png'}
+              text='Prendre la parole'
+              onClick={handleMuted}
+              isActive={!muted}
+            />
           </>
         );
       } else {
         return (
           <>
-            <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
-            <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
-            <NavItem icon="students.png" text="Élèves connectés" onClick={() => {/* ... */}} />
-            <NavItem icon="palm.png" text="Mains levées" onClick={() => {/* ... */}} />
-            <NavItem icon={!!muted ? "NoSpeak.png" : "speak.png"} text="Prendre la parole" onClick={handleMuted} />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='email.png'
+              text='Messages privés'
+              onClick={() => {}}
+            />
+            <NavItem
+              icon='listStudent.png'
+              text='Élèves connectés'
+              onClick={() => {}}
+            />
+            <NavItem icon='palm.png' text='Mains levées' onClick={() => {}} />
+            <NavItem
+              icon={muted ? 'NoSpeak.png' : 'speak.png'}
+              text='Prendre la parole'
+              onClick={handleMuted}
+              isActive={!muted}
+            />
           </>
         );
       }
     } else {
       const handRaiseItem = (
-        <div className="hand-raise-container">
+        <div className='hand-raise-container'>
           <NavItem
-            icon="palm.png"
-            text="Lever la main"
-            onClick={toggleDropdown}
+            icon='palm.png'
+            text='Lever la main'
+            onClick={toggleHandRaiseDropdown}
             isActive={isHandRaised.self || isHandRaised.table}
           />
-          {showDropdown && <Dropdown items={dropdownItems} />}
+          {showHandRaiseDropdown && (
+            <Dropdown
+              items={handRaiseDropdownItems}
+              aria-label='Menu pour lever la main'
+            />
+          )}
         </div>
       );
 
       if (isMobile) {
         return (
           <>
-            <NavItem icon="library.png" text="Bibliothèque" onClick={() => {/* ... */}} />
-            <NavItem icon="channels.png" text="Canaux" onClick={() => {/* ... */}} />
-            <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
-            <NavItem icon="media.png" text="Média" onClick={() => {/* ... */}} />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='email.png'
+              text='Messages privés'
+              onClick={() => {}}
+            />
+            <div className='nav-item'>
+              <NavItem
+                icon='media.png'
+                text='Média'
+                onClick={toggleMediaDropdown}
+              />
+              {showMediaDropdown && (
+                <Dropdown
+                  items={mediaDropdownItems}
+                  aria-label='Menu des médias'
+                />
+              )}
+            </div>
             {handRaiseItem}
           </>
         );
       } else {
         return (
           <>
-            <NavItem icon="home.png" text="Accueil" onClick={() => {/* ... */}} />
-            <NavItem icon="email.png" text="Messages privés" onClick={() => {/* ... */}} />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='email.png'
+              text='Messages privés'
+              onClick={() => {}}
+            />
             {handRaiseItem}
           </>
         );
@@ -118,14 +243,17 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   };
 
   return (
-    <nav className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`}>
+    <nav
+      className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`}
+      aria-label='Navigation principale'
+    >
       {!isMobile && (
-        <div className="logo-container">
-          <Logo width={40} color="white" />
-          <span className="logo-text">Wild Chat</span>
+        <div className='logo-container'>
+          <Logo width={40} color='white' aria-hidden='true' />
+          <span className='logo-text'>Wild Chat</span>
         </div>
       )}
-      {renderNavItems()}
+      <div className='nav-items-container'>{renderNavItems()}</div>
     </nav>
   );
 }
