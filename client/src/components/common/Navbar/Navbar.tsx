@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
 import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
@@ -21,12 +21,22 @@ interface NavItemProps {
 
 function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
   return (
-    <div className={`nav-item ${isActive ? 'active' : ''}`} onClick={onClick}>
+    <button
+      className={`nav-item ${isActive ? 'active' : ''}`}
+      onClick={onClick}
+      aria-label={text}
+      aria-pressed={isActive}
+    >
       <div className='icon-wrapper'>
-        <img src={`/icons/${icon}`} alt={text} className='nav-icon' />
+        <img
+          src={`/icons/${icon}`}
+          alt=''
+          aria-hidden='true'
+          className='nav-icon'
+        />
       </div>
       <span className='nav-text'>{text}</span>
-    </div>
+    </button>
   );
 }
 
@@ -37,17 +47,26 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
     'Current User',
     'Table-1'
   );
-  const [showDropdown, setShowDropdown] = useState(false);
-  const { setActiveContentMainComp } = useNavigation();
+  const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);
+  const [showMediaDropdown, setShowMediaDropdown] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] =
+    useState(false);
+  const [isVolumeMuted, setIsVolumeMuted] = useState(false);
 
   const handleMuted = () => {
-    if (userRole === 'teacher') {
-      setMuted(!muted);
-    }
+    setMuted(!muted);
   };
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
+  const toggleHandRaiseDropdown = () => {
+    setShowHandRaiseDropdown(!showHandRaiseDropdown);
+  };
+
+  const toggleMediaDropdown = () => {
+    setShowMediaDropdown(!showMediaDropdown);
+  };
+
+  const toggleNotificationDropdown = () => {
+    setShowNotificationDropdown(!showNotificationDropdown);
   };
 
   const handleRaiseHand = (type: 'self' | 'table') => {
@@ -56,16 +75,14 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
     } else {
       raiseHand(type);
     }
-    setShowDropdown(false);
+    setShowHandRaiseDropdown(false);
   };
 
-  const toggleLibraryMobile = () => {
-    setActiveContentMainComp((prevState) =>
-      prevState === true ? false : false
-    );
+  const toggleVolume = () => {
+    setIsVolumeMuted(!isVolumeMuted);
   };
 
-  const dropdownItems = [
+  const handRaiseDropdownItems = [
     {
       icon: 'graduate-hat.png',
       text: 'Pour soi',
@@ -78,74 +95,90 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
     },
   ];
 
+  const mediaDropdownItems = [
+    {
+      icon: muted ? 'unmute.png' : 'microphone.png',
+      text: 'Microphone',
+      onClick: handleMuted,
+    },
+    {
+      icon: isVolumeMuted ? 'mute.png' : 'volume.png',
+      text: 'Volume',
+      onClick: toggleVolume,
+    },
+    { icon: 'ecrou.png', text: 'Réglages', onClick: () => {} },
+  ];
+
+  const notificationDropdownItems = [
+    { icon: 'message.png', text: 'Messages privés', onClick: () => {} },
+    { icon: 'list.png', text: 'Liste des mains levées', onClick: () => {} },
+  ];
+
   const renderNavItems = () => {
     if (userRole === 'teacher') {
       if (isMobile) {
         return (
           <>
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
             <NavItem
-              icon='navigation.png'
-              text='Navigation'
-              onClick={() => {
-                /* ... */
-              }}
+              icon='listStudent.png'
+              text='Liste des présences'
+              onClick={() => {}}
             />
+            <div className='nav-item'>
+              <NavItem
+                icon='notification.png'
+                text='Notifications'
+                onClick={toggleNotificationDropdown}
+              />
+              {showNotificationDropdown && (
+                <Dropdown
+                  items={notificationDropdownItems}
+                  aria-label='Menu des notifications'
+                />
+              )}
+            </div>
+            <div className='nav-item'>
+              <NavItem
+                icon='media.png'
+                text='Média'
+                onClick={toggleMediaDropdown}
+              />
+              {showMediaDropdown && (
+                <Dropdown
+                  items={mediaDropdownItems}
+                  aria-label='Menu des médias'
+                />
+              )}
+            </div>
             <NavItem
-              icon='notification.png'
-              text='Notifications'
-              onClick={() => {
-                /* ... */
-              }}
-            />
-            <NavItem
-              icon='media.png'
-              text='Média'
-              onClick={() => {
-                /* ... */
-              }}
-            />
-            <NavItem
-              icon={!!muted ? 'NoSpeak.png' : 'speak.png'}
+              icon={muted ? 'NoSpeak.png' : 'speak.png'}
               text='Prendre la parole'
-              onClick={() => setMuted(!muted)}
+              onClick={handleMuted}
+              isActive={!muted}
             />
           </>
         );
       } else {
         return (
           <>
-            <NavItem
-              icon='home.png'
-              text='Accueil'
-              onClick={() => {
-                /* ... */
-              }}
-            />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
             <NavItem
               icon='email.png'
               text='Messages privés'
-              onClick={() => {
-                /* ... */
-              }}
+              onClick={() => {}}
             />
             <NavItem
-              icon='students.png'
+              icon='listStudent.png'
               text='Élèves connectés'
-              onClick={() => {
-                /* ... */
-              }}
+              onClick={() => {}}
             />
+            <NavItem icon='palm.png' text='Mains levées' onClick={() => {}} />
             <NavItem
-              icon='palm.png'
-              text='Mains levées'
-              onClick={() => {
-                /* ... */
-              }}
-            />
-            <NavItem
-              icon={!!muted ? 'NoSpeak.png' : 'speak.png'}
+              icon={muted ? 'NoSpeak.png' : 'speak.png'}
               text='Prendre la parole'
               onClick={handleMuted}
+              isActive={!muted}
             />
           </>
         );
@@ -156,61 +189,51 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
           <NavItem
             icon='palm.png'
             text='Lever la main'
-            onClick={toggleDropdown}
+            onClick={toggleHandRaiseDropdown}
             isActive={isHandRaised.self || isHandRaised.table}
           />
-          {showDropdown && <Dropdown items={dropdownItems} />}
+          {showHandRaiseDropdown && (
+            <Dropdown
+              items={handRaiseDropdownItems}
+              aria-label='Menu pour lever la main'
+            />
+          )}
         </div>
       );
 
       if (isMobile) {
         return (
           <>
-            <NavItem
-              icon='library.png'
-              text='Bibliothèque'
-              onClick={() => toggleLibraryMobile()}
-            />
-            <NavItem
-              icon='channels.png'
-              text='Canaux'
-              onClick={() => {
-                /* ... */
-              }}
-            />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
             <NavItem
               icon='email.png'
               text='Messages privés'
-              onClick={() => {
-                /* ... */
-              }}
+              onClick={() => {}}
             />
-            <NavItem
-              icon='media.png'
-              text='Média'
-              onClick={() => {
-                /* ... */
-              }}
-            />
+            <div className='nav-item'>
+              <NavItem
+                icon='media.png'
+                text='Média'
+                onClick={toggleMediaDropdown}
+              />
+              {showMediaDropdown && (
+                <Dropdown
+                  items={mediaDropdownItems}
+                  aria-label='Menu des médias'
+                />
+              )}
+            </div>
             {handRaiseItem}
           </>
         );
       } else {
         return (
           <>
-            <NavItem
-              icon='home.png'
-              text='Accueil'
-              onClick={() => {
-                /* ... */
-              }}
-            />
+            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
             <NavItem
               icon='email.png'
               text='Messages privés'
-              onClick={() => {
-                /* ... */
-              }}
+              onClick={() => {}}
             />
             {handRaiseItem}
           </>
@@ -220,14 +243,17 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   };
 
   return (
-    <nav className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`}>
+    <nav
+      className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`}
+      aria-label='Navigation principale'
+    >
       {!isMobile && (
         <div className='logo-container'>
-          <Logo width={40} color='white' />
+          <Logo width={40} color='white' aria-hidden='true' />
           <span className='logo-text'>Wild Chat</span>
         </div>
       )}
-      {renderNavItems()}
+      <div className='nav-items-container'>{renderNavItems()}</div>
     </nav>
   );
 }

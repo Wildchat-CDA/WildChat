@@ -34,8 +34,8 @@
 
 @media (min-width: 768px) {
   .dropdown {
-    left: 60px;
-    top: 0;
+    left: 79px;
+    top: 37%;
     width: 200px;
     max-height: 100vh;
   }
