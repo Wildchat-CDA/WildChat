@@ -237,7 +237,11 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => handleComponent(ContentSideBarEnum.Home)}
+            />
             <NavItem
               icon='email.png'
               text='Messages privés'
