@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 interface UserInfo {
   id: string;
@@ -15,9 +15,9 @@ export const fetchUser = async (userId: string): Promise<UserInfo> => {
   } catch (error) {
     return {
       id: userId,
-      firstName: 'Théo',
-      lastName: 'Doré',
-      avatarUrl: '/path-to-default-avatar.png',
+      firstName: "Théo",
+      lastName: "Doré",
+      avatarUrl: "/path-to-default-avatar.png",
     };
   }
 };

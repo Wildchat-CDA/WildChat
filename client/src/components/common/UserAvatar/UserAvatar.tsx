@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 import { useAvatar } from '../../../hooks/useAvatar';
 
@@ -20,7 +20,7 @@ function UserAvatar({
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
-  const dropdownItems = [
+  const dropdownItems = useMemo(() => [
     {
       icon: 'change-avatar.png',
       text: 'Changer d\'avatar',
@@ -36,7 +36,7 @@ function UserAvatar({
       text: 'Déconnexion',
       onClick: onLogout,
     },
-  ];
+  ], [onChangeAvatar, onChangeAccount, onLogout]);
 
   const renderAvatar = () => {
     if (isLoading) {
@@ -44,10 +44,18 @@ function UserAvatar({
     }
     if (error) {
       console.error('Error loading user info:', error);
+      // Utilisez l'avatar par défaut en cas d'erreur
+      return (
+        <img
+          src="/icons/avatar.png"
+          alt="Avatar par défaut"
+          className="user-avatar default-avatar"
+        />
+      );
     }
     return (
       <img
-        src={avatarUrl}
+        src={avatarUrl || "/icons/avatar.png"}
         alt={`Avatar de ${firstName} ${lastName}`}
         className="user-avatar"
       />
@@ -63,7 +71,7 @@ function UserAvatar({
         aria-expanded={showDropdown}
       >
         {renderAvatar()}
-        <span className="user-name">{`${firstName} ${lastName}`}</span>
+        <span className="user-name">{isLoading ? 'Chargement...' : `${firstName} ${lastName}`}</span>
       </button>
       {showDropdown && (
         <Dropdown
