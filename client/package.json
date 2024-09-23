@@ -10,28 +10,33 @@
     "preview": "vite preview"
   },
   "dependencies": {
-  "@types/uuid": "^9.0.8",
-  "esbuild": "^0.21.5",
-  "peerjs": "^1.5.4",
-  "react": "^18.2.0",
-  "react-dom": "^18.2.0",
-  "react-markdown": "^9.0.1",
-  "react-router-dom": "^6.22.3",
-  "remark-gfm": "^4.0.0",
-  "socket.io-client": "^4.7.5",
-  "uuid": "^9.0.1",
-  "zod": "^3.22.4"
-},
-"devDependencies": {
-  "@types/react": "^18.2.66",
-  "@types/react-dom": "^18.2.22",
-  "@types/react-router-dom": "^5.3.3",
-  "@vitejs/plugin-react": "^4.2.1",
-  "eslint": "^8.57.0",
-  "eslint-plugin-react": "^7.34.1",
-  "eslint-plugin-react-hooks": "^4.6.0",
-  "eslint-plugin-react-refresh": "^0.4.5",
-  "typescript": "^5.4.2",
-  "vite": "^5.1.6"
-}
+    "@hookform/resolvers": "^3.9.0",
+    "@mui/icons-material": "^6.1.1",
+    "@mui/material": "^6.1.1",
+    "@types/uuid": "^9.0.8",
+    "axios": "^1.7.7",
+    "esbuild": "^0.21.5",
+    "peerjs": "^1.5.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.53.0",
+    "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.22.3",
+    "remark-gfm": "^4.0.0",
+    "socket.io-client": "^4.7.5",
+    "uuid": "^9.0.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6"
+  }
 }
