@@ -4,7 +4,11 @@ import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
 import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
-import { useNavigation } from '../../../context/NavigationContext';
+import {
+  ActiveSideBarType,
+  useNavigation,
+} from '../../../context/NavigationContext';
+import { ContentSideBarEnum } from '../../../context/NavigationContext';
 
 interface NavbarProps {
   isMobile: boolean;
@@ -52,6 +56,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   const [showNotificationDropdown, setShowNotificationDropdown] =
     useState(false);
   const [isVolumeMuted, setIsVolumeMuted] = useState(false);
+  const { activeContentSideBar, setActiveContentSide } = useNavigation();
 
   const handleMuted = () => {
     setMuted(!muted);
@@ -110,20 +115,36 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   ];
 
   const notificationDropdownItems = [
-    { icon: 'message.png', text: 'Messages privés', onClick: () => {} },
-    { icon: 'list.png', text: 'Liste des mains levées', onClick: () => {} },
+    {
+      icon: 'message.png',
+      text: 'Messages privés',
+      onClick: () => handleComponent(ContentSideBarEnum.PrivateMessage),
+    },
+    {
+      icon: 'list.png',
+      text: 'Liste des mains levées',
+      onClick: () => handleComponent(ContentSideBarEnum.RaisedHand),
+    },
   ];
+
+  const handleComponent = (contentEnum: ActiveSideBarType) => {
+    setActiveContentSide(contentEnum);
+  };
 
   const renderNavItems = () => {
     if (userRole === 'teacher') {
       if (isMobile) {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => handleComponent(ContentSideBarEnum.Home)}
+            />
             <NavItem
               icon='listStudent.png'
               text='Liste des présences'
-              onClick={() => {}}
+              onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             />
             <div className='nav-item'>
               <NavItem
@@ -162,18 +183,30 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       } else {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => {
+                handleComponent(ContentSideBarEnum.Home);
+              }}
+            />
             <NavItem
               icon='email.png'
               text='Messages privés'
-              onClick={() => {}}
+              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             />
             <NavItem
               icon='listStudent.png'
               text='Élèves connectés'
-              onClick={() => {}}
+              onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             />
-            <NavItem icon='palm.png' text='Mains levées' onClick={() => {}} />
+            <NavItem
+              icon='palm.png'
+              text='Mains levées'
+              onClick={() => {
+                handleComponent(ContentSideBarEnum.RaisedHand);
+              }}
+            />
             <NavItem
               icon={muted ? 'NoSpeak.png' : 'speak.png'}
               text='Prendre la parole'
@@ -208,7 +241,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
             <NavItem
               icon='email.png'
               text='Messages privés'
-              onClick={() => {}}
+              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             />
             <div className='nav-item'>
               <NavItem
@@ -229,11 +262,15 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       } else {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => handleComponent(ContentSideBarEnum.Home)}
+            />
             <NavItem
               icon='email.png'
               text='Messages privés'
-              onClick={() => {}}
+              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             />
             {handRaiseItem}
           </>
