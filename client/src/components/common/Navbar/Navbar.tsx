@@ -56,7 +56,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   const [showNotificationDropdown, setShowNotificationDropdown] =
     useState(false);
   const [isVolumeMuted, setIsVolumeMuted] = useState(false);
-  const { activeContentSideBar, setActiveContentSide } = useNavigation();
+  const { setActiveContentMainComp, setActiveContentSide } = useNavigation();
 
   const handleMuted = () => {
     setMuted(!muted);
@@ -129,6 +129,7 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
 
   const handleComponent = (contentEnum: ActiveSideBarType) => {
     setActiveContentSide(contentEnum);
+    setActiveContentMainComp(false);
   };
 
   const renderNavItems = () => {
