@@ -1,4 +1,3 @@
-import React from 'react';
 import './Dropdown.css';
 
 interface DropdownItem {
@@ -16,10 +15,14 @@ function Dropdown({ items, onClose }: DropdownProps) {
   return (
     <div className="dropdown">
       {items.map((item, index) => (
-        <div key={index} className="dropdown-item" onClick={() => {
-          item.onClick();
-          onClose();
-        }}>
+        <div
+          key={index}
+          className="dropdown-item"
+          onClick={() => {
+            item.onClick();
+            onClose();
+          }}
+        >
           {item.icon && <img src={item.icon} alt="" className="dropdown-icon" />}
           <span>{item.text}</span>
         </div>
