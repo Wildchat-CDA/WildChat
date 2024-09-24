@@ -14,6 +14,12 @@ import {
   IMessageUpdatePayload,
 } from '../../../common/interface/messageInterface';
 
+export interface IPeerIdOnRoomPayload {
+  peerId: string;
+  roomUuid: string;
+  userUuid: string;
+}
+
 @Injectable()
 export class RedisService {
   private _client: RedisClientType<
@@ -64,6 +70,7 @@ export class RedisService {
   }
 
   public async postMessage(data: IMessagePostPayload) {
+    console.log('roomId : ', data.roomId);
     if (data.message.length === 0) {
       throw new Error(
         'The message cannot be empty. Please enter some text before submitting.',
@@ -79,6 +86,44 @@ export class RedisService {
       throw new InternalServerErrorException('Failed to post message to Redis');
     }
   }
+  public async postPeerIdOnRoom(data: IPeerIdOnRoomPayload) {
+    if (data.peerId.length === 0) {
+      throw new Error('The peerId cannot be empty');
+    }
+
+    try {
+      // Récupérer le channel précédent de l'utilisateur
+      const previousRoomId = await this.client.get(
+        `user:${data.userUuid}:currentChannel`,
+      );
+      console.log('previous : ', previousRoomId);
+
+      // Supprimer le peerId de la room précédente si elle existe
+      if (previousRoomId) {
+        console.log('previous existant');
+        await this.client.lRem(`roomPeerId:${previousRoomId}`, 0, data.peerId);
+      }
+
+      // Ajouter le peerId à la nouvelle room
+      await this.client.rPush(`roomPeerId:${data.roomUuid}`, `${data.peerId}`);
+
+      // Mettre à jour le channel actuel de l'utilisateur
+      await this.client.set(
+        `user:${data.userUuid}:currentChannel`,
+        data.roomUuid,
+      );
+      console.log(
+        `Mise à jour du channel de l'utilisateur ${data.userUuid} vers ${data.roomUuid}`,
+      );
+    } catch (error) {
+      console.error('Failed to post peerId:', error);
+      throw new InternalServerErrorException('Failed to post peerId to Redis');
+    }
+  }
+
+  // public async setUserOnRoom (data){
+
+  // }
 
   public async updateMessage(
     data: IMessageUpdatePayload,

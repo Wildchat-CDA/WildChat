@@ -38,7 +38,7 @@ import { RoomService } from './service/room.service';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
-    ],
+  ],
   controllers: [
     AppController,
     RedisController,
@@ -48,7 +48,7 @@ import { RoomService } from './service/room.service';
     ConfigController,
     RedisController,
     RaisedHandsController,
-    RoomController,
+    // RoomController,
   ],
   providers: [
     AppService,
@@ -60,7 +60,7 @@ import { RoomService } from './service/room.service';
     ConfigService,
     ChatGateway,
     RedisService,
-    RoomService
+    RoomService,
   ],
 })
 export class AppModule {}
