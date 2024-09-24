@@ -26,7 +26,7 @@ interface MediaContextType extends MediaState {
   refreshDevices: () => Promise<void>;
 }
 
-const MediaContext = createContext<MediaContextType | undefined>(undefined);
+export const MediaContext = createContext<MediaContextType | undefined>(undefined);
 
 export const MediaProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [state, setState] = useState<MediaState>({

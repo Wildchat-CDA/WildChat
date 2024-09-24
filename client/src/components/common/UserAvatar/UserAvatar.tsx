@@ -44,7 +44,6 @@ function UserAvatar({
     }
     if (error) {
       console.error('Error loading user info:', error);
-      // Utilisez l'avatar par défaut en cas d'erreur
       return (
         <img
           src="/icons/avatar.png"

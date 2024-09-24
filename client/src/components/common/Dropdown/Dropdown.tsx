@@ -23,7 +23,17 @@ function Dropdown({ items, onClose }: DropdownProps) {
             onClose();
           }}
         >
-          {item.icon && <img src={item.icon} alt="" className="dropdown-icon" />}
+          {item.icon && (
+            <img 
+              src={item.icon} 
+              alt="" 
+              className="dropdown-icon" 
+              onError={(e) => {
+                console.error(`Failed to load icon: ${item.icon}`);
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          )}
           <span>{item.text}</span>
         </div>
       ))}

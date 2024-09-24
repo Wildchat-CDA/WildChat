@@ -9,7 +9,7 @@ export const useAvatar = (userId: string) => {
     isLoading: boolean;
     error: string | null;
   }>({
-    avatarUrl: "",
+    avatarUrl: "/icons/avatar.png",
     firstName: "",
     lastName: "",
     isLoading: true,

@@ -1,73 +1,39 @@
-import React, { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
 import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
 import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
 import { useNavigation } from '../../../context/NavigationContext';
+import IconButton from '../../common/button/IconButton/IconButton';
+import { MediaContext } from '../../../context/MediaContext';
 
 interface NavbarProps {
   isMobile: boolean;
-  muted: boolean;
-  setMuted: (v: boolean) => void;
 }
 
-interface NavItemProps {
-  icon: string;
-  text: string;
-  onClick: () => void;
-  isActive?: boolean;
-}
-
-function NavItem({ icon, text, onClick, isActive }: NavItemProps) {
-  return (
-    <button
-      className={`nav-item ${isActive ? 'active' : ''}`}
-      onClick={onClick}
-      aria-label={text}
-      aria-pressed={isActive}
-    >
-      <div className='icon-wrapper'>
-        <img
-          src={`/icons/${icon}`}
-          alt=''
-          aria-hidden='true'
-          className='nav-icon'
-        />
-      </div>
-      <span className='nav-text'>{text}</span>
-    </button>
-  );
-}
-
-function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
+function Navbar({ isMobile }: NavbarProps) {
   const { userRole } = useUserRole();
-  const { isHandRaised, raiseHand, lowerHand } = useHandRaise(
-    1,
-    'Current User',
-    'Table-1'
-  );
+  const { isHandRaised, raiseHand, lowerHand } = useHandRaise(1, 'Current User', 'Table-1');
   const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);
   const [showMediaDropdown, setShowMediaDropdown] = useState(false);
-  const [showNotificationDropdown, setShowNotificationDropdown] =
-    useState(false);
-  const [isVolumeMuted, setIsVolumeMuted] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  const navigation = useNavigation();
+  
+  const mediaContext = useContext(MediaContext);
+  if (!mediaContext) {
+    throw new Error("Navbar must be used within a MediaProvider");
+  }
+  const { 
+    isMicrophoneOn, 
+    speakerVolume,
+    toggleMicrophone, 
+    setSpeakerVolume
+  } = mediaContext;
 
-  const handleMuted = () => {
-    setMuted(!muted);
-  };
-
-  const toggleHandRaiseDropdown = () => {
-    setShowHandRaiseDropdown(!showHandRaiseDropdown);
-  };
-
-  const toggleMediaDropdown = () => {
-    setShowMediaDropdown(!showMediaDropdown);
-  };
-
-  const toggleNotificationDropdown = () => {
-    setShowNotificationDropdown(!showNotificationDropdown);
-  };
+  const toggleHandRaiseDropdown = () => setShowHandRaiseDropdown(!showHandRaiseDropdown);
+  const toggleMediaDropdown = () => setShowMediaDropdown(!showMediaDropdown);
+  const toggleNotificationDropdown = () => setShowNotificationDropdown(!showNotificationDropdown);
 
   const handleRaiseHand = (type: 'self' | 'table') => {
     if (isHandRaised[type]) {
@@ -78,124 +44,156 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
     setShowHandRaiseDropdown(false);
   };
 
-  const toggleVolume = () => {
-    setIsVolumeMuted(!isVolumeMuted);
-  };
+  const toggleSpeaker = () => setSpeakerVolume(speakerVolume > 0 ? 0 : 1);
+  const isSpeakerOn = speakerVolume > 0;
 
   const handRaiseDropdownItems = [
-    {
-      icon: 'graduate-hat.png',
-      text: 'Pour soi',
-      onClick: () => handleRaiseHand('self'),
-    },
-    {
-      icon: 'multiple-users-silhouette.png',
-      text: 'Pour la table',
-      onClick: () => handleRaiseHand('table'),
-    },
+    { icon: 'icons/graduate-hat.png', text: 'Pour soi', onClick: () => handleRaiseHand('self') },
+    { icon: 'icons/multiple-users-silhouette.png', text: 'Pour la table', onClick: () => handleRaiseHand('table') },
   ];
 
   const mediaDropdownItems = [
     {
-      icon: muted ? 'unmute.png' : 'microphone.png',
+      icon: `icons/${isMicrophoneOn ? 'microphone.png' : 'unmute.png'}`,
       text: 'Microphone',
-      onClick: handleMuted,
+      onClick: toggleMicrophone,
     },
     {
-      icon: isVolumeMuted ? 'mute.png' : 'volume.png',
+      icon: `icons/${isSpeakerOn ? 'volume.png' : 'mute.png'}`,
       text: 'Volume',
-      onClick: toggleVolume,
+      onClick: toggleSpeaker,
     },
-    { icon: 'ecrou.png', text: 'Réglages', onClick: () => {} },
+    { icon: 'icons/ecrou.png', text: 'Réglages', onClick: () => {} },
   ];
 
   const notificationDropdownItems = [
-    { icon: 'message.png', text: 'Messages privés', onClick: () => {} },
-    { icon: 'list.png', text: 'Liste des mains levées', onClick: () => {} },
+    { icon: 'icons/email.png', text: 'Messages privés', onClick: () => {} },
+    { icon: 'icons/listStudent.png', text: 'Liste des mains levées', onClick: () => {} },
   ];
+
+  const handleNavigation = (type: string) => {
+    switch (type) {
+      case 'accueil':
+        navigation.goToHome();
+        break;
+      case 'messagesPrives':
+        navigation.goToPrivateMessages();
+        break;
+      case 'listePresences':
+        navigation.goToAttendanceList();
+        break;
+      case 'elevesConnectes':
+        navigation.goToConnectedStudents();
+        break;
+      case 'mainsLevees':
+        navigation.goToRaisedHands();
+        break;
+      default:
+        break;
+    }
+  };
 
   const renderNavItems = () => {
     if (userRole === 'teacher') {
       if (isMobile) {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
-            <NavItem
-              icon='listStudent.png'
-              text='Liste des présences'
-              onClick={() => {}}
+            <IconButton 
+              icon='home.png' 
+              text='Accueil' 
+              onClick={() => handleNavigation('accueil')} 
+              ariaLabel="Aller à l'accueil"
             />
-            <div className='nav-item'>
-              <NavItem
-                icon='notification.png'
-                text='Notifications'
-                onClick={toggleNotificationDropdown}
-              />
+            <IconButton 
+              icon='email.png' 
+              text='Messages privés' 
+              onClick={() => handleNavigation('messagesPrives')} 
+              ariaLabel="Aller aux messages privés"
+            />
+            <IconButton 
+              icon='listStudent.png' 
+              text='Liste des présences' 
+              onClick={() => handleNavigation('listePresences')} 
+              ariaLabel="Voir la liste des présences"
+            />
+            <div className="nav-item">
+              <IconButton icon='notification.png' text='Notifications' onClick={toggleNotificationDropdown} ariaLabel="Ouvrir les notifications" />
               {showNotificationDropdown && (
-                <Dropdown
-                  items={notificationDropdownItems}
-                  aria-label='Menu des notifications'
+                <Dropdown 
+                  items={notificationDropdownItems} 
+                  onClose={() => setShowNotificationDropdown(false)} 
                 />
               )}
             </div>
-            <div className='nav-item'>
-              <NavItem
-                icon='media.png'
-                text='Média'
-                onClick={toggleMediaDropdown}
-              />
+            <div className="nav-item">
+              <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
               {showMediaDropdown && (
-                <Dropdown
-                  items={mediaDropdownItems}
-                  aria-label='Menu des médias'
+                <Dropdown 
+                  items={mediaDropdownItems} 
+                  onClose={() => setShowMediaDropdown(false)} 
                 />
               )}
             </div>
-            <NavItem
-              icon={muted ? 'NoSpeak.png' : 'speak.png'}
+            <IconButton
+              icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
               text='Prendre la parole'
-              onClick={handleMuted}
-              isActive={!muted}
+              onClick={toggleMicrophone}
+              isActive={isMicrophoneOn}
+              ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
             />
           </>
         );
       } else {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
-            <NavItem
-              icon='email.png'
-              text='Messages privés'
-              onClick={() => {}}
+            <IconButton 
+              icon='home.png' 
+              text='Accueil' 
+              onClick={() => handleNavigation('accueil')} 
+              ariaLabel="Aller à l'accueil"
             />
-            <NavItem
-              icon='listStudent.png'
-              text='Élèves connectés'
-              onClick={() => {}}
+            <IconButton 
+              icon='email.png' 
+              text='Messages privés' 
+              onClick={() => handleNavigation('messagesPrives')} 
+              ariaLabel="Aller aux messages privés"
             />
-            <NavItem icon='palm.png' text='Mains levées' onClick={() => {}} />
-            <NavItem
-              icon={muted ? 'NoSpeak.png' : 'speak.png'}
+            <IconButton 
+              icon='listStudent.png' 
+              text='Élèves connectés' 
+              onClick={() => handleNavigation('elevesConnectes')} 
+              ariaLabel="Voir les élèves connectés"
+            />
+            <IconButton 
+              icon='palm.png' 
+              text='Mains levées' 
+              onClick={() => handleNavigation('mainsLevees')} 
+              ariaLabel="Voir les mains levées"
+            />
+            <IconButton
+              icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
               text='Prendre la parole'
-              onClick={handleMuted}
-              isActive={!muted}
+              onClick={toggleMicrophone}
+              isActive={isMicrophoneOn}
+              ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
             />
           </>
         );
       }
     } else {
       const handRaiseItem = (
-        <div className='hand-raise-container'>
-          <NavItem
+        <div className="hand-raise-container">
+          <IconButton
             icon='palm.png'
             text='Lever la main'
             onClick={toggleHandRaiseDropdown}
             isActive={isHandRaised.self || isHandRaised.table}
+            ariaLabel='Lever la main'
           />
           {showHandRaiseDropdown && (
-            <Dropdown
-              items={handRaiseDropdownItems}
-              aria-label='Menu pour lever la main'
+            <Dropdown 
+              items={handRaiseDropdownItems} 
+              onClose={() => setShowHandRaiseDropdown(false)} 
             />
           )}
         </div>
@@ -204,22 +202,24 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
-            <NavItem
-              icon='email.png'
-              text='Messages privés'
-              onClick={() => {}}
+            <IconButton 
+              icon='home.png' 
+              text='Accueil' 
+              onClick={() => handleNavigation('accueil')} 
+              ariaLabel="Aller à l'accueil"
             />
-            <div className='nav-item'>
-              <NavItem
-                icon='media.png'
-                text='Média'
-                onClick={toggleMediaDropdown}
-              />
+            <IconButton 
+              icon='email.png' 
+              text='Messages privés' 
+              onClick={() => handleNavigation('messagesPrives')} 
+              ariaLabel="Aller aux messages privés"
+            />
+            <div className="nav-item">
+              <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
               {showMediaDropdown && (
-                <Dropdown
-                  items={mediaDropdownItems}
-                  aria-label='Menu des médias'
+                <Dropdown 
+                  items={mediaDropdownItems} 
+                  onClose={() => setShowMediaDropdown(false)} 
                 />
               )}
             </div>
@@ -229,11 +229,17 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
       } else {
         return (
           <>
-            <NavItem icon='home.png' text='Accueil' onClick={() => {}} />
-            <NavItem
-              icon='email.png'
-              text='Messages privés'
-              onClick={() => {}}
+            <IconButton 
+              icon='home.png' 
+              text='Accueil' 
+              onClick={() => handleNavigation('accueil')} 
+              ariaLabel="Aller à l'accueil"
+            />
+            <IconButton 
+              icon='email.png' 
+              text='Messages privés' 
+              onClick={() => handleNavigation('messagesPrives')} 
+              ariaLabel="Aller aux messages privés"
             />
             {handRaiseItem}
           </>
@@ -243,17 +249,14 @@ function Navbar({ isMobile, muted, setMuted }: NavbarProps) {
   };
 
   return (
-    <nav
-      className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`}
-      aria-label='Navigation principale'
-    >
+    <nav className={`main-navbar ${isMobile ? 'mobile' : ''} ${userRole}`} aria-label="Navigation principale">
       {!isMobile && (
-        <div className='logo-container'>
+        <div className="logo-container">
           <Logo width={40} color='white' aria-hidden='true' />
-          <span className='logo-text'>Wild Chat</span>
+          <span className="logo-text">MyApp</span>
         </div>
       )}
-      <div className='nav-items-container'>{renderNavItems()}</div>
+      <div className="nav-items-container">{renderNavItems()}</div>
     </nav>
   );
 }
