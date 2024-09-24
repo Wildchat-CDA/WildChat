@@ -7,6 +7,7 @@ import { User } from '../entity/user.entity';
 import { Role } from '../entity/role.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -46,33 +47,42 @@ export class AuthService {
     return { status: HttpStatus.CREATED, message: 'Compte professeur créé avec succès', user: savedUser };
   }
 
-async login(loginDto: LoginDto): Promise<{ status: number; message: string; accessToken?: string }> {
-  const { email, password } = loginDto;
-  const user = await this.userRepository.findOne({
-    where: { email },
-    relations: ['role'],
-  });
+  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
+    const { email, password } = loginDto;
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['role'],
+    });
 
-  if (!user) {
-    return { status: HttpStatus.UNAUTHORIZED, message: 'Identifiants invalides' };
-  }
+    if (!user) {
+      throw new Error('Identifiants invalides');
+    }
 
-  if (user.role.name !== 'professeur') {
-    return { status: HttpStatus.UNAUTHORIZED, message: 'Utilisateur non autorisé' };
-  }
+    if (user.role.name !== 'professeur') {
+      throw new Error('Utilisateur non autorisé');
+    }
 
-  const isPasswordValid = await argon2.verify(user.password, password);
-  if (!isPasswordValid) {
-    return { status: HttpStatus.UNAUTHORIZED, message: 'Identifiants invalides' };
-  }
+    const isPasswordValid = await argon2.verify(user.password, password);
+    if (!isPasswordValid) {
+      throw new Error('Identifiants invalides');
+    }
 
-  const payload = { email: user.email, sub: user.id, roles: [user.role.name] };
-  const accessToken = this.jwtService.sign(payload, { expiresIn: '4h' });
-  
-  const decodedToken = this.jwtService.decode(accessToken) as { exp: number };
-  const expirationDate = new Date(decodedToken.exp * 1000);
-  console.log(`Token généré avec expiration le ${expirationDate.toLocaleString()} (dans 4 heures)`);
+    const payload = { email: user.email, sub: user.id, roles: [user.role.name] };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '4h' });
+    
+    const decodedToken = this.jwtService.decode(accessToken) as { exp: number };
+    const expirationDate = new Date(decodedToken.exp * 1000);
 
-  return { status: HttpStatus.OK, message: 'Connexion réussie', accessToken } 
+    const response: LoginResponseDto = {
+      id: user.id,
+      name: user.name,
+      firstName: user.firstName,
+      role: user.role.name,
+      message: 'Connexion réussie',
+      expiration: expirationDate.toISOString(),
+      accessToken: accessToken,
+    };
+
+    return response;
   }
 }

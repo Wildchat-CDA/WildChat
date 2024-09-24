@@ -2,7 +2,7 @@ import axios from "axios"
 
 //TODO mettre le API_URL dans le .env apres
 
-const API_URL= "http://localhost:5173/api"
+const API_URL= "http://localhost:3000"
 
 export const login = async (email: string, password: string) => {
     const response = await axios.post(`${API_URL}/login`, {email, password});
@@ -12,12 +12,10 @@ export const login = async (email: string, password: string) => {
     return response.data;
 };
 
-export const register = async (name: string, firsName: string, email: string, password: string) => {
-    const response = await axios.post(`${API_URL}/register`, { name, firsName, email, password });
+export const register = async (name: string, firstName: string, email: string, password: string) => {
+    const response = await axios.post(`${API_URL}/register`, { name, firstName, email, password });
 }
 
 export const logout = () => {
     localStorage.removeItem("user");
 };
-
-

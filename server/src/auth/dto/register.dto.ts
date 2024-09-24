@@ -1,6 +1,7 @@
 import { IsEmail, IsString, MinLength, Matches } from 'class-validator';
 
 export class RegisterDto {
+  
   @IsString()
   @MinLength(3, { message: 'Le nom doit contenir au moins 3 caractères' })
   name: string;
