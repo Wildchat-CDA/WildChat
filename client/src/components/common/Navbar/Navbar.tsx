@@ -4,9 +4,11 @@ import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
 import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
-import { useNavigation } from '../../../context/NavigationContext';
-import IconButton from '../../common/button/IconButton/IconButton';
-import { MediaContext } from '../../../context/MediaContext';
+import {
+  ActiveSideBarType,
+  useNavigation,
+} from '../../../context/NavigationContext';
+import { ContentSideBarEnum } from '../../../context/NavigationContext';
 
 interface NavbarProps {
   isMobile: boolean;
@@ -17,19 +19,14 @@ function Navbar({ isMobile }: NavbarProps) {
   const { isHandRaised, raiseHand, lowerHand } = useHandRaise(1, 'Current User', 'Table-1');
   const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);
   const [showMediaDropdown, setShowMediaDropdown] = useState(false);
-  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
-  const navigation = useNavigation();
-  
-  const mediaContext = useContext(MediaContext);
-  if (!mediaContext) {
-    throw new Error("Navbar must be used within a MediaProvider");
-  }
-  const { 
-    isMicrophoneOn, 
-    speakerVolume,
-    toggleMicrophone, 
-    setSpeakerVolume
-  } = mediaContext;
+  const [showNotificationDropdown, setShowNotificationDropdown] =
+    useState(false);
+  const [isVolumeMuted, setIsVolumeMuted] = useState(false);
+  const { setActiveContentMainComp, setActiveContentSide } = useNavigation();
+
+  const handleMuted = () => {
+    setMuted(!muted);
+  };
 
   const toggleHandRaiseDropdown = () => setShowHandRaiseDropdown(!showHandRaiseDropdown);
   const toggleMediaDropdown = () => setShowMediaDropdown(!showMediaDropdown);
@@ -67,30 +64,21 @@ function Navbar({ isMobile }: NavbarProps) {
   ];
 
   const notificationDropdownItems = [
-    { icon: 'icons/email.png', text: 'Messages privés', onClick: () => {} },
-    { icon: 'icons/listStudent.png', text: 'Liste des mains levées', onClick: () => {} },
+    {
+      icon: 'message.png',
+      text: 'Messages privés',
+      onClick: () => handleComponent(ContentSideBarEnum.PrivateMessage),
+    },
+    {
+      icon: 'list.png',
+      text: 'Liste des mains levées',
+      onClick: () => handleComponent(ContentSideBarEnum.RaisedHand),
+    },
   ];
 
-  const handleNavigation = (type: string) => {
-    switch (type) {
-      case 'accueil':
-        navigation.goToHome();
-        break;
-      case 'messagesPrives':
-        navigation.goToPrivateMessages();
-        break;
-      case 'listePresences':
-        navigation.goToAttendanceList();
-        break;
-      case 'elevesConnectes':
-        navigation.goToConnectedStudents();
-        break;
-      case 'mainsLevees':
-        navigation.goToRaisedHands();
-        break;
-      default:
-        break;
-    }
+  const handleComponent = (contentEnum: ActiveSideBarType) => {
+    setActiveContentSide(contentEnum);
+    setActiveContentMainComp(false);
   };
 
   const renderNavItems = () => {
@@ -98,23 +86,15 @@ function Navbar({ isMobile }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <IconButton 
-              icon='home.png' 
-              text='Accueil' 
-              onClick={() => handleNavigation('accueil')} 
-              ariaLabel="Aller à l'accueil"
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => handleComponent(ContentSideBarEnum.Home)}
             />
-            <IconButton 
-              icon='email.png' 
-              text='Messages privés' 
-              onClick={() => handleNavigation('messagesPrives')} 
-              ariaLabel="Aller aux messages privés"
-            />
-            <IconButton 
-              icon='listStudent.png' 
-              text='Liste des présences' 
-              onClick={() => handleNavigation('listePresences')} 
-              ariaLabel="Voir la liste des présences"
+            <NavItem
+              icon='listStudent.png'
+              text='Liste des présences'
+              onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             />
             <div className="nav-item">
               <IconButton icon='notification.png' text='Notifications' onClick={toggleNotificationDropdown} ariaLabel="Ouvrir les notifications" />
@@ -146,32 +126,32 @@ function Navbar({ isMobile }: NavbarProps) {
       } else {
         return (
           <>
-            <IconButton 
-              icon='home.png' 
-              text='Accueil' 
-              onClick={() => handleNavigation('accueil')} 
-              ariaLabel="Aller à l'accueil"
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => {
+                handleComponent(ContentSideBarEnum.Home);
+              }}
             />
-            <IconButton 
-              icon='email.png' 
-              text='Messages privés' 
-              onClick={() => handleNavigation('messagesPrives')} 
-              ariaLabel="Aller aux messages privés"
+            <NavItem
+              icon='email.png'
+              text='Messages privés'
+              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             />
-            <IconButton 
-              icon='listStudent.png' 
-              text='Élèves connectés' 
-              onClick={() => handleNavigation('elevesConnectes')} 
-              ariaLabel="Voir les élèves connectés"
+            <NavItem
+              icon='listStudent.png'
+              text='Élèves connectés'
+              onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             />
-            <IconButton 
-              icon='palm.png' 
-              text='Mains levées' 
-              onClick={() => handleNavigation('mainsLevees')} 
-              ariaLabel="Voir les mains levées"
+            <NavItem
+              icon='palm.png'
+              text='Mains levées'
+              onClick={() => {
+                handleComponent(ContentSideBarEnum.RaisedHand);
+              }}
             />
-            <IconButton
-              icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
+            <NavItem
+              icon={muted ? 'NoSpeak.png' : 'speak.png'}
               text='Prendre la parole'
               onClick={toggleMicrophone}
               isActive={isMicrophoneOn}
@@ -202,17 +182,15 @@ function Navbar({ isMobile }: NavbarProps) {
       if (isMobile) {
         return (
           <>
-            <IconButton 
-              icon='home.png' 
-              text='Accueil' 
-              onClick={() => handleNavigation('accueil')} 
-              ariaLabel="Aller à l'accueil"
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => handleComponent(ContentSideBarEnum.Home)}
             />
-            <IconButton 
-              icon='email.png' 
-              text='Messages privés' 
-              onClick={() => handleNavigation('messagesPrives')} 
-              ariaLabel="Aller aux messages privés"
+            <NavItem
+              icon='email.png'
+              text='Messages privés'
+              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             />
             <div className="nav-item">
               <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
@@ -229,17 +207,15 @@ function Navbar({ isMobile }: NavbarProps) {
       } else {
         return (
           <>
-            <IconButton 
-              icon='home.png' 
-              text='Accueil' 
-              onClick={() => handleNavigation('accueil')} 
-              ariaLabel="Aller à l'accueil"
+            <NavItem
+              icon='home.png'
+              text='Accueil'
+              onClick={() => handleComponent(ContentSideBarEnum.Home)}
             />
-            <IconButton 
-              icon='email.png' 
-              text='Messages privés' 
-              onClick={() => handleNavigation('messagesPrives')} 
-              ariaLabel="Aller aux messages privés"
+            <NavItem
+              icon='email.png'
+              text='Messages privés'
+              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             />
             {handRaiseItem}
           </>

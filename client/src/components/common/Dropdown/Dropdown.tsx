@@ -13,7 +13,7 @@ interface DropdownProps {
 
 function Dropdown({ items, onClose }: DropdownProps) {
   return (
-    <div className="dropdown">
+    <div className='dropdown'>
       {items.map((item, index) => (
         <div
           key={index}

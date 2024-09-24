@@ -16,7 +16,18 @@ export interface NavigationContextType {
   setActiveContentMainComp: React.Dispatch<React.SetStateAction<boolean>>;
   isClassRoom: boolean;
   setIsClassRoom: React.Dispatch<React.SetStateAction<boolean>>;
+  activeContentSideBar: ActiveSideBarType;
+  setActiveContentSide: (activeContentSideBar: ActiveSideBarType) => void;
 }
+
+export enum ContentSideBarEnum {
+  Home = 'home',
+  PrivateMessage = 'privateMessage',
+  PresenceList = 'presenceList',
+  RaisedHand = 'raisedHame',
+}
+
+export type ActiveSideBarType = ContentSideBarEnum;
 
 // Création du contexte avec un type par défaut
 const NavigationContext = createContext<NavigationContextType | undefined>(
@@ -51,6 +62,8 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
   const [activeContentMainComp, setActiveContentMainComp] =
     useState<boolean>(false);
   const [isClassRoom, setIsClassRoom] = useState<boolean>(false);
+  const [activeContentSideBar, setActiveContentSide] =
+    useState<ActiveSideBarType>(ContentSideBarEnum['Home']);
 
   const value = {
     currentSection,
@@ -61,6 +74,8 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     setActiveContentMainComp,
     isClassRoom,
     setIsClassRoom,
+    activeContentSideBar,
+    setActiveContentSide,
   };
 
   return (

@@ -1,5 +1,5 @@
 import './ContentMain.css';
-import ChatPage from '../../../../pages/ChatPage';
+import ChatPage from '../../../../pages/chatPage/ChatPage';
 import { useNavigation } from '../../../../context/NavigationContext';
 
 function ContentMain() {
