@@ -23,6 +23,8 @@ import { RedisController } from './controller/redis.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
 import { RoomController } from './controller/room.controller';
 import { RoomService } from './service/room.service';
+import { UserController } from './controller/user.controller';
+import { UserService } from './service/user.service';
 
 @Module({
   imports: [
@@ -37,8 +39,8 @@ import { RoomService } from './service/room.service';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Section, Channel, Type, Config]),
-    ],
+    TypeOrmModule.forFeature([Section, Channel, Type, Config, User]),
+  ],
   controllers: [
     AppController,
     RedisController,
@@ -49,6 +51,7 @@ import { RoomService } from './service/room.service';
     RedisController,
     RaisedHandsController,
     RoomController,
+    UserController,
   ],
   providers: [
     AppService,
@@ -60,7 +63,8 @@ import { RoomService } from './service/room.service';
     ConfigService,
     ChatGateway,
     RedisService,
-    RoomService
+    RoomService,
+    UserService,
   ],
 })
 export class AppModule {}
