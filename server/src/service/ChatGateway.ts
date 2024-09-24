@@ -86,10 +86,15 @@ export class ChatGateway
   }
 
   @SubscribeMessage('join-channel')
-  joinCnannel(
+  async joinCnannel(
     @MessageBody() data: { peerID: string; roomUuid: string; userUuid: string },
   ) {
-    this.roomService.addUserOnRoom(data.peerID, data.roomUuid, data.userUuid);
+    await this.roomService.addUserOnRoom(
+      data.peerID,
+      data.roomUuid,
+      data.userUuid,
+    );
+    this.server.emit('join-channel', 'Bravo');
   }
 
   // @SubscribeMessage('join-channel')
@@ -97,17 +102,17 @@ export class ChatGateway
   //   @MessageBody() data: { peerID: string },
   //   @ConnectedSocket() client: Socket,
   // ) {
-  //   // console.log(`New user joined: PeerID ${data.peerID}`);
-  //   // const userUUID = this.roomService.addUser(data.peerID);
-  //   // // client.join(this.roomService.channelUUID);
-  //   // this.socketToPeerMap.set(client.id, data.peerID);
-  //   // this.server.to(this.roomService.channelUUID).emit('user-joined', {
-  //   //   peerID: data.peerID,
-  //   //   uuid: userUUID,
-  //   //   channelUUID: this.roomService.channelUUID,
-  //   //   users: this.roomService.users,
-  //   // });
-  //   // return { uuid: userUUID, channelUUID: this.roomService.channelUUID };
+  //   console.log(`New user joined: PeerID ${data.peerID}`);
+  //   const userUUID = this.roomService.addUser(data.peerID);
+  //   client.join(this.roomService.channelUUID);
+  //   this.socketToPeerMap.set(client.id, data.peerID);
+  //   this.server.to(this.roomService.channelUUID).emit('user-joined', {
+  //     peerID: data.peerID,
+  //     uuid: userUUID,
+  //     channelUUID: this.roomService.channelUUID,
+  //     users: this.roomService.users,
+  //   });
+  //   return { uuid: userUUID, channelUUID: this.roomService.channelUUID };
   // }
 
   // @SubscribeMessage('leave-channel')

@@ -44,15 +44,16 @@ export const AudioProvider: React.FunctionComponent<{
         setMyPeerID(peerID);
 
         socketRef.current = io(SOCKET_SERVER);
-        socketRef.current.emit(
-          'join-channel',
-          { peerID },
-          (response: JoinChannelResponse) => {
-            setChannelUUID(response.channelUUID);
-          }
-        );
+        
+        // socketRef.current.emit(
+        //   'join-channel',
+        //   { peerID },
+        //   (response: JoinChannelResponse) => {
+        //     setChannelUUID(response.channelUUID);
+        //   }
+        // );
 
-        setupSocketListeners();
+        // setupSocketListeners();
       });
 
       try {
@@ -60,6 +61,7 @@ export const AudioProvider: React.FunctionComponent<{
           video: false,
           audio: true,
         });
+        console.log('stream : ', stream);
         streamRef.current = stream;
         if (localAudioRef.current) {
           localAudioRef.current.srcObject = stream;
@@ -76,36 +78,32 @@ export const AudioProvider: React.FunctionComponent<{
     };
   }, []);
 
-  const setupSocketListeners = () => {
-    if (!socketRef.current) return;
-
-    socketRef.current.on('user-joined', (data: { users: User[] }) => {
-      console.log('DATA : ', data);
-      setConnectedUsers(data.users);
-      const newUser = data.users.find((user) => user.peerID !== myPeerID);
-      if (newUser && streamRef.current) {
-        callUser(newUser.peerID);
-      }
-    });
-
-    socketRef.current.on(
-      'user-disconnected',
-      (data: { peerID: string; uuid: string; users: User[] }) => {
-        setConnectedUsers(data.users);
-
-        const connection = connectionsRef.current.get(data.peerID);
-        if (connection) {
-          connection.close();
-          connectionsRef.current.delete(data.peerID);
-        }
-      }
-    );
-
-    socketRef.current.emit('request-channel-info', (info: ChannelInfo) => {
-      setChannelUUID(info.channelUUID);
-      setConnectedUsers(info.users);
-    });
-  };
+  // const setupSocketListeners = () => {
+  //   if (!socketRef.current) return;
+  //   socketRef.current.on('user-joined', (data: { users: User[] }) => {
+  //     console.log('DATA : ', data);
+  //     setConnectedUsers(data.users);
+  //     const newUser = data.users.find((user) => user.peerID !== myPeerID);
+  //     if (newUser && streamRef.current) {
+  //       callUser(newUser.peerID);
+  //     }
+  //   });
+  //   socketRef.current.on(
+  //     'user-disconnected',
+  //     (data: { peerID: string; uuid: string; users: User[] }) => {
+  //       setConnectedUsers(data.users);
+  //       const connection = connectionsRef.current.get(data.peerID);
+  //       if (connection) {
+  //         connection.close();
+  //         connectionsRef.current.delete(data.peerID);
+  //       }
+  //     }
+  //   );
+  //   socketRef.current.emit('request-channel-info', (info: ChannelInfo) => {
+  //     setChannelUUID(info.channelUUID);
+  //     setConnectedUsers(info.users);
+  //   });
+  // };
 
   const cleanup = () => {
     if (socketRef.current) {
@@ -124,6 +122,8 @@ export const AudioProvider: React.FunctionComponent<{
   useEffect(() => {
     if (peerRef.current) {
       peerRef.current.on('call', handleIncomingCall);
+      console.log('local :', localAudioRef);
+      console.log('remote : ', remoteAudioRef);
     }
 
     return () => {
