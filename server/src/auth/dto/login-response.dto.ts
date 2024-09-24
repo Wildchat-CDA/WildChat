@@ -1,9 +1,9 @@
 export class LoginResponseDto {
     name: string;
     firstName: string;
+    email: string;
     id: number;
     role: string;
-    message: string;
     expiration: string;
     accessToken: string;
   }

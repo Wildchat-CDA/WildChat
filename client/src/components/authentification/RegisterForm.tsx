@@ -1,79 +1,109 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useAuth } from '../../context/AuthentificationContext';
+import { useNavigate } from 'react-router-dom';
+import { register as registerUser } from '../../services/authentificationService';
 import { PasswordStrength } from './PasswordStrength';
-import { passwordSchema } from '../../utils/ValidationPassword';
-import "./Auth.css";
-import "../../App.css"
+import './Auth.css';
 
-const registerSchema = z.object({
-  name: z.string().min(1, "Le nom est requis"),
-  firstName: z.string().min(1, "Le prénom est requis"),
-  email: z.string().email("Adresse e-mail invalide"),
-  password: passwordSchema,
-  confirmPassword: z.string().min(1, "La confirmation du mot de passe est requise"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Les mots de passe ne correspondent pas",
-  path: ["confirmPassword"],
-});
+type RegisterFormData = {
+  nom: string;
+  prenom: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
-type RegisterFormData = z.infer<typeof registerSchema>;
-
-const Register: React.FC = () => {
-  const [password, setPassword] = React.useState('');
-  const { register: registerUser } = useAuth();
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
-  });
+const RegisterForm: React.FC = () => {
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterFormData>();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterFormData) => {
-    await registerUser(data.name, data.firstName, data.email, data.password);
+    try {
+      await registerUser(data.nom, data.prenom, data.email, data.password);
+      navigate('/login');
+    } catch (error) {
+      console.error("Erreur d'inscription", error);
+    }
   };
+
+  const password = watch("password");
 
   return (
     <div className="auth-container">
-      <div className="auth-header">
-        <img src="./logo-Wild-Chat.svg" alt="App Icon" className="app-icon" />
-        <h1>WILDCHAT</h1>
+       <div className="auth-logo">
+        <img src="./logo/logo-Wild-Chat.svg" alt="WildChat Logo" />
+        <div className="auth-logo-title">
+          <p>WILD</p>
+          <p>CHAT</p>
+        </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">Nom</label>
-          <input id="name" {...register('name')} />
-          {errors.name && <span>{errors.name.message}</span>}
-        </div>
-        <div>
-          <label htmlFor="firstName">Prénom</label>
-          <input id="firstName" {...register('firstName')} />
-          {errors.firstName && <span>{errors.firstName.message}</span>}
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input id="email" type="email" {...register('email')} />
-          {errors.email && <span>{errors.email.message}</span>}
-        </div>
-        <div>
-          <label htmlFor="password">Mot de passe</label>
+      <h2>S'ENREGISTRER</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+        <div className="form-group">
+        <label htmlFor="nom" aria-label="adresse mail">Votre Nom  - Champs obligatoire  </label>
           <input
-            id="password"
-            type="password"
-            {...register('password')}
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            id="nom"
+            placeholder="Votre Nom"
+            {...register('nom', { required: "Le nom est requis" })}
           />
-          {errors.password && <span>{errors.password.message}</span>}
-          <PasswordStrength password={password} />
+          {errors.nom && <span className="error-message">{errors.nom.message}</span>}
         </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
-          <input id="confirmPassword" type="password" {...register('confirmPassword')} />
-          {errors.confirmPassword && <span>{errors.confirmPassword.message}</span>}
+        <div className="form-group">
+        <label htmlFor="prenol" aria-label="adresse mail">Votre Prénom - Champs obligatoire  </label>
+          <input
+            type="text"
+            id="prenom"
+            placeholder="Votre Prénom"
+            {...register('prenom', { required: "Le prénom est requis" })}
+          />
+          {errors.prenom && <span className="error-message">{errors.prenom.message}</span>}
         </div>
-        <button type="submit">S'enregistrer</button>
+        <div className="form-group">
+        <label htmlFor="email" aria-label="adresse mail">Votre Email - Champs obligatoire</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Votre Email"
+            {...register('email', { required: "L'email est requis" })}
+          />
+          {errors.email && <span className="error-message">{errors.email.message}</span>}
+        </div>
+        <div className="form-group">
+        <label htmlFor="password" aria-label=" mot de passe">Votre Email - Champs obligatoire</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Votre Mot de Passe"
+            {...register('password', { required: "Le mot de passe est requis" })}
+          />
+          {errors.password && <span className="error-message">{errors.password.message}</span>}
+          <PasswordStrength password={password || ""} />
+        </div>
+        <div className="form-group">
+        <label htmlFor="repat-password" aria-label=" mot de passe">Répéter Mot-de-Passe - Champs obligatoire </label>
+          <input
+            type="password"
+            id="repat-password"
+            placeholder="Répéter Mot de Passe"
+            {...register('confirmPassword', {
+              required: "La confirmation du mot de passe est requise",
+              validate: value => value === password || "Les mots de passe ne correspondent pas"
+            })}
+          />
+          {errors.confirmPassword && <span className="error-message">{errors.confirmPassword.message}</span>}
+        </div>
+        <p className="login-link">
+           En cliquant sur Se connecter, vous acceptez les <a href="/cgu">CGU</a> . Pour plus d'informations sur la manière dont nous traitons
+            vos données personnelles, veuillez consulter <a href="/politique_prive">notre Politique vie privée</a>.
+        </p>
+        <div className="div-btn">
+        <button type="submit" className="auth-button">S'enregistrer</button>
+        </div>
       </form>
+      <p className="login-link">Vous possédez déjà un compte ? <a href="/login">Connexion</a></p>
     </div>
   );
 };
 
-export default Register;
+export { RegisterForm };

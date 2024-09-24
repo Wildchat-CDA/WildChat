@@ -77,8 +77,9 @@ export class AuthService {
       id: user.id,
       name: user.name,
       firstName: user.firstName,
+      email: user.email,
       role: user.role.name,
-      message: 'Connexion réussie',
+      
       expiration: expirationDate.toISOString(),
       accessToken: accessToken,
     };

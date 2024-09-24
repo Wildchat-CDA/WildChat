@@ -1,47 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthentificationContext';
-import "./Auth.css";
-import "../../App.css"
+import { login } from '../../services/authentificationService';
+import { PasswordStrength } from "./PasswordStrength"
+import './Auth.css';
+import Cookies from 'js-cookie';
 
-const schema = z.object({
-  email: z.string().email('Email invalide').nonempty('L\'email est requis'),
-  password: z.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères').nonempty('Le mot de passe est requis')
-});
-
-type LoginFormData = z.infer<typeof schema>;
+type LoginFormData = {
+  email: string;
+  password: string;
+};
 
 const LoginForm: React.FC = () => {
-  const { login } = useAuth();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
-    resolver: zodResolver(schema)
-  });
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<LoginFormData>();
+  const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
+  const [password, setPassword] = useState<string>("");
 
   const onSubmit = async (data: LoginFormData) => {
-    await login(data.email, data.password);
+    try {
+      const user = await login(data.email, data.password);
+      if(user?.accessToken){
+        Cookies.set('token', user?.accessToken, { secure: true, sameSite: 'Strict' });
+      }
+      
+      authLogin(user, data.password); 
+      navigate('/');
+    } catch (error) {
+      console.error("Erreur de connexion", error);
+    }
   };
 
   return (
-
-    
-    <form onSubmit={handleSubmit(onSubmit)} className="form-container">
-      <div className="form-group">
-        <label>Email</label>
-        <input type="email" {...register('email')} />
-        {errors.email && <span className="error-message">{errors.email.message}</span>}
+    <div className="auth-container">
+      <div className="auth-logo">
+        <img src="./logo/logo-Wild-Chat.svg" alt="WildChat Logo" />
+        <div className="auth-logo-title">
+          <p>WILD</p>
+          <p>CHAT</p>
+        </div>
       </div>
-
-      <div className="form-group">
-        <label>Mot de passe</label>
-        <input type="password" {...register('password')} />
-        {errors.password && <span className="error-message">{errors.password.message}</span>}
-      </div>
-
-      <button type="submit" className="submit-button">Se connecter</button>
-    </form>
+      <h2>SE CONNECTER</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+        <div className="form-group">
+        <label htmlFor="email" aria-label="adresse mail">Votre Email - Champs obligatoire</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Votre Email"
+            {...register('email', { required: "L'email est requis" })}
+          />
+          {errors.email && <span className="error-message">{errors.email.message}</span>}
+        </div>
+        <div className="form-group">
+          <label htmlFor="password" aria-label=" mot de passe">Votre Email - Champs obligatoire</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Votre Mot de Passe"
+            {...register('password', { required: "Le mot de passe est requis" })}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {errors.password && <span className="error-message">{errors.password.message}</span>}
+          <PasswordStrength password={password} />
+        </div>
+        <p className="login-link">
+           En cliquant sur Se connecter, vous acceptez les <a href="/cgu">CGU</a> . Pour plus d'informations sur la manière dont nous traitons
+            vos données personnelles, veuillez consulter <a href="/politique_prive">notre Politique vie privée</a>.
+        </p>
+        <div className="div-btn">
+        <button type="submit" className="auth-button">SE CONNECTER</button>
+        </div>
+      </form>
+      <p className="login-link">Vous n'avez pas encore de compte ? <a href="/register">S'enregistrer</a></p>
+    </div>
   );
 };
 
-export default LoginForm;
+export { LoginForm };
