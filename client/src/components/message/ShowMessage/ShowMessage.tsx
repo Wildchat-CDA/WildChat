@@ -23,6 +23,9 @@ const ShowMessage: React.FC = () => {
   const { currentSection, setCurrentSection } = useNavigation();
   const name = 'Théo'; // TODO Need to use an userContext
 
+
+
+
   useEffect(() => {
     // Load messages with redis (init)
     LoadMessage(currentSection)
@@ -42,6 +45,8 @@ const ShowMessage: React.FC = () => {
       socket.off('message', handleMessage);
     };
   }, [currentSection]);
+
+  
 
   const scrollRef = useScrollToBottom(messages);
 

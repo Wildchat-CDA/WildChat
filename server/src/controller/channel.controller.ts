@@ -70,4 +70,15 @@ export class ChannelController {
       throw new NotFoundException(error.message);
     }
   }
+
+  @Get('/all/private')
+  async getChannelsWithConfigPrivate(): Promise<Channel[]> {
+    console.log('getChannelsWithConfigPrivate');
+    return await this.channelService.getChannelsWithConfigPrivate();
+  }
+
+  @Post('/private')
+  async createPrivateChannel(): Promise<Channel> {
+    return await this.channelService.createPrivateChannel();
+  }
 }

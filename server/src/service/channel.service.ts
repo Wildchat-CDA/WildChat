@@ -2,8 +2,14 @@ import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Channel } from 'src/entity/channel.entity';
 import { Config } from 'src/entity/config.entity';
+import { Type } from 'src/entity/type.entity';
 
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import {
+  DeleteResult,
+  FindManyOptions,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 export class ChannelService {
@@ -12,6 +18,8 @@ export class ChannelService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(Config)
     private readonly configRepository: Repository<Config>,
+    @InjectRepository(Type)
+    private readonly typeRepository: Repository<Type>,
   ) {}
 
   async create(channel: {
@@ -33,7 +41,7 @@ export class ChannelService {
 
   async findAll(): Promise<Channel[]> {
     return this.channelRepository.find({
-      relations: ['config', 'sections'],
+      relations: ['config', 'sections', 'config.type'],
     });
   }
 
@@ -82,5 +90,43 @@ export class ChannelService {
     channel.config = newConfig;
 
     return await this.channelRepository.save(channel);
+  }
+
+  async createPrivateChannel(): Promise<Channel> {
+    const newPrivateChannel = this.channelRepository.create({
+      uuid: uuidv4(),
+      title: 'channel Private',
+      slot: 2,
+    });
+
+    const newConfig = this.configRepository.create({
+      maxSlot: 2,
+      type: await this.typeRepository.findOneBy({ id: 1 }),
+    });
+
+    newPrivateChannel.config = newConfig;
+
+    await this.configRepository.save(newConfig);
+    const savedNewPrivateChannel =
+      await this.channelRepository.save(newPrivateChannel);
+
+    return savedNewPrivateChannel;
+  }
+
+  async getChannelsWithConfigPrivate(): Promise<Channel[]> {
+    const channels = await this.channelRepository.find({
+      relations: ['config', 'config.type'],
+      where: {
+        config: {
+          type: {
+            id: 1,
+          },
+        },
+      },
+    });
+
+    console.log(channels, 'channels');
+
+    return channels;
   }
 }

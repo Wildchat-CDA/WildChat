@@ -8,6 +8,7 @@ function ContentSidebar() {
       {/* {userRole === 'teacher' && <RaisedHandsList />} */}
       <Section type={'library'} />
       <Section type={`classRoom`} />
+
       <Setting />
       {/* Autres composants de la sidebar si nécessaire */}
     </aside>
