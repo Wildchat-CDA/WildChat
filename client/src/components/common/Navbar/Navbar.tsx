@@ -4,11 +4,9 @@ import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
 import Dropdown from '../Dropdown/Dropdown';
 import './Navbar.css';
-import {
-  ActiveSideBarType,
-  useNavigation,
-} from '../../../context/NavigationContext';
-import { ContentSideBarEnum } from '../../../context/NavigationContext';
+import { ActiveSideBarType, useNavigation, ContentSideBarEnum } from '../../../context/NavigationContext';
+import IconButton from '../../common/button/IconButton/IconButton';
+import { MediaContext } from '../../../context/MediaContext';
 
 interface NavbarProps {
   isMobile: boolean;
@@ -19,14 +17,19 @@ function Navbar({ isMobile }: NavbarProps) {
   const { isHandRaised, raiseHand, lowerHand } = useHandRaise(1, 'Current User', 'Table-1');
   const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);
   const [showMediaDropdown, setShowMediaDropdown] = useState(false);
-  const [showNotificationDropdown, setShowNotificationDropdown] =
-    useState(false);
-  const [isVolumeMuted, setIsVolumeMuted] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
   const { setActiveContentMainComp, setActiveContentSide } = useNavigation();
-
-  const handleMuted = () => {
-    setMuted(!muted);
-  };
+  
+  const mediaContext = useContext(MediaContext);
+  if (!mediaContext) {
+    throw new Error("Navbar must be used within a MediaProvider");
+  }
+  const { 
+    isMicrophoneOn, 
+    speakerVolume,
+    toggleMicrophone, 
+    setSpeakerVolume
+  } = mediaContext;
 
   const toggleHandRaiseDropdown = () => setShowHandRaiseDropdown(!showHandRaiseDropdown);
   const toggleMediaDropdown = () => setShowMediaDropdown(!showMediaDropdown);
@@ -64,15 +67,15 @@ function Navbar({ isMobile }: NavbarProps) {
   ];
 
   const notificationDropdownItems = [
-    {
-      icon: 'message.png',
-      text: 'Messages privés',
-      onClick: () => handleComponent(ContentSideBarEnum.PrivateMessage),
+    { 
+      icon: 'icons/email.png', 
+      text: 'Messages privés', 
+      onClick: () => handleComponent(ContentSideBarEnum.PrivateMessage) 
     },
-    {
-      icon: 'list.png',
-      text: 'Liste des mains levées',
-      onClick: () => handleComponent(ContentSideBarEnum.RaisedHand),
+    { 
+      icon: 'icons/listStudent.png', 
+      text: 'Liste des mains levées', 
+      onClick: () => handleComponent(ContentSideBarEnum.RaisedHand) 
     },
   ];
 
@@ -83,83 +86,47 @@ function Navbar({ isMobile }: NavbarProps) {
 
   const renderNavItems = () => {
     if (userRole === 'teacher') {
-      if (isMobile) {
-        return (
-          <>
-            <NavItem
-              icon='home.png'
-              text='Accueil'
-              onClick={() => handleComponent(ContentSideBarEnum.Home)}
-            />
-            <NavItem
-              icon='listStudent.png'
-              text='Liste des présences'
-              onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
-            />
-            <div className="nav-item">
-              <IconButton icon='notification.png' text='Notifications' onClick={toggleNotificationDropdown} ariaLabel="Ouvrir les notifications" />
-              {showNotificationDropdown && (
-                <Dropdown 
-                  items={notificationDropdownItems} 
-                  onClose={() => setShowNotificationDropdown(false)} 
-                />
-              )}
-            </div>
-            <div className="nav-item">
-              <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
-              {showMediaDropdown && (
-                <Dropdown 
-                  items={mediaDropdownItems} 
-                  onClose={() => setShowMediaDropdown(false)} 
-                />
-              )}
-            </div>
-            <IconButton
-              icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
-              text='Prendre la parole'
-              onClick={toggleMicrophone}
-              isActive={isMicrophoneOn}
-              ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
-            />
-          </>
-        );
-      } else {
-        return (
-          <>
-            <NavItem
-              icon='home.png'
-              text='Accueil'
-              onClick={() => {
-                handleComponent(ContentSideBarEnum.Home);
-              }}
-            />
-            <NavItem
-              icon='email.png'
-              text='Messages privés'
-              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
-            />
-            <NavItem
-              icon='listStudent.png'
-              text='Élèves connectés'
-              onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
-            />
-            <NavItem
-              icon='palm.png'
-              text='Mains levées'
-              onClick={() => {
-                handleComponent(ContentSideBarEnum.RaisedHand);
-              }}
-            />
-            <NavItem
-              icon={muted ? 'NoSpeak.png' : 'speak.png'}
-              text='Prendre la parole'
-              onClick={toggleMicrophone}
-              isActive={isMicrophoneOn}
-              ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
-            />
-          </>
-        );
-      }
+      return (
+        <>
+          <IconButton
+            icon='home.png'
+            text='Accueil'
+            onClick={() => handleComponent(ContentSideBarEnum.Home)}
+            ariaLabel="Aller à l'accueil"
+          />
+          <IconButton
+            icon='listStudent.png'
+            text='Liste des présences'
+            onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
+            ariaLabel="Voir la liste des présences"
+          />
+          <div className="nav-item">
+            <IconButton icon='notification.png' text='Notifications' onClick={toggleNotificationDropdown} ariaLabel="Ouvrir les notifications" />
+            {showNotificationDropdown && (
+              <Dropdown
+                items={notificationDropdownItems}
+                onClose={() => setShowNotificationDropdown(false)}
+              />
+            )}
+          </div>
+          <div className="nav-item">
+            <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
+            {showMediaDropdown && (
+              <Dropdown
+                items={mediaDropdownItems}
+                onClose={() => setShowMediaDropdown(false)}
+              />
+            )}
+          </div>
+          <IconButton
+            icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
+            text='Prendre la parole'
+            onClick={toggleMicrophone}
+            isActive={isMicrophoneOn}
+            ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
+          />
+        </>
+      );
     } else {
       const handRaiseItem = (
         <div className="hand-raise-container">
@@ -171,56 +138,42 @@ function Navbar({ isMobile }: NavbarProps) {
             ariaLabel='Lever la main'
           />
           {showHandRaiseDropdown && (
-            <Dropdown 
-              items={handRaiseDropdownItems} 
-              onClose={() => setShowHandRaiseDropdown(false)} 
+            <Dropdown
+              items={handRaiseDropdownItems}
+              onClose={() => setShowHandRaiseDropdown(false)}
             />
           )}
         </div>
       );
 
-      if (isMobile) {
-        return (
-          <>
-            <NavItem
-              icon='home.png'
-              text='Accueil'
-              onClick={() => handleComponent(ContentSideBarEnum.Home)}
-            />
-            <NavItem
-              icon='email.png'
-              text='Messages privés'
-              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
-            />
+      return (
+        <>
+          <IconButton
+            icon='home.png'
+            text='Accueil'
+            onClick={() => handleComponent(ContentSideBarEnum.Home)}
+            ariaLabel="Aller à l'accueil"
+          />
+          <IconButton
+            icon='email.png'
+            text='Messages privés'
+            onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
+            ariaLabel="Aller aux messages privés"
+          />
+          {isMobile && (
             <div className="nav-item">
               <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
               {showMediaDropdown && (
-                <Dropdown 
-                  items={mediaDropdownItems} 
-                  onClose={() => setShowMediaDropdown(false)} 
+                <Dropdown
+                  items={mediaDropdownItems}
+                  onClose={() => setShowMediaDropdown(false)}
                 />
               )}
             </div>
-            {handRaiseItem}
-          </>
-        );
-      } else {
-        return (
-          <>
-            <NavItem
-              icon='home.png'
-              text='Accueil'
-              onClick={() => handleComponent(ContentSideBarEnum.Home)}
-            />
-            <NavItem
-              icon='email.png'
-              text='Messages privés'
-              onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
-            />
-            {handRaiseItem}
-          </>
-        );
-      }
+          )}
+          {handRaiseItem}
+        </>
+      );
     }
   };
 
@@ -229,7 +182,7 @@ function Navbar({ isMobile }: NavbarProps) {
       {!isMobile && (
         <div className="logo-container">
           <Logo width={40} color='white' aria-hidden='true' />
-          <span className="logo-text">MyApp</span>
+          <span className="logo-text">Wild Chat</span>
         </div>
       )}
       <div className="nav-items-container">{renderNavItems()}</div>
