@@ -42,21 +42,11 @@ function UserAvatar({
     if (isLoading) {
       return <div className="avatar-placeholder">Chargement...</div>;
     }
-    if (error) {
-      console.error('Error loading user info:', error);
-      return (
-        <img
-          src="/icons/avatar.png"
-          alt="Avatar par défaut"
-          className="user-avatar default-avatar"
-        />
-      );
-    }
     return (
       <img
         src={avatarUrl || "/icons/avatar.png"}
         alt={`Avatar de ${firstName} ${lastName}`}
-        className="user-avatar"
+        className={`user-avatar ${error ? 'default-avatar' : ''}`}
       />
     );
   };

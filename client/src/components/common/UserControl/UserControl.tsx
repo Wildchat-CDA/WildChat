@@ -1,8 +1,5 @@
-import { Avatar } from '../Avatar/Avatar';
-import { MicrophoneControl } from '../AudioControls/MicrophoneControl';
-import { VolumeControl } from '../AudioControls/VolumeControl';
-import { SettingsButton } from '../SettingsButton/SettingsButton';
-import { useAudioContext } from '../../../hooks/useAudioContext';
+import UserAvatar from '../UserAvatar/UserAvatar';
+import MediaControls from '../MediaControl/MediaControl';
 import './UserControl.css';
 
 interface UserControlProps {
@@ -10,27 +7,37 @@ interface UserControlProps {
   firstName: string;
   lastName: string;
   onSettingsClick: () => void;
+  onChangeAvatar: () => void;
+  onChangeAccount: () => void;
+  onLogout: () => void;
 }
 
-export const UserControl: React.FC<UserControlProps> = ({
+function UserControl({
   userId,
   firstName,
   lastName,
-  onSettingsClick
-}) => {
-  const { isMuted, toggleMute, volume, setVolume } = useAudioContext();
-
+  onSettingsClick,
+  onChangeAvatar,
+  onChangeAccount,
+  onLogout
+}: UserControlProps) {
   return (
     <div className="user-control">
       <div className="user-info">
-        <Avatar userId={userId} firstName={firstName} lastName={lastName} size={40} />
+        <UserAvatar 
+          userId={userId}
+          onChangeAvatar={onChangeAvatar}
+          onChangeAccount={onChangeAccount}
+          onLogout={onLogout}
+        />
         <span className="user-name">{`${firstName} ${lastName}`}</span>
       </div>
       <div className="control-panel">
-        <MicrophoneControl isMuted={isMuted} toggleMute={toggleMute} />
-        <VolumeControl volume={volume} setVolume={setVolume} />
-        <SettingsButton onClick={onSettingsClick} />
+        <MediaControls userId={''} />
+        <button onClick={onSettingsClick} className="settings-button">Settings</button>
       </div>
     </div>
   );
-};
+}
+
+export default UserControl;

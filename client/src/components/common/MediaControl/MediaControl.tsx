@@ -2,6 +2,8 @@ import { useCallback, useContext } from 'react';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import { MediaContext } from '../../../context/MediaContext';
 import IconButton from '../../common/button/IconButton/IconButton';
+import Tooltip from '../Tooltip/Tooltip';
+import './MediaControl.css';
 
 interface MediaControlProps {
   userId: string;
@@ -52,26 +54,56 @@ function MediaControl({ userId }: MediaControlProps) {
         onLogout={handleLogout}
       />
       <div className="media-buttons">
-        <IconButton
-          icon={isMicrophoneOn ? 'microphone-on.png' : 'microphone-off.png'}
-          onClick={toggleMicrophone}
-          ariaLabel={isMicrophoneOn ? 'Mute microphone' : 'Unmute microphone'}
-        />
-        <IconButton
-          icon={isWebcamOn ? 'webcam-on.png' : 'webcam-off.png'}
-          onClick={toggleWebcam}
-          ariaLabel={isWebcamOn ? 'Turn off webcam' : 'Turn on webcam'}
-        />
-        <IconButton
-          icon={isSpeakerOn ? 'speaker-on.png' : 'speaker-off.png'}
-          onClick={toggleSpeaker}
-          ariaLabel={isSpeakerOn ? 'Mute speaker' : 'Unmute speaker'}
-        />
-        <IconButton
-          icon={isScreenSharing ? 'screen-share-on.png' : 'screen-share-off.png'}
-          onClick={toggleScreenSharing}
-          ariaLabel={isScreenSharing ? 'Stop screen sharing' : 'Start screen sharing'}
-        />
+        <Tooltip content={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}>
+          <div className="media-control-icon">
+            <IconButton
+              icon={isMicrophoneOn ? 'microphone-on.png' : 'microphone-off.png'}
+              onClick={toggleMicrophone}
+              ariaLabel={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}
+              text={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}
+            />
+          </div>
+        </Tooltip>
+        <Tooltip content={isWebcamOn ? 'Désactiver la caméra' : 'Activer la caméra'}>
+          <div className="media-control-icon">
+            <IconButton
+              icon={isWebcamOn ? 'webcam-on.png' : 'webcam-off.png'}
+              onClick={toggleWebcam}
+              ariaLabel={isWebcamOn ? 'Désactiver la caméra' : 'Activer la caméra'}
+              text={isWebcamOn ? 'Désactiver la caméra' : 'Activer la caméra'}
+            />
+          </div>
+        </Tooltip>
+        <Tooltip content={isSpeakerOn ? 'Couper le son' : 'Activer le son'}>
+          <div className="media-control-icon">
+            <IconButton
+              icon={isSpeakerOn ? 'speaker-on.png' : 'speaker-off.png'}
+              onClick={toggleSpeaker}
+              ariaLabel={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
+              text={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
+            />
+          </div>
+        </Tooltip>
+        <Tooltip content={isScreenSharing ? 'Arrêter le partage d\'écran' : 'Démarrer le partage d\'écran'}>
+          <div className="media-control-icon">
+            <IconButton
+              icon={isScreenSharing ? 'screen-share-on.png' : 'screen-share-off.png'}
+              onClick={toggleScreenSharing}
+              ariaLabel={isScreenSharing ? 'Arrêter le partage d\'écran' : 'Démarrer le partage d\'écran'}
+              text={isScreenSharing ? 'Arrêter le partage d\'écran' : 'Démarrer le partage d\'écran'}
+            />
+          </div>
+        </Tooltip>
+        <Tooltip content="Afficher les réglages">
+          <div className="media-control-icon">
+            <IconButton
+              icon="settings.png"
+              onClick={() => {/* Logique pour ouvrir les réglages */}}
+              ariaLabel="Afficher les réglages"
+              text="Afficher les réglages"
+            />
+          </div>
+        </Tooltip>
       </div>
     </div>
   );
