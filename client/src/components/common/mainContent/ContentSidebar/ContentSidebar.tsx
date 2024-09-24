@@ -1,14 +1,14 @@
 import './ContentSidebar.css';
-import Section from '../../../channel/section/Section';
+
 import Setting from '../../../setting/Setting';
+import ContentSideBarWrapper from './ContentSideBarWrapper';
+import { useNavigation } from '../../../../context/NavigationContext';
 
 function ContentSidebar() {
+  const { activeContentSideBar } = useNavigation();
   return (
     <aside className='content-sidebar'>
-      {/* {userRole === 'teacher' && <RaisedHandsList />} */}
-      <Section type={'library'} />
-      <Section type={`classRoom`} />
-
+      <ContentSideBarWrapper activeContentSideBar={activeContentSideBar} />
       <Setting />
       {/* Autres composants de la sidebar si nécessaire */}
     </aside>

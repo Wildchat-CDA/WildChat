@@ -10,11 +10,11 @@ const Modal = ({ children }: IModalProps) => {
   const { activeModal } = useModal();
   if (activeModal === null) return null;
   return (
-    <div className='modal-bg'>
+    <dialog className='modal-bg'>
       <div className='modal-container'>
         <div className='modal-content'>{children}</div>
       </div>
-    </div>
+    </dialog>
   );
 };
 
