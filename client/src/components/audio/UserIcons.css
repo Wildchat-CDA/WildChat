@@ -1,0 +1,25 @@
+.users-list_container {
+  list-style: none;
+  margin: 5px 0px;
+  margin-left: 10px;
+  width: 70px;
+  height: 100%;
+
+  .user-icon_list {
+    display: flex;
+    justify-content: start;
+
+    .user-icon_container {
+      height: 20px;
+      width: 20px;
+      display: flex;
+      .user-icon {
+        width: 100%;
+      }
+    }
+  }
+
+  .user-name {
+    margin-left: 10px;
+  }
+}
