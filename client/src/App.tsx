@@ -1,8 +1,7 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom'; 
-import { useAuth } from './context/AuthentificationContext';
-import { LoginForm } from './components/authentification/LoginForm';
-import { RegisterForm } from './components/authentification/RegisterForm';
+import { LoginForm } from './components/authentification/Login';
+import { RegisterForm } from './components/authentification/Register';
 import MainContent from './components/common/mainContent/MainContent';
 import { HandRaiseProvider } from './context/HandRaiseContext';
 import { UserRoleProvider } from './context/UserRoleContext';
@@ -22,9 +21,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const token = Cookies.get('token');
   const decoded: any = token && jwtDecode<JwtPayload>(token);
   const date = new Date(decoded?.exp * 1000);
-  console.log("date is", date)
   return (token && decoded?.exp * 1000 > new Date().getTime()) ? <>{children}</> : <Navigate to="/login" replace />;
-
 };
 
 const App: React.FC = () => {
@@ -46,6 +43,7 @@ const App: React.FC = () => {
           <NavigationProvider>
             <ModalProvider>
               <Routes>
+                
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/register" element={<RegisterForm />} />
                 <Route path="/politique_prive" element={<PolitiquePrive />} />

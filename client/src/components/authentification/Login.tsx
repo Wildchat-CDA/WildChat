@@ -6,6 +6,7 @@ import { login } from '../../services/authentificationService';
 import { PasswordStrength } from "./PasswordStrength"
 import './Auth.css';
 import Cookies from 'js-cookie';
+import Logo from '../common/Logo';
 
 type LoginFormData = {
   email: string;
@@ -15,7 +16,7 @@ type LoginFormData = {
 const LoginForm: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<LoginFormData>();
   const navigate = useNavigate();
-  const { login: authLogin } = useAuth();
+  //const { login: authLogin } = useAuth();
   const [password, setPassword] = useState<string>("");
 
   const onSubmit = async (data: LoginFormData) => {
@@ -24,8 +25,7 @@ const LoginForm: React.FC = () => {
       if(user?.accessToken){
         Cookies.set('token', user?.accessToken, { secure: true, sameSite: 'Strict' });
       }
-      
-      authLogin(user, data.password); 
+     
       navigate('/');
     } catch (error) {
       console.error("Erreur de connexion", error);
@@ -35,8 +35,8 @@ const LoginForm: React.FC = () => {
   return (
     <div className="auth-container">
       <div className="auth-logo">
-        <img src="./logo/logo-Wild-Chat.svg" alt="WildChat Logo" />
-        <div className="auth-logo-title">
+        <Logo width={150} height={100} color="white" aria-hidden="true" />       
+         <div className="auth-logo-title">
           <p>WILD</p>
           <p>CHAT</p>
         </div>
@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
       <h2>SE CONNECTER</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
         <div className="form-group">
-        <label htmlFor="email" aria-label="adresse mail">Votre Email - Champs obligatoire</label>
+        <label htmlFor="email" aria-label="adresse mail">Votre Email </label>
           <input
             type="email"
             id="email"
@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
           {errors.email && <span className="error-message">{errors.email.message}</span>}
         </div>
         <div className="form-group">
-          <label htmlFor="password" aria-label=" mot de passe">Votre Email - Champs obligatoire</label>
+          <label htmlFor="password" aria-label=" Mot de passe">Votre Mot de passe </label>
           <input
             type="password"
             id="password"

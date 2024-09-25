@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { register as registerUser } from '../../services/authentificationService';
 import { PasswordStrength } from './PasswordStrength';
 import './Auth.css';
+import Logo from '../common/Logo';
 
 type RegisterFormData = {
   nom: string;
@@ -31,7 +32,7 @@ const RegisterForm: React.FC = () => {
   return (
     <div className="auth-container">
        <div className="auth-logo">
-        <img src="./logo/logo-Wild-Chat.svg" alt="WildChat Logo" />
+        <Logo width={200} height={150} color="white" aria-hidden="true" />
         <div className="auth-logo-title">
           <p>WILD</p>
           <p>CHAT</p>
@@ -40,7 +41,7 @@ const RegisterForm: React.FC = () => {
       <h2>S'ENREGISTRER</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
         <div className="form-group">
-        <label htmlFor="nom" aria-label="adresse mail">Votre Nom  - Champs obligatoire  </label>
+        <label htmlFor="nom" aria-label="nom"> Votre Nom </label>
           <input
             type="text"
             id="nom"
@@ -50,7 +51,7 @@ const RegisterForm: React.FC = () => {
           {errors.nom && <span className="error-message">{errors.nom.message}</span>}
         </div>
         <div className="form-group">
-        <label htmlFor="prenol" aria-label="adresse mail">Votre Prénom - Champs obligatoire  </label>
+        <label htmlFor="prénom" aria-label="prénom"> Votre Prénom </label>
           <input
             type="text"
             id="prenom"
@@ -60,7 +61,7 @@ const RegisterForm: React.FC = () => {
           {errors.prenom && <span className="error-message">{errors.prenom.message}</span>}
         </div>
         <div className="form-group">
-        <label htmlFor="email" aria-label="adresse mail">Votre Email - Champs obligatoire</label>
+        <label htmlFor="email" aria-label="adresse mail"> Votre Email </label>
           <input
             type="email"
             id="email"
@@ -70,7 +71,7 @@ const RegisterForm: React.FC = () => {
           {errors.email && <span className="error-message">{errors.email.message}</span>}
         </div>
         <div className="form-group">
-        <label htmlFor="password" aria-label=" mot de passe">Votre Email - Champs obligatoire</label>
+        <label htmlFor="password" aria-label=" mot de passe"> Votre Mot de passe </label>
           <input
             type="password"
             id="password"
@@ -81,7 +82,7 @@ const RegisterForm: React.FC = () => {
           <PasswordStrength password={password || ""} />
         </div>
         <div className="form-group">
-        <label htmlFor="repat-password" aria-label=" mot de passe">Répéter Mot-de-Passe - Champs obligatoire </label>
+        <label htmlFor="repat-password" aria-label=" mot de passe"> Répéter Mot-de-Passe </label>
           <input
             type="password"
             id="repat-password"

@@ -17,14 +17,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 5px;
   max-width: 80%;
   padding: 20px;
-}
-
-.auth-logo img {
-  width: 230px;
-  color: #fff;
 }
 
 .auth-logo-title {
@@ -128,11 +123,7 @@ input.invalid {
     width: 400px;
     margin: 0;
   }
-  
-  .auth-logo img {
-    width: 150px;
-  }
-  
+ 
   .auth-logo-title {
     display: block;
   }
@@ -148,6 +139,10 @@ input.invalid {
     justify-content: center;
   }
 
+  .auth-container {
+    justify-content: center;
+    padding: 20px 100px;
+  }
 }
 
 
