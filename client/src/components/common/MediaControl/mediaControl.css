@@ -1,4 +1,36 @@
-.media-control-icon .icon-button .button-text {
+.media-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.media-button-wrapper {
+  position: relative;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.icon-button img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.icon-button .nav-text {
   position: absolute;
   width: 1px;
   height: 1px;

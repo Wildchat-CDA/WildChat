@@ -94,30 +94,24 @@ function Navbar({ isMobile }: NavbarProps) {
             onClick={() => handleComponent(ContentSideBarEnum.Home)}
             ariaLabel="Aller à l'accueil"
           />
+            <IconButton
+            icon='email.png'
+            text='Message privée'
+            onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
+            ariaLabel="Voir les messages privés"
+          />
           <IconButton
             icon='listStudent.png'
             text='Liste des présences'
             onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             ariaLabel="Voir la liste des présences"
           />
-          <div className="nav-item">
-            <IconButton icon='notification.png' text='Notifications' onClick={toggleNotificationDropdown} ariaLabel="Ouvrir les notifications" />
-            {showNotificationDropdown && (
-              <Dropdown
-                items={notificationDropdownItems}
-                onClose={() => setShowNotificationDropdown(false)}
-              />
-            )}
-          </div>
-          <div className="nav-item">
-            <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
-            {showMediaDropdown && (
-              <Dropdown
-                items={mediaDropdownItems}
-                onClose={() => setShowMediaDropdown(false)}
-              />
-            )}
-          </div>
+           <IconButton
+            icon='palm.png'
+            text='Mains levées'
+            onClick={() => handleComponent(ContentSideBarEnum.RaisedHand)}
+            ariaLabel="Voir la liste des mains levées"
+          />
           <IconButton
             icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
             text='Prendre la parole'

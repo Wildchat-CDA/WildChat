@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { fetchUser } from "../services/fetchUser";
 
 export const useAvatar = (userId: string) => {
   const [avatarState, setAvatarState] = useState<{
@@ -10,21 +9,27 @@ export const useAvatar = (userId: string) => {
     error: string | null;
   }>({
     avatarUrl: "/icons/avatar.png",
-    firstName: "",
-    lastName: "",
-    isLoading: true,
+    firstName: "Théo",
+    lastName: "Doré",
+    isLoading: false,
     error: null,
   });
 
   useEffect(() => {
     let isMounted = true;
 
-    const getUserInfo = async () => {
+    const simulateFetchUser = async () => {
       try {
-        const userInfo = await fetchUser(userId);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const userInfo = {
+          avatarUrl: null,
+          firstName: "Théo",
+          lastName: "Doré",
+        };
+
         if (isMounted) {
           setAvatarState({
-            avatarUrl: userInfo.avatarUrl,
+            avatarUrl: userInfo.avatarUrl || "/icons/avatar.png",
             firstName: userInfo.firstName,
             lastName: userInfo.lastName,
             isLoading: false,
@@ -34,17 +39,17 @@ export const useAvatar = (userId: string) => {
       } catch (error) {
         if (isMounted) {
           setAvatarState({
-            avatarUrl: "/path-to-default-avatar.png",
+            avatarUrl: "/icons/avatar.png",
             firstName: "Théo",
             lastName: "Doré",
             isLoading: false,
-            error: "Error loading user info",
+            error: "Erreur lors du chargement de l'utilisateur",
           });
         }
       }
     };
 
-    getUserInfo();
+    simulateFetchUser();
 
     return () => {
       isMounted = false;

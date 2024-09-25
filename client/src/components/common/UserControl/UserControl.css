@@ -1,21 +1,13 @@
 .user-control {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
-  padding: 10px;
   background-color: #2f3136;
-  border-radius: 5px;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-}
-
-.user-name {
-  margin-left: 10px;
-  color: white;
-  font-weight: bold;
 }
 
 .control-panel {

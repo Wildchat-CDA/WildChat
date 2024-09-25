@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 import { useAvatar } from '../../../hooks/useAvatar';
+import './userAvatar.css';
 
 interface UserAvatarProps {
   userId: string;
@@ -47,6 +48,8 @@ function UserAvatar({
         src={avatarUrl || "/icons/avatar.png"}
         alt={`Avatar de ${firstName} ${lastName}`}
         className={`user-avatar ${error ? 'default-avatar' : ''}`}
+        width="40"
+        height="40"
       />
     );
   };
@@ -60,14 +63,18 @@ function UserAvatar({
         aria-expanded={showDropdown}
       >
         {renderAvatar()}
-        <span className="user-name">{isLoading ? 'Chargement...' : `${firstName} ${lastName}`}</span>
+        <span className="user-name">
+          {isLoading ? 'Chargement...' : `${firstName} ${lastName}`}
+        </span>
       </button>
       {showDropdown && (
-        <Dropdown
-          items={dropdownItems}
-          aria-label="Options utilisateur"
-          onClose={() => setShowDropdown(false)}
-        />
+        <div className="dropdown-avatar-menu">
+          <Dropdown
+            items={dropdownItems}
+            aria-label="Options utilisateur"
+            onClose={() => setShowDropdown(false)}
+          />
+        </div>
       )}
     </div>
   );
