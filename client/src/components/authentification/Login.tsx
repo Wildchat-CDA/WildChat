@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthentificationContext';
 import { login } from '../../services/authentificationService';
 import { PasswordStrength } from "./PasswordStrength"
 import './Auth.css';
@@ -16,7 +15,6 @@ type LoginFormData = {
 const LoginForm: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<LoginFormData>();
   const navigate = useNavigate();
-  //const { login: authLogin } = useAuth();
   const [password, setPassword] = useState<string>("");
 
   const onSubmit = async (data: LoginFormData) => {

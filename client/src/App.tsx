@@ -37,19 +37,12 @@ const App: React.FC = () => {
   const isMobile = screenSize <= 768;
 
   return (
-    <AudioProvider isMuted={muted}>
-      <UserRoleProvider>
-        <HandRaiseProvider>
-          <NavigationProvider>
-            <ModalProvider>
-              <Routes>
-                
-                <Route path="/login" element={<LoginForm />} />
-                <Route path="/register" element={<RegisterForm />} />
-                <Route path="/politique_prive" element={<PolitiquePrive />} />
-                <Route path="/cgu" element={<PlitiqueCgu />} />
-                <Route path="/" element={
-                  <ProtectedRoute>
+
+          <AudioProvider isMuted={muted}>
+            <UserRoleProvider>
+              <HandRaiseProvider>
+                <NavigationProvider>
+                  <ModalProvider>
                     {isMobile ? (
                       <MobileLayout muted={muted} setMuted={setMuted}>
                         <MainContent isMobile={true} />
@@ -59,15 +52,13 @@ const App: React.FC = () => {
                         <MainContent isMobile={false} />
                       </DesktopLayout>
                     )}
-                  </ProtectedRoute>
-                } />
-              </Routes>
-            </ModalProvider>
-          </NavigationProvider>
-        </HandRaiseProvider>
-      </UserRoleProvider>
-    </AudioProvider>
+                  </ModalProvider>
+                </NavigationProvider>
+              </HandRaiseProvider>
+            </UserRoleProvider>
+          </AudioProvider>
   );
 };
 
 export default App;
+
