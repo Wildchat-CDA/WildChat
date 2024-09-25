@@ -22,26 +22,28 @@ function App() {
   const isMobile = screenSize <= 768;
 
   return (
-    <AudioProvider isMuted={muted}>
-      <UserRoleProvider>
-        <HandRaiseProvider>
-          <NavigationProvider>
-            <ModalProvider>
-              {isMobile ? (
-                <MobileLayout muted={muted} setMuted={setMuted}>
-                  <MainContent isMobile={true} />
-                </MobileLayout>
-              ) : (
-                <DesktopLayout muted={muted} setMuted={setMuted}>
-                  <MainContent isMobile={false} />
-                </DesktopLayout>
-              )}
-            </ModalProvider>
-          </NavigationProvider>
-        </HandRaiseProvider>
-      </UserRoleProvider>
-    </AudioProvider>
+    // <AudioProvider isMuted={muted}>
+    <UserRoleProvider>
+      <HandRaiseProvider>
+        <NavigationProvider>
+          <ModalProvider>
+            {isMobile ? (
+              <MobileLayout muted={muted} setMuted={setMuted}>
+                <MainContent isMobile={true} />
+              </MobileLayout>
+            ) : (
+              <DesktopLayout muted={muted} setMuted={setMuted}>
+                <MainContent isMobile={false} />
+              </DesktopLayout>
+            )}
+          </ModalProvider>
+        </NavigationProvider>
+      </HandRaiseProvider>
+    </UserRoleProvider>
+    // {/* </AudioProvider> */}
   );
 }
 
 export default App;
+
+//get(:id/)

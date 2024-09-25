@@ -1,139 +1,81 @@
 import { useEffect, useRef, useState } from 'react';
-import Peer, { MediaConnection } from 'peerjs';
-import io, { Socket } from 'socket.io-client';
-import { User, ChannelInfo, JoinChannelResponse } from '../../types/audioTypes';
+import PeerService from '../../services/peerService';
 
-const SOCKET_SERVER = 'http://localhost:3000';
+const peerService = new PeerService();
 
-export function AudioCall(): JSX.Element {
-  const [myPeerID, setMyPeerID] = useState<string>('');
-  const [channelUUID, setChannelUUID] = useState<string>('');
-  const [connectedUsers, setConnectedUsers] = useState<User[]>([]);
+export function AudioCall() {
+  const localAudioRef = useRef<HTMLAudioElement | null>(null);
+  const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [remotePeerID, setRemotePeerID] = useState('');
 
-  const localAudioRef = useRef<HTMLAudioElement>(null);
-  const remoteAudioRef = useRef<HTMLAudioElement>(null);
-  const peerRef = useRef<Peer | null>(null);
-  const socketRef = useRef<Socket | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
+  // Fonction pour gérer les appels sortants
+  const callHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log('CALL to ' + remotePeerID);
+
+    // Utilise le service peer pour passer un appel à l'ID distant avec le flux média local
+    const call = peerService.makeCall(
+      remotePeerID, // ID du peer distant
+      streamRef.current as MediaStream // Flux média local
+    );
+
+    // Écoute l'événement 'stream' pour recevoir le flux audio du peer distant
+    call.on('stream', (remoteStream) => {
+      // Vérifie si la référence à l'élément audio distant est disponible
+      if (remoteAudioRef.current) {
+        remoteAudioRef.current.srcObject = remoteStream; // Définit le flux distant comme source de l'élément audio
+      }
+    });
+  };
+
+  // Effet pour gérer les appels entrants et obtenir le flux média local
   useEffect(() => {
-    const initializePeerAndSocket = async () => {
-      peerRef.current = new Peer();
+    // Gère les appels entrants
+    peerService.onCall((remoteCall) => {
+      console.log('Incoming call:', remoteCall); // Affiche les détails de l'appel entrant
+      remoteCall.answer(streamRef.current as MediaStream); // Répond à l'appel avec le flux média local
 
-      peerRef.current.on('open', (peerID) => {
-        setMyPeerID(peerID);
-
-        socketRef.current = io(SOCKET_SERVER);
-        socketRef.current.emit(
-          'join-channel',
-          { peerID },
-          (response: JoinChannelResponse) => {
-            setChannelUUID(response.channelUUID);
-          }
-        );
-
-        setupSocketListeners();
+      // Écoute l'événement 'stream' pour recevoir le flux audio du peer distant
+      remoteCall.on('stream', (remoteStream) => {
+        // Vérifie si la référence à l'élément audio distant est disponible
+        if (remoteAudioRef.current) {
+          remoteAudioRef.current.srcObject = remoteStream; // Définit le flux distant comme source de l'élément audio
+        }
       });
+    });
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: false,
-          audio: true,
-        });
-        streamRef.current = stream;
+    // Obtenez le flux média local (microphone)
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true }) // Demande l'accès au microphone
+      .then((stream) => {
+        streamRef.current = stream; // Stocke le flux média dans la référence
+        // Vérifie si la référence à l'élément audio local est disponible
         if (localAudioRef.current) {
-          localAudioRef.current.srcObject = stream;
-        }
-      } catch (err) {
-        console.error('Error accessing media devices:', err);
-      }
-    };
-
-    initializePeerAndSocket();
-
-    return () => {
-      cleanup();
-    };
-  }, []);
-
-  const setupSocketListeners = () => {
-    console.log('je passe');
-    if (!socketRef.current) return;
-
-    socketRef.current.on('user-joined', (data: { users: User[] }) => {
-      setConnectedUsers(data.users);
-      const newUser = data.users.find((user) => user.peerID !== myPeerID);
-      if (newUser && streamRef.current) {
-        callUser(newUser.peerID);
-      }
-    });
-
-    socketRef.current.on('user-left', (data: { users: User[] }) => {
-      setConnectedUsers(data.users);
-    });
-
-    socketRef.current.emit('request-channel-info', (info: ChannelInfo) => {
-      setChannelUUID(info.channelUUID);
-      setConnectedUsers(info.users);
-    });
-  };
-
-  const cleanup = () => {
-    if (socketRef.current) {
-      socketRef.current.emit('leave-channel', { peerID: myPeerID });
-      socketRef.current.disconnect();
-    }
-    if (peerRef.current) {
-      peerRef.current.destroy();
-    }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-    }
-  };
-
-  useEffect(() => {
-    if (peerRef.current) {
-      peerRef.current.on('call', handleIncomingCall);
-    }
-  }, []);
-
-  const handleIncomingCall = (call: MediaConnection) => {
-    if (streamRef.current) {
-      call.answer(streamRef.current);
-      call.on('stream', (remoteStream: MediaStream) => {
-        if (remoteAudioRef.current) {
-          remoteAudioRef.current.srcObject = remoteStream;
+          localAudioRef.current.srcObject = stream; // Définit le flux local comme source de l'élément audio
         }
       });
-    }
-  };
-
-  const callUser = (remotePeerID: string) => {
-    if (streamRef.current && peerRef.current) {
-      const call = peerRef.current.call(remotePeerID, streamRef.current);
-      call.on('stream', (remoteStream) => {
-        if (remoteAudioRef.current) {
-          remoteAudioRef.current.srcObject = remoteStream;
-        }
-      });
-    }
-  };
+  }, []); // Le tableau vide signifie que cet effet ne s'exécute qu'une seule fois lors du montage du composant
 
   return (
-    <div>
-      <h2>Audio Call</h2>
-      <p>Channel UUID: {channelUUID || 'Waiting for channel...'}</p>
-      <p>My Peer ID: {myPeerID || 'Connecting...'}</p>
-      <p>Connected Users: {connectedUsers.length}</p>
-      <ul>
-        {connectedUsers.map((user) => (
-          <li key={user.uuid}>
-            {user.peerID === myPeerID ? `${user.peerID} (You)` : user.peerID}
-          </li>
-        ))}
-      </ul>
-      <audio ref={localAudioRef} autoPlay playsInline />
-      <audio ref={remoteAudioRef} autoPlay playsInline />
-    </div>
+    <>
+      <form onSubmit={callHandler}>
+        <input
+          value={remotePeerID}
+          onChange={(e) => setRemotePeerID(e.target.value)}
+          placeholder='Enter remote Peer ID'
+        />
+        <button type='submit'>CALL</button>
+      </form>
+
+      <div>
+        <audio ref={localAudioRef} autoPlay muted />
+      </div>
+      <div>
+        <audio ref={remoteAudioRef} autoPlay />
+      </div>
+    </>
   );
 }

@@ -22,7 +22,7 @@ import { RedisService } from './service/redis.service';
 import { RedisController } from './controller/redis.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
 import { RoomController } from './controller/room.controller';
-import { RoomService } from './service/room.service';
+import { RoomService } from './service/roomOld/room.service';
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ import { RoomService } from './service/room.service';
     ConfigController,
     RedisController,
     RaisedHandsController,
-    // RoomController,
+    RoomController,
   ],
   providers: [
     AppService,

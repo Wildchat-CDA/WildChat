@@ -11,8 +11,8 @@ import {
 import { Server, Socket } from 'socket.io';
 import { RedisService } from './redis.service';
 import { IMessagePostPayload } from '../../../common/interface/messageInterface';
-// import { RoomService } from './roomOld/room.service';
-import { RoomService } from './room.service';
+import { RoomService } from './roomOld/room.service';
+// import { RoomService } from './room.service';
 
 interface HandRaiseData {
   userId: number;
@@ -85,75 +85,77 @@ export class ChatGateway
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
 
+  // @SubscribeMessage('join-channel')
+  // async joinCnannel(
+  //   @MessageBody() data: { peerID: string; roomUuid: string; userUuid: string },
+  // ) {
+  //   await this.roomService.addUserOnRoom(
+  //     data.peerID,
+  //     data.roomUuid,
+  //     data.userUuid,
+  //   );
+  //   this.server.to(data.roomUuid).emit('join-channel', {
+  //     peerID: data.peerID,
+  //     user: data.userUuid,
+  //   });
+  // }
+
   @SubscribeMessage('join-channel')
-  async joinCnannel(
-    @MessageBody() data: { peerID: string; roomUuid: string; userUuid: string },
+  joinChannel(
+    @MessageBody() data: { peerID: string },
+    @ConnectedSocket() client: Socket,
   ) {
-    await this.roomService.addUserOnRoom(
-      data.peerID,
-      data.roomUuid,
-      data.userUuid,
-    );
-    this.server.emit('join-channel', 'Bravo');
+    console.log(`New user joined: PeerID ${data.peerID}`);
+    const userUUID = this.roomService.addUser(data.peerID);
+    client.join(this.roomService.channelUUID);
+    this.socketToPeerMap.set(client.id, data.peerID);
+    this.server.to(this.roomService.channelUUID).emit('user-joined', {
+      peerID: data.peerID,
+      uuid: userUUID,
+      channelUUID: this.roomService.channelUUID,
+      users: this.roomService.users,
+    });
+    return { uuid: userUUID, channelUUID: this.roomService.channelUUID };
   }
 
-  // @SubscribeMessage('join-channel')
-  // joinChannel(
-  //   @MessageBody() data: { peerID: string },
-  //   @ConnectedSocket() client: Socket,
-  // ) {
-  //   console.log(`New user joined: PeerID ${data.peerID}`);
-  //   const userUUID = this.roomService.addUser(data.peerID);
-  //   client.join(this.roomService.channelUUID);
-  //   this.socketToPeerMap.set(client.id, data.peerID);
-  //   this.server.to(this.roomService.channelUUID).emit('user-joined', {
-  //     peerID: data.peerID,
-  //     uuid: userUUID,
-  //     channelUUID: this.roomService.channelUUID,
-  //     users: this.roomService.users,
-  //   });
-  //   return { uuid: userUUID, channelUUID: this.roomService.channelUUID };
-  // }
+  @SubscribeMessage('leave-channel')
+  leaveChannel(
+    @MessageBody() data: { peerID: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log(`User left: PeerID ${data.peerID}`);
+    const user = this.roomService.getUserByPeerID(data.peerID);
+    if (user) {
+      this.roomService.removeUser(data.peerID);
+      client.leave(this.roomService.channelUUID);
 
-  // @SubscribeMessage('leave-channel')
-  // leaveChannel(
-  //   @MessageBody() data: { peerID: string },
-  //   @ConnectedSocket() client: Socket,
-  // ) {
-  //   console.log(`User left: PeerID ${data.peerID}`);
-  //   const user = this.roomService.getUserByPeerID(data.peerID);
-  //   if (user) {
-  //     this.roomService.removeUser(data.peerID);
-  //     client.leave(this.roomService.channelUUID);
+      this.server.to(this.roomService.channelUUID).emit('user-disconnected', {
+        peerID: data.peerID,
+        uuid: user.uuid,
+        users: this.roomService.users,
+      });
+      this.socketToPeerMap.delete(client.id);
+    }
+  }
 
-  //     this.server.to(this.roomService.channelUUID).emit('user-disconnected', {
-  //       peerID: data.peerID,
-  //       uuid: user.uuid,
-  //       users: this.roomService.users,
-  //     });
-  //     this.socketToPeerMap.delete(client.id);
-  //   }
-  // }
+  @SubscribeMessage('request-channel-info')
+  requestChannelInfo() {
+    return {
+      channelUUID: this.roomService.channelUUID,
+      users: this.roomService.users,
+    };
+  }
 
-  //   @SubscribeMessage('request-channel-info')
-  //   requestChannelInfo() {
-  //     return {
-  //       channelUUID: this.roomService.channelUUID,
-  //       users: this.roomService.users,
-  //     };
-  //   }
-
-  //   @SubscribeMessage('update-peer-id')
-  //   updatePeerID(@MessageBody() data: { oldPeerID: string; newPeerID: string }) {
-  //     const user = this.roomService.getUserByPeerID(data.oldPeerID);
-  //     if (user) {
-  //       this.roomService.updateUserPeerID(user.uuid, data.newPeerID);
-  //       this.server.to(this.roomService.channelUUID).emit('peer-id-updated', {
-  //         oldPeerID: data.oldPeerID,
-  //         newPeerID: data.newPeerID,
-  //         uuid: user.uuid,
-  //       });
-  //     }
-  //   }
-  // }
+  @SubscribeMessage('update-peer-id')
+  updatePeerID(@MessageBody() data: { oldPeerID: string; newPeerID: string }) {
+    const user = this.roomService.getUserByPeerID(data.oldPeerID);
+    if (user) {
+      this.roomService.updateUserPeerID(user.uuid, data.newPeerID);
+      this.server.to(this.roomService.channelUUID).emit('peer-id-updated', {
+        oldPeerID: data.oldPeerID,
+        newPeerID: data.newPeerID,
+        uuid: user.uuid,
+      });
+    }
+  }
 }

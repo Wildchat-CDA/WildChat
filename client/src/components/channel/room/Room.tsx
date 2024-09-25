@@ -11,6 +11,7 @@ import UserIcons from '../../audio/UserIcons';
 import { useAudio } from '../../../context/AudioContext';
 import { JoinChannelResponse } from '../../../types/audioTypes';
 import { v4 as uuidv4 } from 'uuid';
+import { AudioCall } from '../../audio/AudioCall';
 
 interface IRoomProps {
   section: ISection;
@@ -29,7 +30,7 @@ function Room({
   setActiveModal,
   activeModal,
 }: IRoomProps) {
-  const { socketRef, myPeerID, setChannelUUID } = useAudio();
+  // const { socketRef, myPeerID, setChannelUUID } = useAudio();
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
   const handleRoom = (room: IChannel) => {
     affectedCurrentSection(room);
@@ -38,15 +39,15 @@ function Room({
   const affectedCurrentSection = (room: IChannel) => {
     //TODO USE user uuid
     const userUuid = '7a0fc143-0f76-442d-9c05-df3c37a4c5cf';
-    console.log('MyPeed :: ', myPeerID);
+    // console.log('MyPeed :: ', myPeerID);
     console.log('roomUUID ', room.uuid);
-    socketRef.current.emit('join-channel', {
-      peerID: myPeerID,
-      roomUuid: room.uuid,
-      userUuid: userUuid,
-    });
+    // socketRef.current.emit('join-channel', {
+    //   peerID: myPeerID,
+    //   roomUuid: room.uuid,
+    //   userUuid: userUuid,
+    // });
     console.log('uuid : ', userUuid);
-    setChannelUUID(room.uuid);
+    // setChannelUUID(room.uuid);
 
     setVocalChannelPosition(room.uuid);
     setCurrentSection({
@@ -86,7 +87,13 @@ function Room({
               {room.title}
             </span>
             <div className='users'>
-              {vocalChannelPosition === room.uuid && <UserIcons />}
+              {vocalChannelPosition === room.uuid && (
+                <>
+                  {' '}
+                  <UserIcons />
+                  <AudioCall />
+                </>
+              )}
             </div>
           </div>
         </div>
