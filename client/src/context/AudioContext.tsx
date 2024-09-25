@@ -28,6 +28,7 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
 
         socketRef.current = io(SOCKET_SERVER);
         
+        
         socketRef.current.emit('join-channel', { peerID }, (response: JoinChannelResponse) => {
           setChannelUUID(response.channelUUID);
         });
