@@ -4,7 +4,7 @@ import {
   ContentSideBarEnum,
 } from '../../../../context/NavigationContext';
 import SectionPage from '../../../../pages/sectionPage/SectionPage';
-import RaisedHandsList from '../../../teacher/RaisedHandsList';
+import RaisedHandsList from '../../../teacher/RaisedHandList/RaisedHandsList';
 
 interface ContentSideBarWrapperProps {
   activeContentSideBar: ActiveSideBarType;

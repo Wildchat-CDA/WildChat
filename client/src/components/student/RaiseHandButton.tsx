@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useHandRaise from '../../hooks/useHandRaise';
 
 interface RaiseHandButtonProps {
   studentId: number;
   studentName: string;
-  table: number;
+  table: string
 }
 
 function RaiseHandButton({ studentId, studentName, table }: RaiseHandButtonProps) {
