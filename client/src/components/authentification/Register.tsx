@@ -14,7 +14,7 @@ type RegisterFormData = {
   confirmPassword: string;
 };
 
-const RegisterForm: React.FC = () => {
+const RegisterForm = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterFormData>();
   const navigate = useNavigate();
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { validatePasswordStrength } from '../../utils/ValidationPassword';
 
@@ -6,7 +5,7 @@ interface PasswordStrengthProps {
   password: string;
 }
 
-const PasswordStrength: React.FC<PasswordStrengthProps> = ({ password = "" }) => {
+  const PasswordStrength = ({ password = "" }: PasswordStrengthProps) => { 
   const { isValid, errors } = validatePasswordStrength(password);
   
   const conditions = [

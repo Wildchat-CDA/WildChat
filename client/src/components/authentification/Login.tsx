@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/authentificationService';
@@ -12,16 +12,16 @@ type LoginFormData = {
   password: string;
 };
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<LoginFormData>();
   const navigate = useNavigate();
-  const [password, setPassword] = useState<string>("");
+  const [password, setPassword] = useState("");
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       const user = await login(data.email, data.password);
       if(user?.accessToken){
-        Cookies.set('token', user?.accessToken, { secure: true, sameSite: 'Strict' });
+        Cookies.set('token', user?.accessToken, { secure: true, sameSite: 'strict' });
       }
      
       navigate('/');
@@ -47,15 +47,17 @@ const LoginForm: React.FC = () => {
             type="email"
             id="email"
             placeholder="Votre Email"
+            autoComplete="email"
             {...register('email', { required: "L'email est requis" })}
           />
           {errors.email && <span className="error-message">{errors.email.message}</span>}
         </div>
         <div className="form-group">
-          <label htmlFor="password" aria-label=" Mot de passe">Votre Mot de passe </label>
+          <label htmlFor="password" aria-label=" Mot de passe" >Votre Mot de passe </label>
           <input
             type="password"
             id="password"
+            autoComplete="current-password"
             placeholder="Votre Mot de Passe"
             {...register('password', { required: "Le mot de passe est requis" })}
             onChange={(e) => setPassword(e.target.value)}
