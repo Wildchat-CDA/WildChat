@@ -13,10 +13,14 @@ interface DropdownProps {
 
 function Dropdown({ items }: DropdownProps) {
   return (
-    <div className="dropdown">
+    <div className='dropdown'>
       {items.map((item, index) => (
-        <div key={index} className="dropdown-item" onClick={item.onClick}>
-          <img src={`/icons/${item.icon}`} alt={item.text} className="dropdown-icon" />
+        <div key={index} className='dropdown-item' onClick={item.onClick}>
+          <img
+            src={`/icons/${item.icon}`}
+            alt={item.text}
+            className='dropdown-icon'
+          />
           <span>{item.text}</span>
         </div>
       ))}
