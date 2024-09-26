@@ -1,0 +1,16 @@
+.user-control {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #2f3136;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.control-panel {
+  display: flex;
+  align-items: center;
+}

@@ -7,9 +7,10 @@ export async function fetchPostSection(
     isClassRoom: isClassRoom,
   };
 
+  const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
   const urlApi = isClassRoom
-    ? 'http://localhost:3000/section/'
-    : 'http://localhost:3000/section/topic';
+    ? `${apiUrl}/section/`
+    : `${apiUrl}/section/topic`;
   try {
     const response = await fetch(urlApi, {
       method: 'POST',
