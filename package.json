@@ -7,7 +7,8 @@
     "dev": "concurrently \"npm start --prefix ./server\" \"npm run dev --prefix ./client\"",
     "tunnel": "concurrently \"npm run dev --prefix ./client\" \"lt --port 5173 --subdomain wildchat\"",
     "start:tunnel": "concurrently \"npm start --prefix ./server\" \"npm run tunnel\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-ssl": "cd server && npm run create-ssl"
   },
   "repository": {
     "type": "git",
