@@ -1,49 +1,37 @@
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import './index.css';
-import App from './App';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthentificationContext';
+import { UserProvider } from './context/UserContext';
+import ProtectedRoute from './components/ProtectedRoutes';
+import App from './App';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import CGU from './pages/CGU';
+import Politics from './pages/Politics';
 
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <UserProvider>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/cgu" element={<CGU />} />
+            <Route path="/politics" element={<Politics />} />
 
-import Cookies from 'js-cookie';
-import { JwtPayload, jwtDecode } from 'jwt-decode';
-import { Route, Routes, Navigate } from 'react-router-dom'; 
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/*" element={<App />} />
+            </Route>
 
-import { LoginForm } from './components/authentification/Login';
-import { RegisterForm } from './components/authentification/Register';
-import PolitiquePrive from './pages/PolitiquePrive';
-import PlitiqueCgu from './pages/PlitiqueCgu';
-import { MediaProvider } from './context/MediaContext';
-
-
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
-
-const root = createRoot(rootElement);
-
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = Cookies.get('token');
-  const decoded: any = token && jwtDecode<JwtPayload>(token);
-  const date = new Date(decoded?.exp * 1000);
-  return (token && decoded?.exp * 1000 > new Date().getTime()) ? <>{children}</> : <Navigate to="/login" replace />;
-};
-
-root.render(
-  <BrowserRouter>
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/politique_prive" element={<PolitiquePrive />} />
-        <Route path="/cgu" element={<PlitiqueCgu />} />
-        <Route path="/" element={
-          <ProtectedRoute>
-            <MediaProvider>
-              <App />
-            </MediaProvider>
-          </ProtectedRoute>
-        } />
-      </Routes>
-    </AuthProvider>
-  </BrowserRouter>
+            {/* Catch-all route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </UserProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

@@ -1,0 +1,155 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: hsl(0, 0%, 0%);
+  color: hsl(0, 0%, 100%);
+}
+
+.auth-form {
+  background-color: hsl(0, 0%, 10%);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px hsla(0, 0%, 100%, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.auth-header h1 {
+  margin-left: 1rem;
+  font-size: 1.5rem;
+  color: hsl(0, 0%, 100%);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: hsl(0, 0%, 100%);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.5rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  border: 1px solid hsl(0, 100%, 50%);
+  border-radius: 4px;
+  background-color: hsl(0, 0%, 16%);
+  color: hsl(0, 0%, 100%);
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.auth-form input.success {
+  border-color: hsl(120, 100%, 25%);
+}
+
+.error-message {
+  color: hsl(0, 100%, 50%);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.validation-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.validation-icon.error {
+  color: hsl(0, 100%, 50%);
+}
+
+.validation-icon.success {
+  color: hsl(120, 100%, 25%);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: hsl(0, 0%, 70%);
+}
+
+.auth-form button[type="submit"] {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: hsl(210, 100%, 50%);
+  color: hsl(0, 0%, 100%);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.auth-form button[type="submit"]:disabled {
+  background-color: hsl(0, 0%, 27%);
+  cursor: not-allowed;
+}
+
+.password-rules {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.password-rules p {
+  margin: 0.25rem 0;
+}
+
+.password-rules .valid {
+  color: hsl(120, 100%, 25%);
+}
+
+.password-rules .invalid {
+  color: hsl(0, 100%, 50%);
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1rem;
+  color: hsl(0, 0%, 100%);
+}
+
+.auth-switch a {
+  color: hsl(210, 100%, 50%);
+  text-decoration: none;
+}
+
+.terms-agreement {
+  font-size: 0.8rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.terms-agreement a {
+  color: hsl(210, 100%, 50%);
+  text-decoration: none;
+}
+
+.terms-agreement a:hover {
+  text-decoration: underline;
+}
