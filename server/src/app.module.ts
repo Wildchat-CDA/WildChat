@@ -26,7 +26,10 @@ import { RoomService } from './service/room.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -38,7 +41,7 @@ import { RoomService } from './service/room.service';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
-    ],
+  ],
   controllers: [
     AppController,
     RedisController,
@@ -60,7 +63,7 @@ import { RoomService } from './service/room.service';
     ConfigService,
     ChatGateway,
     RedisService,
-    RoomService
+    RoomService,
   ],
 })
 export class AppModule {}
