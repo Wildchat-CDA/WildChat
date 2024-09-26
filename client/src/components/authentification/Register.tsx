@@ -38,7 +38,7 @@ const RegisterForm = () => {
           <p>CHAT</p>
         </div>
       </div>
-      <h2>S'ENREGISTRER</h2>
+      <div className='senRegister'>S'ENREGISTRER</div>
       <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
         <div className="form-group">
         <label htmlFor="nom" aria-label="nom"> Votre Nom </label>

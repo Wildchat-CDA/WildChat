@@ -13,6 +13,7 @@ import { LoginForm } from './components/authentification/Login';
 import { RegisterForm } from './components/authentification/Register';
 import PolitiquePrive from './pages/PolitiquePrive';
 import PlitiqueCgu from './pages/PlitiqueCgu';
+import { MediaProvider } from './context/MediaContext';
 
 
 const rootElement = document.getElementById('root');
@@ -37,7 +38,9 @@ root.render(
         <Route path="/cgu" element={<PlitiqueCgu />} />
         <Route path="/" element={
           <ProtectedRoute>
-            <App />
+            <MediaProvider>
+              <App />
+            </MediaProvider>
           </ProtectedRoute>
         } />
       </Routes>

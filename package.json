@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/techmefr/WildChat#readme",
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "localtunnel": "^2.0.2"
   }
 }

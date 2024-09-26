@@ -30,6 +30,14 @@
   font-weight: 700;
 }
 
+.seConnecter{
+  font-size: 31px;
+}
+
+.senRegister{
+  font-size: 31px;
+}
+
 .auth-form {
   width: 800px;
   max-width: 763px;

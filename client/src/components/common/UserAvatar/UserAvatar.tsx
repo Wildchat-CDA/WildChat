@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 import { useAvatar } from '../../../hooks/useAvatar';
+import { useNavigate } from 'react-router-dom';
 import './userAvatar.css';
+import Cookies from 'js-cookie';
 
 interface UserAvatarProps {
   userId: string;
@@ -14,12 +16,17 @@ function UserAvatar({
   userId,
   onChangeAvatar,
   onChangeAccount,
-  onLogout,
 }: UserAvatarProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const { avatarUrl, firstName, lastName, isLoading, error } = useAvatar(userId);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
+  
+  const onLogout = () => {
+    Cookies.remove('token');
+    navigate("/login");
+  }
 
   const dropdownItems = useMemo(() => [
     {
@@ -34,10 +41,10 @@ function UserAvatar({
     },
     {
       icon: 'logout.png',
-      text: 'Déconnexion',
+      text: 'Deconnexion',
       onClick: onLogout,
     },
-  ], [onChangeAvatar, onChangeAccount, onLogout]);
+  ], [onChangeAvatar, onChangeAccount, navigate]);
 
   const renderAvatar = () => {
     if (isLoading) {

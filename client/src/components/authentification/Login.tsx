@@ -39,7 +39,7 @@ const LoginForm = () => {
           <p>CHAT</p>
         </div>
       </div>
-      <h2>SE CONNECTER</h2>
+      <div className='seConnecter'>SE CONNECTER</div>
       <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
         <div className="form-group">
         <label htmlFor="email" aria-label="adresse mail">Votre Email </label>
