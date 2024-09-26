@@ -63,6 +63,7 @@ const RegisterForm = () => {
         <div className="form-group">
         <label htmlFor="email" aria-label="adresse mail"> Votre Email </label>
           <input
+            autoComplete='email'
             type="email"
             id="email"
             placeholder="Votre Email"
@@ -73,6 +74,7 @@ const RegisterForm = () => {
         <div className="form-group">
         <label htmlFor="password" aria-label=" mot de passe"> Votre Mot de passe </label>
           <input
+            autoComplete='new-password'
             type="password"
             id="password"
             placeholder="Votre Mot de Passe"
@@ -86,6 +88,7 @@ const RegisterForm = () => {
           <input
             type="password"
             id="repat-password"
+            autoComplete='new-password'
             placeholder="Répéter Mot de Passe"
             {...register('confirmPassword', {
               required: "La confirmation du mot de passe est requise",
