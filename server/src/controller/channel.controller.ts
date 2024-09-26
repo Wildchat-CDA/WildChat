@@ -14,7 +14,8 @@ import { ChannelService } from '../service/channel.service';
 import { Channel } from 'src/entity/channel.entity';
 import { Config } from 'src/entity/config.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import UserIdRequest from '../interface/userIdRequest.interface';
+import { Request } from 'express';
+import { User } from 'src/entity/user.entity';
 
 @Controller('/channel')
 export class ChannelController {
@@ -76,9 +77,10 @@ export class ChannelController {
 
   @Get('/all/private')
   async getChannelsWithConfigPrivate(
-    @Req() request: UserIdRequest,
+    @Req() request: Request,
   ): Promise<Channel[]> {
-    const userId = request.user.id;
+    const userId = request['user'].id;
+
     try {
       return await this.channelService.getChannelsWithConfigPrivate(userId);
     } catch (error) {
@@ -94,9 +96,7 @@ export class ChannelController {
   async createPrivateChannel(
     @Body('id') id: number,
     @Body('targetUser') targetUser: number,
-  ): Promise<any> {
-    console.log(id, 'id');
-    console.log(targetUser, 'targetUser');
+  ): Promise<Channel> {
     return await this.channelService.createPrivateChannel(id, targetUser);
   }
 }

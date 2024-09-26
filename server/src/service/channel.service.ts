@@ -191,22 +191,43 @@ export class ChannelService {
   //   return channels;
   // }
 
+  // async getChannelsWithConfigPrivate(userId: number): Promise<Channel[]> {
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: userId },
+  //     relations: ['channels', 'channels.config.type'],
+  //   });
+
+  //   console.log(user, 'user');
+
+  //   if (!user) throw new Error('User not found');
+
+  //   const channels = user.channels.filter(
+  //     (channel) => channel.config.type.name === 'private',
+  //   );
+
+  //   console.log(channels, 'channel');
+
+  //   if (channels.length === 0) throw new Error('User has no private channels');
+
+  //   return channels;
+  // }
+
   async getChannelsWithConfigPrivate(userId: number): Promise<Channel[]> {
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.find({
       where: { id: userId },
       relations: ['channels', 'channels.config.type'],
     });
 
-    console.log(user);
-
-    if (!user) throw new Error('User not found');
-
-    const channels = user.channels.filter(
-      (channel) => channel.config.type.name === 'private',
+    const privateChannels = user.flatMap((user) =>
+      user.channels.filter(
+        (channel) =>
+          channel.config.type.name === 'private' &&
+          channel.config.maxSlot === 2,
+      ),
     );
 
-    if (channels.length === 0) throw new Error('User has no private channels');
-
-    return channels;
+    if (privateChannels.length === 0) throw new Error('No private channels');
+    console.log(privateChannels, 'private channels');
+    return privateChannels;
   }
 }

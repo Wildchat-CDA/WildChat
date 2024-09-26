@@ -6,9 +6,11 @@ export async function LoadMessage(
   currentChannel: ISectionChannel | null
 ): Promise<IMessageGet[]> {
   try {
-    const apiUrl = `${import.meta.env.VITE_API_URL}:${
-      import.meta.env.VITE_API_PORT
-    }`;
+    // const apiUrl = `${import.meta.env.VITE_API_URL}`+ `:` + `${
+    //   import.meta.env.VITE_API_PORT
+    //   }`;
+    const apiUrl = 'http://localhost:3000'
+    console.log(apiUrl,"apiURL");
     const response = await fetch(
       `${apiUrl}/room/${currentChannel ? currentChannel.uuid : ""}`
     );
