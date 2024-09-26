@@ -12,7 +12,10 @@ class WebSocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io("http://localhost:3000");
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${
+      import.meta.env.VITE_API_PORT
+    }`;
+    this.socket = io(apiUrl);
   }
 
   on(event: string, callback: (data: any) => void) {

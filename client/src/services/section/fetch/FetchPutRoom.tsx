@@ -9,8 +9,9 @@ export async function fetchPutRoom(
     title: data,
   };
   try {
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
     const response = await fetch(
-      `http://localhost:3000/section/${currentSection.sectionId}/topic/channel/${currentSection.channelId}`,
+      `${apiUrl}/section/${currentSection.sectionId}/topic/channel/${currentSection.channelId}`,
       {
         method: 'PUT',
         headers: {

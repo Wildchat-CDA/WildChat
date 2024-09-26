@@ -10,8 +10,9 @@ export async function fetchPostRoom(
     slot: slotValue,
   };
   try {
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
     const response = await fetch(
-      `http://localhost:3000/section/${currentSection.sectionId}/topic/channel`,
+      `${apiUrl}/section/${currentSection.sectionId}/topic/channel`,
       {
         method: 'POST',
         headers: {
