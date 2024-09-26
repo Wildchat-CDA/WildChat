@@ -4,8 +4,9 @@ export async function fetchDeleteRoom(
   currentSection: NavigationContextType['currentSection']
 ): Promise<number> {
   try {
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
     const response = await fetch(
-      `http://localhost:3000/channel/${currentSection.channelId}`,
+      `${apiUrl}/channel/${currentSection.channelId}`,
       {
         method: 'DELETE',
         headers: {

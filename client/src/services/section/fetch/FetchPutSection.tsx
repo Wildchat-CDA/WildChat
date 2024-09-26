@@ -8,9 +8,9 @@ export async function fetchPutSection(
     title: data,
   };
   try {
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
     const response = await fetch(
-      `http://localhost:3000/section/${currentSection.sectionId}`,
-      {
+      `${apiUrl}/section/${currentSection.sectionId}`,      {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
