@@ -1,0 +1,8 @@
+.user-control-settings {
+  width: 100%;
+  height: 70px;
+  background-color: #232428;
+  display: flex;
+  justify-content: space-evenly;
+  z-index: 1001;
+}

@@ -1,17 +1,17 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import './index.css';
+// src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import App from './App';
+// import { UserProvider } from './context/UserContext';
+import { MediaProvider } from './context/MediaContext';
+import './index.css';
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
-
-const root = createRoot(rootElement);
-
-root.render(
-  // <StrictMode>
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    {/* <UserProvider> */}
+      <MediaProvider>
+        <App />
+      </MediaProvider>
+    {/* </UserProvider> */}
+  </React.StrictMode>
 );
