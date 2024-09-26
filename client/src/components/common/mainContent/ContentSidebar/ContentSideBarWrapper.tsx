@@ -5,6 +5,7 @@ import {
 } from '../../../../context/NavigationContext';
 import SectionPage from '../../../../pages/sectionPage/SectionPage';
 import RaisedHandsList from '../../../teacher/RaisedHandList/RaisedHandsList';
+import PrivateMessagePage from '../../../../pages/privateMessagePage/PrivateMessagePage';
 
 interface ContentSideBarWrapperProps {
   activeContentSideBar: ActiveSideBarType;
@@ -19,7 +20,7 @@ function ContentSideBarWrapper({
       content = <SectionPage />;
       break;
     case ContentSideBarEnum.PrivateMessage:
-      content = 'COMPOSANT private message';//TODO : METTRE MON COMPOSANT ICI
+      content = <PrivateMessagePage />; //TODO : METTRE MON COMPOSANT ICI
       break;
     case ContentSideBarEnum.PresenceList:
       content = 'COMPOSANT presence list';

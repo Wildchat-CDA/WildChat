@@ -1,0 +1,23 @@
+.privateMessagePage-container {
+  width: 100%;
+  height: 100%;
+}
+
+.list-student-wrapper {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.list-student-wrapper > li {
+  text-decoration: none;
+  padding: 8px;
+  
+ 
+}
+
+.student-wrapper{
+  display: flex;
+  justify-content: space-around;
+ 
+}
