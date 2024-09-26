@@ -10,11 +10,11 @@ export class RoomService {
     this._allRooms = [];
   }
 
-  addUserOnRoom(peerId, roomUuid, userUuid) {
+  addUserOnRoom(peerId, roomUuid) {
     console.log('peerID', peerId);
     console.log('room :', roomUuid);
-    console.log('userUuid : ', userUuid);
-    const data = { peerId, roomUuid, userUuid };
+
+    const data = { peerId, roomUuid };
     this.redisService.postPeerIdOnRoom(data);
   }
 }

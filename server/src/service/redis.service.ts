@@ -17,7 +17,6 @@ import {
 export interface IPeerIdOnRoomPayload {
   peerId: string;
   roomUuid: string;
-  userUuid: string;
 }
 
 @Injectable()
@@ -49,6 +48,18 @@ export class RedisService {
 
   get client() {
     return this._client;
+  }
+
+  public async getPeerId(roomId: string) {
+    try {
+      const peerList = await this._client.lRange(`roomPeerId:${roomId}`, 0, -1);
+      return peerList;
+    } catch (error) {
+      console.error('Failed to get peerId list', error);
+      throw new InternalServerErrorException(
+        'Failed to retrieve Peer Id List from redis',
+      );
+    }
   }
 
   public async getMessages(roomId: string): Promise<IMessageGet[]> {
@@ -92,29 +103,7 @@ export class RedisService {
     }
 
     try {
-      // Récupérer le channel précédent de l'utilisateur
-      const previousRoomId = await this.client.get(
-        `user:${data.userUuid}:currentChannel`,
-      );
-      console.log('previous : ', previousRoomId);
-
-      // Supprimer le peerId de la room précédente si elle existe
-      if (previousRoomId) {
-        console.log('previous existant');
-        await this.client.lRem(`roomPeerId:${previousRoomId}`, 0, data.peerId);
-      }
-
-      // Ajouter le peerId à la nouvelle room
       await this.client.rPush(`roomPeerId:${data.roomUuid}`, `${data.peerId}`);
-
-      // Mettre à jour le channel actuel de l'utilisateur
-      await this.client.set(
-        `user:${data.userUuid}:currentChannel`,
-        data.roomUuid,
-      );
-      console.log(
-        `Mise à jour du channel de l'utilisateur ${data.userUuid} vers ${data.roomUuid}`,
-      );
     } catch (error) {
       console.error('Failed to post peerId:', error);
       throw new InternalServerErrorException('Failed to post peerId to Redis');

@@ -12,6 +12,7 @@ import { useAudio } from '../../../context/AudioContext';
 import { JoinChannelResponse } from '../../../types/audioTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { AudioCall } from '../../audio/AudioCall';
+import { useState } from 'react';
 
 interface IRoomProps {
   section: ISection;
@@ -32,6 +33,7 @@ function Room({
 }: IRoomProps) {
   // const { socketRef, myPeerID, setChannelUUID } = useAudio();
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
+
   const handleRoom = (room: IChannel) => {
     affectedCurrentSection(room);
   };
@@ -91,7 +93,7 @@ function Room({
                 <>
                   {' '}
                   <UserIcons />
-                  <AudioCall />
+                  <AudioCall currentSection={currentSection} />
                 </>
               )}
             </div>

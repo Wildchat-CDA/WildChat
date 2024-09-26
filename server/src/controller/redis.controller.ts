@@ -15,6 +15,11 @@ export class RedisController {
     return await this.redisService.getMessages(roomId);
   }
 
+  @Get('/peer/:roomId')
+  public async getAllPeerId(@Param('roomId') roomId: string) {
+    return await this.redisService.getPeerId(roomId);
+  }
+
   @Put(':roomId/message')
   public async updateMessage(
     @Param('roomId') roomId: string,
