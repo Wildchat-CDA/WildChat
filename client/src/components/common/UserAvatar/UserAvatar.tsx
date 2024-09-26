@@ -30,17 +30,17 @@ function UserAvatar({
 
   const dropdownItems = useMemo(() => [
     {
-      icon: 'change-avatar.png',
+      icon: 'icons/change-avatar.png',
       text: 'Changer d\'avatar',
       onClick: onChangeAvatar,
     },
     {
-      icon: 'switch-account.png',
+      icon: 'icons/switch-account.png',
       text: 'Changer de compte',
       onClick: onChangeAccount,
     },
     {
-      icon: 'logout.png',
+      icon: 'icons/logout.png',
       text: 'Deconnexion',
       onClick: onLogout,
     },
