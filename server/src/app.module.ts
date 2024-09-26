@@ -39,8 +39,8 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
-    AuthModule
-    ],
+    AuthModule,
+  ],
   controllers: [
     AppController,
     RedisController,
@@ -62,7 +62,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigService,
     ChatGateway,
     RedisService,
-    RoomService
+    RoomService,
   ],
 })
 export class AppModule {}
