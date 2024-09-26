@@ -138,6 +138,12 @@ dist
 /dist
 /node_modules
 
+# Ignorer les fichiers de clé et certificat SSL
+certs/
+
+# Ignorer tous les fichiers .pem
+*.pem
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
