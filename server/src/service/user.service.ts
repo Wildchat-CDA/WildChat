@@ -23,16 +23,14 @@ export class UserService {
       relations: ['channels', 'channels.config.type'],
     });
 
-    if (!user) {
-      throw new Error('User not found');
-    } else {
-      const channels = user.channels.filter((channel) => {
-        return channel.config.type.name === 'public';
-      });
+    if (!user) throw new Error('User not found');
 
-      console.log(channels);
+    const channels = user.channels.filter(
+      (channel) => channel.config.type.name === 'public',
+    );
 
-      return channels;
-    }
+    if (channels.length === 0) throw new Error('User has no private channels');
+
+    return channels;
   }
 }

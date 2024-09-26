@@ -1,4 +1,10 @@
-import { Controller, Get, InternalServerErrorException, NotFoundException, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { UserService } from 'src/service/user.service';
 
 import { User } from 'src/entity/user.entity';
@@ -13,7 +19,6 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  // Votre contrôleur
   @Get(':id/private-channels')
   async getUserChannels(@Param('id') id: number): Promise<Channel[]> {
     try {

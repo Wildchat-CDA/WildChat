@@ -19,7 +19,7 @@ function ContentSideBarWrapper({
       content = <SectionPage />;
       break;
     case ContentSideBarEnum.PrivateMessage:
-      content = 'COMPOSANT private message';
+      content = 'COMPOSANT private message';//TODO : METTRE MON COMPOSANT ICI
       break;
     case ContentSideBarEnum.PresenceList:
       content = 'COMPOSANT presence list';
