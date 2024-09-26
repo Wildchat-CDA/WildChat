@@ -1,7 +1,7 @@
 export async function fetchDeleteSection(id: number | null): Promise<number> {
   try {
-    const response = await fetch(`http://localhost:3000/section/${id}`, {
-      method: 'DELETE',
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+    const response = await fetch(`${apiUrl}/section/${id}`, {      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },

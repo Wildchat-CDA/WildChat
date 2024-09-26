@@ -3,7 +3,9 @@ import Peer, { MediaConnection } from "peerjs";
 import io, { Socket } from "socket.io-client";
 import { User, ChannelInfo, JoinChannelResponse } from '../../types/audioTypes';
 
-const SOCKET_SERVER = 'http://localhost:3000';
+const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+
+const SOCKET_SERVER = 'apiURL';
 
 export function AudioCall(): JSX.Element {
   const [myPeerID, setMyPeerID] = useState<string>("");

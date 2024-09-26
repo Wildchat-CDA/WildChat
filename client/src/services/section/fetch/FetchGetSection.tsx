@@ -2,7 +2,8 @@
 
 export async function fetchGetSection(type: string): Promise<any> {
   try {
-    const response = await fetch(`http://localhost:3000/section/${type}`, {
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+    const response = await fetch(`${apiUrl}/section/${type}`, {
       method: 'GET',
     });
 
