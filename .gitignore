@@ -81,6 +81,8 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+.env.tunnel
+
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -146,4 +148,7 @@ dist
 !.vscode/launch.json
 !.vscode/extensions.json
 .vscode
+
+# ENv
+.env.sample
 .env.tunnel
