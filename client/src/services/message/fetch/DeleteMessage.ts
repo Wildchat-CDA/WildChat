@@ -1,15 +1,18 @@
-import { IMessageDeletePayload } from '../../../../../common/interface/messageInterface';
+import { IMessageDeletePayload } from "../../../../../common/interface/messageInterface";
 
 export async function deleteMessage(
   data: IMessageDeletePayload
 ): Promise<void> {
   try {
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${
+      import.meta.env.VITE_API_PORT
+    }`;
     const response = await fetch(
-      `http://localhost:3000/room/${data.roomId}/message/${data.index}`,
+      `${apiUrl}/room/${data.roomId}/message/${data.index}`,
       {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
@@ -20,7 +23,7 @@ export async function deleteMessage(
       );
     }
   } catch (error) {
-    console.error('Failed to delete message:', error);
-    throw new Error('Failed to delete the message. Please try again later.');
+    console.error("Failed to delete message:", error);
+    throw new Error("Failed to delete the message. Please try again later.");
   }
 }
