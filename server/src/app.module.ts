@@ -23,6 +23,7 @@ import { RedisController } from './controller/redis.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
 import { RoomController } from './controller/room.controller';
 import { RoomService } from './service/room.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { RoomService } from './service/room.service';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
+    AuthModule,
   ],
   controllers: [
     AppController,
