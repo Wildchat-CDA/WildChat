@@ -12,7 +12,7 @@ import { useAudio } from '../../../context/AudioContext';
 import { JoinChannelResponse } from '../../../types/audioTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { AudioCall } from '../../audio/AudioCall';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IRoomProps {
   section: ISection;
@@ -71,6 +71,10 @@ function Room({
     affectedCurrentSection(room);
     setActiveModal(ModalTypeEnum.DeleteRoom);
   };
+
+  useEffect(() => {
+    console.log('je passe dans room');
+  }, [currentSection]);
 
   return (
     <div className='rooms-container'>

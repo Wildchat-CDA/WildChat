@@ -17,4 +17,8 @@ export class RoomService {
     const data = { peerId, roomUuid };
     this.redisService.postPeerIdOnRoom(data);
   }
+
+  deletePeerIdUser(data) {
+    this.redisService.deletePeerIdUser(data);
+  }
 }

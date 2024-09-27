@@ -88,8 +88,15 @@ export default class PeerService {
       if (peerId) {
         console.log('Peer ID dans le service:', peerId);
         await this.setupLocalStream(streamRef, localAudioRef);
-        this.setupIncomingCalls(streamRef, remoteAudioRef);
-        await this.setupPeerList(currentSection, peerId, setPeerList, socket);
+        this.setupIncomingCalls(
+          streamRef,
+          remoteAudioRef,
+          socket,
+          peerId,
+          currentSection,
+          setPeerList
+        ),
+          await this.setupPeerList(currentSection, peerId, setPeerList, socket);
       }
     } catch (error) {
       console.error("Erreur lors de l'initialisation de l'appel audio:", error);
@@ -126,7 +133,11 @@ export default class PeerService {
   // Configuration des appels entrants
   private setupIncomingCalls(
     streamRef: React.MutableRefObject<MediaStream | null>,
-    remoteAudioRef: React.RefObject<HTMLAudioElement>
+    remoteAudioRef: React.RefObject<HTMLAudioElement>,
+    socket,
+    peerId,
+    currentSection,
+    setPeerList
   ) {
     this.onCall((remoteCall) => {
       console.log('Appel entrant de:', remoteCall.peer);
@@ -148,6 +159,15 @@ export default class PeerService {
       });
 
       remoteCall.on('close', () => {
+        const payload = {
+          peerId: remoteCall.peer,
+          roomUuid: currentSection.uuid,
+        };
+        socket.emit('leave-channel', payload);
+        setPeerList((prevPeerList) =>
+          prevPeerList.filter((id) => id !== peerID)
+        );
+
         console.log('Appel terminé avec:', remoteCall.peer);
       });
 

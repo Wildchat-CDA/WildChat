@@ -86,14 +86,21 @@ export class ChatGateway
   }
 
   @SubscribeMessage('join-channel')
-  async joinCnannel(@MessageBody() data: { peerId: string; roomUuid: string }) {
-    console.log('data : ', data);
+  async joinChannel(@MessageBody() data: { peerId: string; roomUuid: string }) {
+    console.log('data join channel : ', data);
     this.roomService.addUserOnRoom(data.peerId, data.roomUuid);
     this.server.to(data.roomUuid).emit('join-channel', {
       peerID: data.peerId,
     });
   }
 
+  @SubscribeMessage('leave-channel')
+  async leaveChannel(
+    @MessageBody() data: { peerId: string; roomUuid: string },
+  ) {
+    console.log('data leave : ', data);
+    this.roomService.deletePeerIdUser(data);
+  }
   // @SubscribeMessage('join-channel')
   // joinChannel(
   //   @MessageBody() data: { peerID: string },

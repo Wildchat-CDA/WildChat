@@ -50,6 +50,35 @@ export class RedisService {
     return this._client;
   }
 
+  public async deletePeerIdUser(data: IPeerIdOnRoomPayload) {
+    if (data.peerId.length === 0) {
+      throw new Error('Le peerId ne peut pas être vide');
+    }
+
+    try {
+      const result = await this.client.lRem(
+        `roomPeerId:${data.roomUuid}`,
+        0,
+        `${data.peerId}`,
+      );
+
+      if (result === 0) {
+        console.warn(
+          `Le peerId ${data.peerId} n'a pas été trouvé dans la room ${data.roomUuid}`,
+        );
+      } else {
+        console.log(
+          `Le peerId ${data.peerId} a été supprimé de la room ${data.roomUuid}`,
+        );
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression du peerId:', error);
+      throw new InternalServerErrorException(
+        'Erreur lors de la suppression du peerId de Redis',
+      );
+    }
+  }
+
   public async getPeerId(roomId: string) {
     try {
       const peerList = await this._client.lRange(`roomPeerId:${roomId}`, 0, -1);
