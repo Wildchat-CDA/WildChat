@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as https from 'https';
 
 dotenv.config();
 
@@ -20,7 +22,16 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(3000);
+  const httpsOptions = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+  };
+
+  https
+    .createServer(httpsOptions, app.getHttpAdapter().getHttpServer())
+    .listen(3000, () => {
+      console.log('Server is running on https://localhost:3000');
+    });
 }
 
 bootstrap();
