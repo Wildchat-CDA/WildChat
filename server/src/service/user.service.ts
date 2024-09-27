@@ -17,6 +17,9 @@ export class UserService {
     });
   }
 
+  // async findAll(): Promise<User[]> {
+  //   return await this.userRepository.find();
+  // }
   async getUserChannels(userId: number): Promise<Channel[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },

@@ -19,6 +19,7 @@ const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
+   const { setActiveModal, activeModal } = useModal();
   const [currentMessage, setCurrentMessage] = useState<string>();
   const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);

@@ -10,7 +10,8 @@ export async function LoadMessage(
     //   import.meta.env.VITE_API_PORT
     //   }`;
     const apiUrl = 'http://localhost:3000'
-    console.log(apiUrl,"apiURL");
+    console.log(apiUrl, "apiURL");
+    console.log(currentChannel?.uuid,"currentChannel loadMessage")
     const response = await fetch(
       `${apiUrl}/room/${currentChannel ? currentChannel.uuid : ""}`
     );
