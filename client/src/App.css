@@ -50,3 +50,16 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+/* A corriger dans le code et supprimer ici*/
+.settings-button {
+  display: none;
+}
+
+#root {
+  background-color: #2f3136;
+}
+
+.media-buttons label {
+  display: none;
+}

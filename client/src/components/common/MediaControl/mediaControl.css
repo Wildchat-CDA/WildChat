@@ -4,6 +4,9 @@
   justify-content: center;
 }
 
+.media-control .icon-button span {
+  display: none;
+}
 .media-buttons {
   display: flex;
   gap: 10px;
