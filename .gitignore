@@ -149,6 +149,6 @@ dist
 !.vscode/extensions.json
 .vscode
 
-# ENv
+# ENV
 .env.sample
 .env.tunnel
