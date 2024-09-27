@@ -71,6 +71,19 @@ export default class PeerService {
       console.log(`Appel initié avec: ${remotePeerId}`);
     }
 
+    // Ajout de l'écoute des événements 'stream' et 'close'
+    call.on('stream', (remoteStream) => {
+      console.log("Flux distant reçu pendant l'appel:", remoteStream);
+    });
+
+    call.on('close', () => {
+      console.log(`Appel terminé avec: ${remotePeerId}`);
+    });
+
+    call.on('error', (err) => {
+      console.error("Erreur pendant l'appel:", err);
+    });
+
     return call;
   }
 
@@ -155,6 +168,7 @@ export default class PeerService {
         console.log('Flux distant reçu:', remoteStream);
         if (remoteAudioRef.current) {
           remoteAudioRef.current.srcObject = remoteStream;
+          console.log("Le flux distant est attaché à l'audio.");
         }
       });
 
@@ -165,7 +179,7 @@ export default class PeerService {
         };
         socket.emit('leave-channel', payload);
         setPeerList((prevPeerList) =>
-          prevPeerList.filter((id) => id !== peerID)
+          prevPeerList.filter((id) => id !== peerId)
         );
 
         console.log('Appel terminé avec:', remoteCall.peer);
@@ -178,6 +192,7 @@ export default class PeerService {
   }
 
   // Configuration du flux local
+  // Méthode setupLocalStream
   private async setupLocalStream(
     streamRef: React.MutableRefObject<MediaStream | null>,
     localAudioRef: React.RefObject<HTMLAudioElement>
@@ -187,8 +202,8 @@ export default class PeerService {
         video: false,
         audio: true,
       });
-      streamRef.current = stream;
-      console.log('Flux audio local initialisé:', stream);
+      streamRef.current = stream; // Ici on définit le stream
+      console.log('Flux audio local après initialisation:', streamRef.current);
 
       if (localAudioRef.current) {
         localAudioRef.current.srcObject = stream;
