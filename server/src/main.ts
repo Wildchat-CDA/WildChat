@@ -27,11 +27,12 @@ async function bootstrap() {
     cert: fs.readFileSync(process.env.SSL_CERT_PATH),
   };
 
-  https
-    .createServer(httpsOptions, app.getHttpAdapter().getHttpServer())
-    .listen(3000, () => {
-      console.log('Server is running on https://localhost:3000');
-    });
+  const server = https.createServer(
+    httpsOptions,
+    app.getHttpAdapter().getInstance(),
+  );
+
+  server.listen(3000);
 }
 
 bootstrap();
