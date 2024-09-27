@@ -7,7 +7,14 @@ import * as https from 'https';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+  };
+
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
 
   const allowedOrigins = [
     process.env.FRONTEND_URL + ':' + process.env.PORT_FRONT,
@@ -22,17 +29,14 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const httpsOptions = {
-    key: fs.readFileSync(process.env.SSL_KEY_PATH),
-    cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-  };
-
   const server = https.createServer(
     httpsOptions,
     app.getHttpAdapter().getInstance(),
   );
 
-  server.listen(3000);
+  server.listen(3000, () => {
+    console.log('Server is running on https://localhost:3000');
+  });
 }
 
 bootstrap();
