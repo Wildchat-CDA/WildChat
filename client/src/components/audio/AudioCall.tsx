@@ -22,27 +22,22 @@ export function AudioCall({ currentSection }) {
         setPeerList
       );
     };
-
     initializeCall();
   }, [currentSection]); // Assurez-vous que cela s'exécute lorsque currentSection change
 
   useEffect(() => {
     if (peerList.length > 0) {
-      console.log('Current Peer List:', peerList); // Vérifiez que peerList contient des valeurs
       peerList.forEach((remotePeerID) => {
         if (
           !calledPeersRef.current.includes(remotePeerID) &&
           remotePeerID !== peerService.peerId
         ) {
-          // Ajoutez la condition pour filtrer votre propre ID
-          console.log('CALL to ' + remotePeerID); // Log pour le peer que vous appelez
-
           if (streamRef.current) {
-            const call = peerService.makeCall(remotePeerID, streamRef.current);
+            peerService.makeCall(remotePeerID, streamRef.current);
             calledPeersRef.current.push(remotePeerID);
             console.log('Current Called Peers:', calledPeersRef.current);
           } else {
-            console.error('Stream is not initialized'); // Log d'erreur
+            console.error('Stream is not initialized');
           }
         }
       });
@@ -51,16 +46,35 @@ export function AudioCall({ currentSection }) {
     // Écouteur pour l'événement 'join-channel'
     socket.on('join-channel', (data) => {
       console.log('Un utilisateur a rejoint la salle :', data.peerID);
-      // Mettez à jour l'état ou effectuez d'autres actions ici
     });
 
-    // Nettoyer l'écouteur à la désactivation du composant
+    // Écouteur pour l'événement 'leave-channel'
+    socket.on('leave-channel', (data) => {
+      const { peerID } = data;
+
+      console.log('Un utilisateur a quitté la salle :', peerID);
+
+      // Retirer le peerID de la liste
+      setPeerList((prevPeerList) => prevPeerList.filter((id) => id !== peerID));
+
+      // Si cet utilisateur est en appel, stopper le flux audio
+      if (calledPeersRef.current.includes(peerID)) {
+        calledPeersRef.current = calledPeersRef.current.filter(
+          (id) => id !== peerID
+        );
+        if (remoteAudioRef.current) {
+          remoteAudioRef.current.srcObject = null; // Stopper le flux audio
+        }
+        console.log('Peer call stopped and removed:', peerID);
+      }
+    });
+
+    // Nettoyer les écouteurs à la désactivation du composant
     return () => {
       socket.off('join-channel', (data) => console.log('data : ', data));
+      socket.off('leave-channel', (data) => console.log('data : ', data));
     };
   }, [peerList]);
-
-  useEffect(() => {}, [socket]);
 
   return (
     <>

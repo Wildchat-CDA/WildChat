@@ -8,9 +8,14 @@ export default class PeerService {
 
   constructor() {
     this.peer = new Peer();
+
     this.peer.on('open', (id) => {
       this.peerId = id;
-      console.log('Peer IDDD:', this.peerId);
+      console.log('Peer ID ouvert:', this.peerId);
+    });
+
+    this.peer.on('error', (err) => {
+      console.error('Erreur PeerJS:', err);
     });
   }
 
@@ -22,6 +27,7 @@ export default class PeerService {
       } else {
         // Attendre que l'événement 'open' soit déclenché
         this.peer.on('open', (id) => {
+          console.log('ID du Peer obtenu:', id);
           resolve(id);
         });
       }
@@ -29,21 +35,42 @@ export default class PeerService {
   }
 
   // Récupérer tous les Peer ID d'une room
-  getAllPeerIds = async (currentChannel: ISectionChannel) => {
-    return loadPeerList(currentChannel);
-  };
+  async getAllPeerIds(currentChannel: ISectionChannel): Promise<string[]> {
+    try {
+      const peerList = await loadPeerList(currentChannel);
+      console.log('Liste des peers obtenue:', peerList);
+      return peerList;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des Peer IDs:', error);
+      return [];
+    }
+  }
 
   // Méthode pour gérer les appels entrants
   onCall(callback: (call: MediaConnection) => void) {
-    this.peer.on('call', callback);
+    this.peer.on('call', (call) => {
+      console.log('Appel entrant reçu de:', call.peer);
+      callback(call);
+    });
   }
 
   // Nouvelle méthode pour passer un appel
-  makeCall(remotePeerId: string, stream: MediaStream): MediaConnection {
+  makeCall(remotePeerId: string, stream: MediaStream): MediaConnection | null {
     if (!this.peer) {
-      throw new Error('Peer not initialized');
+      console.error('Peer non initialisé');
+      return null;
     }
+    console.log(`Passer un appel à: ${remotePeerId}`);
+
     const call = this.peer.call(remotePeerId, stream);
+
+    if (!call) {
+      console.error(`Échec de l'appel à: ${remotePeerId}`);
+      return null;
+    } else {
+      console.log(`Appel initié avec: ${remotePeerId}`);
+    }
+
     return call;
   }
 
@@ -56,17 +83,20 @@ export default class PeerService {
     socket: any,
     setPeerList: (peers: string[]) => void
   ) {
-    const peerId = await this.getPeerId();
-    if (peerId) {
-      console.log('Peer ID in service:', peerId);
-
-      await this.setupLocalStream(streamRef, localAudioRef);
-      this.setupIncomingCalls(streamRef, remoteAudioRef);
-      await this.setupPeerList(currentSection, peerId, setPeerList, socket); // Assurez-vous que la liste des pairs est configurée
+    try {
+      const peerId = await this.getPeerId();
+      if (peerId) {
+        console.log('Peer ID dans le service:', peerId);
+        await this.setupLocalStream(streamRef, localAudioRef);
+        this.setupIncomingCalls(streamRef, remoteAudioRef);
+        await this.setupPeerList(currentSection, peerId, setPeerList, socket);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'initialisation de l'appel audio:", error);
     }
   }
 
-  // Récuperaton des peerId dans la room, et ajout du nouvel peerId
+  // Récuperation des peerId dans la room, et ajout du nouvel peerId
   private async setupPeerList(
     currentSection: ISectionChannel,
     peerId: string,
@@ -77,16 +107,20 @@ export default class PeerService {
       peerId,
       roomUuid: currentSection.uuid,
     };
+    console.log('Rejoindre le canal avec le payload:', payload);
     socket.emit('join-channel', payload);
 
-    // Mettez à jour la liste des pairs après avoir rejoint la salle
-    let peerList = await this.getAllPeerIds(currentSection);
-
-    // Filtrer la liste pour retirer le propre peerId
-    peerList = peerList.filter((id) => id !== peerId);
-
-    // Mettre à jour le state avec la liste filtrée
-    setPeerList(peerList);
+    try {
+      let peerList = await this.getAllPeerIds(currentSection);
+      peerList = peerList.filter((id) => id !== peerId); // Filtrer pour exclure soi-même
+      console.log('Liste des peers après filtrage:', peerList);
+      setPeerList(peerList);
+    } catch (error) {
+      console.error(
+        'Erreur lors de la configuration de la liste des peers:',
+        error
+      );
+    }
   }
 
   // Configuration des appels entrants
@@ -95,17 +129,30 @@ export default class PeerService {
     remoteAudioRef: React.RefObject<HTMLAudioElement>
   ) {
     this.onCall((remoteCall) => {
-      console.log('Incoming call:', remoteCall);
+      console.log('Appel entrant de:', remoteCall.peer);
+
       if (streamRef.current) {
-        remoteCall.answer(streamRef.current); // Répondre à l'appel avec le flux local
+        console.log('Répondre avec le flux local');
+        remoteCall.answer(streamRef.current); // Répondre avec le flux local
       } else {
-        console.error('Local stream not initialized when answering call.');
+        console.error(
+          "Flux local non initialisé lors de la réponse à l'appel."
+        );
       }
 
       remoteCall.on('stream', (remoteStream) => {
+        console.log('Flux distant reçu:', remoteStream);
         if (remoteAudioRef.current) {
           remoteAudioRef.current.srcObject = remoteStream;
         }
+      });
+
+      remoteCall.on('close', () => {
+        console.log('Appel terminé avec:', remoteCall.peer);
+      });
+
+      remoteCall.on('error', (err) => {
+        console.error("Erreur pendant l'appel:", err);
       });
     });
   }
@@ -120,15 +167,18 @@ export default class PeerService {
         video: false,
         audio: true,
       });
-
       streamRef.current = stream;
+      console.log('Flux audio local initialisé:', stream);
 
       if (localAudioRef.current) {
         localAudioRef.current.srcObject = stream;
-        console.log('Local audio stream set up successfully');
+        console.log('Le flux audio local est bien défini');
       }
     } catch (error) {
-      console.error('Error accessing media devices.', error);
+      console.error(
+        "Erreur lors de l'accès aux périphériques multimédia:",
+        error
+      );
     }
   }
 }
