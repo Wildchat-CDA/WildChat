@@ -1,0 +1,188 @@
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  min-height: 100vh;
+  padding: 20px 600px;
+  background: #1E1E1E;
+  color: #fff;
+}
+
+.auth-container h2 {
+  margin: 30px 0px 30px 0px;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  max-width: 80%;
+  padding: 20px;
+}
+
+.auth-logo-title {
+  display: flex;
+}
+.auth-logo-title p {
+  font-size: 4rem;
+  font-weight: 700;
+}
+
+.seConnecter{
+  font-size: 31px;
+}
+
+.senRegister{
+  font-size: 31px;
+}
+
+.auth-form {
+  width: 800px;
+  max-width: 763px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.div-btn {
+  text-align: center;
+  margin: 40px 0px;
+}
+.div-btn button{
+  background-color: #35A554;
+  border-radius: 70px;
+  padding: 11px 12px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.form-group {
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 15px;
+  height: 45px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+}
+
+.form-group label {
+  font-size: 10px;
+  margin-bottom: 70px;
+}
+
+.password-group {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-group input {
+  width: calc(100% - 40px);
+}
+
+.login-link {
+  font-size: 10px; 
+}
+
+.login-link a {
+  color: #35A554;
+}
+.icon {
+  position: absolute;
+  right: 10px;
+}
+
+.valid-icon {
+  color: green;
+}
+
+.invalid-icon {
+  color: red;
+}
+
+
+input.valid {
+  border-color: #35A554;
+}
+
+input.invalid {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 10px;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 30px 10px;
+    margin: 0px;
+  }
+
+  .auth-form {
+    width: 400px;
+    margin: 0;
+  }
+ 
+  .auth-logo-title {
+    display: block;
+  }
+
+  .auth-logo-title p {
+    font-size: 3rem;
+    font-weight: 500;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-container {
+    justify-content: center;
+  }
+
+  .auth-container {
+    justify-content: center;
+    padding: 20px 100px;
+  }
+}
+
+
+.password-strength {
+  margin-top: 10px;
+}
+
+.password-strength h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.password-strength ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.password-strength li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 12x;
+}
+
+.password-strength .icon {
+  margin-right: 10px;
+}
+
+.password-strength .valid {
+  color: #35A554;
+}
+
+.password-strength .invalid {
+  color: red;
+}
+

@@ -25,6 +25,7 @@ import { RoomController } from './controller/room.controller';
 import { RoomService } from './service/room.service';
 import { UserController } from './controller/user.controller';
 import { UserService } from './service/user.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { UserService } from './service/user.service';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Section, Channel, Type, Config, User]),
+    TypeOrmModule.forFeature([Section, Channel, Type, Config]),
+    AuthModule,
   ],
   controllers: [
     AppController,

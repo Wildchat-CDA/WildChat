@@ -1,13 +1,15 @@
 {
   "name": "wildchat",
   "version": "1.0.0",
-  "description": "This application is used to create pre-configured workspaces in the context of education in order to recreate the face-to-face experience in the distance learning environment.",
+  "description": "Application pour créer des espaces de travail pré-configurés pour l'éducation à distance, reproduisant l'expérience en face-à-face.",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm start --prefix ./server\" \"npm run dev --prefix ./client\"",
-    "tunnel": "concurrently \"npm run dev --prefix ./client\" \"lt --port 5173 --subdomain wildchat\"",
-    "start:tunnel": "concurrently \"npm start --prefix ./server\" \"npm run tunnel\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"npm start --prefix server\" \"npm run dev --prefix client\"",
+    "tunnel": "concurrently \"npm run dev --prefix client\" \"lt --port 5173 --subdomain wildchat\"",
+    "start:tunnel": "concurrently \"npm start --prefix server\" \"npm run tunnel\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:all": "npm i && concurrently \"npm i --prefix client\" \"npm i --prefix server\"",
+    "setup": "npm run install:all && cd server && npx ts-node -r tsconfig-paths/register src/database/seed/index.seed.ts"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,6 @@
     "react",
     "ts",
     "nestjs",
-    "scholar",
     "education",
     "learning"
   ],
@@ -31,6 +32,8 @@
   },
   "homepage": "https://github.com/techmefr/WildChat#readme",
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "localtunnel": "^2.0.2",
+    "ts-node": "^10.9.2"
   }
 }
