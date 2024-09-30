@@ -34,7 +34,6 @@ function UserControl({
       </div>
       <div className="control-panel">
         <MediaControls userId={''} />
-        <button onClick={onSettingsClick} className="settings-button">Settings</button>
       </div>
     </div>
   );

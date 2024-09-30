@@ -2,7 +2,7 @@ import ContentSidebar from './ContentSidebar/ContentSidebar';
 import ContentMain from './contentMain/ContentMain';
 import './MainContent.css';
 import { useNavigation } from '../../../context/NavigationContext';
-import Setting from '../../UserControlSettings/UserControlSettings';
+// import Setting from '../../UserControlSettings/UserControlSettings';
 
 interface IMainContentProps {
   isMobile: boolean;
