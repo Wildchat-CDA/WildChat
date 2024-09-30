@@ -24,7 +24,7 @@ const ShowMessage: React.FC = () => {
   const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
-  const { currentSection } = useNavigation();
+  const { currentSection, setCurrentSection } = useNavigation();
 
   const name = 'Théo'; // TODO Need to use an 
 
@@ -68,6 +68,7 @@ const ShowMessage: React.FC = () => {
       messageIndex: index,
       currentMessage: message,
     }));
+    console.log(currentSection,"fonction suppression")
   };
 
   // Update message in message Array

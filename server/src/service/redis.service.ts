@@ -94,6 +94,7 @@ export class RedisService {
       if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
       }
+
       if (data.message.length === 0) {
         throw new Error(
           'The message cannot be empty. Please enter some text before submitting.',
@@ -101,6 +102,7 @@ export class RedisService {
       }
 
       const updatedMessage = `${data.name} : ${data.message}`;
+
       await this._client.lSet(`room:${roomId}`, data.index, updatedMessage);
     } catch (error) {
       console.error('Failed to update message:', error);

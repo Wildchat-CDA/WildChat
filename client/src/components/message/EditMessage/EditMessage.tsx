@@ -24,6 +24,7 @@ const MessageEditor: React.FC<IMessageUpdateProps> = ({
     if (newMessage.length !== 0) {
       editMessage({ name, index, message: newMessage, roomId });
       setActiveEdit(false);
+       console.log(newMessage, 'edition');
       updateMessage(newMessage, index);
     }
   };
