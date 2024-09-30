@@ -13,6 +13,7 @@ import {
   IMessageGet,
   IMessageUpdatePayload,
 } from '../../../common/interface/messageInterface';
+import { User } from 'src/entity/user.entity';
 
 @Injectable()
 export class RedisService {
@@ -215,6 +216,4 @@ export class RedisService {
       throw new InternalServerErrorException('Failed to get all user presences from Redis');
     }
   }
-
-
 }

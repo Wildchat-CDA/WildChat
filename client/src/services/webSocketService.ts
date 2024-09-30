@@ -51,25 +51,25 @@ class WebSocketService {
 
 //a implementer par tout
 
-export class InstanceSocket {
-  private _webSocketService: WebSocketService;
-  static INSTANCE: InstanceSocket | null = null;
+// export class InstanceSocket {
+//   private _webSocketService: WebSocketService;
+//   static INSTANCE: InstanceSocket | null = null;
 
-  private constructor(){
-    this._webSocketService = new WebSocketService();
-  } 
+//   private constructor(){
+//     this._webSocketService = new WebSocketService();
+//   } 
 
-  get webSocketService(){
-    return this._webSocketService;
-  }
+//   get webSocketService(){
+//     return this._webSocketService;
+//   }
 
-  static getInstance(){
-    if(this.INSTANCE === null){
-      this.INSTANCE = new InstanceSocket();
-    } 
-    return this.INSTANCE;
-  }
-}
+//   static getInstance(){
+//     if(this.INSTANCE === null){
+//       this.INSTANCE = new InstanceSocket();
+//     } 
+//     return this.INSTANCE;
+//   }
+// }
 
 
 const webSocketService = new WebSocketService();
