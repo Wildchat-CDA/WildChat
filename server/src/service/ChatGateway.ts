@@ -54,6 +54,7 @@ export class ChatGateway
     const userId = client.handshake.query.userId as string;
     await this.presenceService.setUserPresence(userId, 'offline');
     this.server.emit('presenceUpdate', { userId, status: 'offline' });
+   
 
     console.log(`Client disconnected: ${client.id}`);
     const peerID = this.socketToPeerMap.get(client.id);
