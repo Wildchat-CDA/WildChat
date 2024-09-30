@@ -52,11 +52,12 @@ const PresenceList = () => {
 
   return (
     <div className="presence-list">
-      <span>Liste des présences</span>
+      <h1>Liste des présences</h1>
 
       <details>
-        <summary>Non connectés ({ofLine.length})</summary>
+        <summary>Non connectés({ofLine.length})</summary>
         <ul className='studentOfLine'>
+        <br />
           {ofLine.map((user) => (
             <li key={user.id}>
               {user.name} {user.firstName}
@@ -64,9 +65,10 @@ const PresenceList = () => {
           ))}
         </ul>
       </details>
-
+          <br />
       <details>
         <summary>Connectés ({onLine.length})</summary>
+        <br />
         <ul className='studentonLine'>
           {onLine.map((user) => (
             <li key={user.id}>
