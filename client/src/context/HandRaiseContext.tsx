@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import webSocketService from '../services/webSocketService';
+import webSocketService, { InstanceSocket } from '../services/webSocketService';
 
 interface HandRaiseData {
   userId: number;
@@ -25,7 +25,7 @@ export const HandRaiseProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setRaisedHands(data);
     };
 
-    webSocketService.onRaisedHandsUpdate(handleRaisedHandsUpdate);
+    InstanceSocket.getInstance().webSocketService.onRaisedHandsUpdate(handleRaisedHandsUpdate);
 
     return () => {
       webSocketService.off("raisedHandsUpdate", handleRaisedHandsUpdate);

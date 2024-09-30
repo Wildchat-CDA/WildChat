@@ -12,6 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { RedisService } from './redis.service';
 import { IMessagePostPayload } from '../../../common/interface/messageInterface';
 import { RoomService } from './room.service';
+import { PresenceService } from './presence.service';
 
 interface HandRaiseData {
   userId: number;
@@ -35,17 +36,25 @@ export class ChatGateway
   constructor(
     private readonly redisService: RedisService,
     private readonly roomService: RoomService,
+    private readonly presenceService: PresenceService
   ) {}
 
   afterInit() {
     console.log('WebSocket server initialized');
   }
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
+    const userId = client.handshake.query.userId as string;
+    await this.presenceService.setUserPresence(userId, 'online');
+    this.server.emit('presenceUpdate', { userId, status: 'online' });
     console.log(`Client connected: ${client.id}`);
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
+    const userId = client.handshake.query.userId as string;
+    await this.presenceService.setUserPresence(userId, 'offline');
+    this.server.emit('presenceUpdate', { userId, status: 'offline' });
+
     console.log(`Client disconnected: ${client.id}`);
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
@@ -143,5 +152,13 @@ export class ChatGateway
         uuid: user.uuid,
       });
     }
+  }
+  
+
+//methode pour que je puisse recuperer la presence de tous les eleves
+  @SubscribeMessage('getPresence')
+  async handleGetPresence() {
+    const presences = await this.presenceService.getAllUsersPresence();
+    return presences;
   }
 }

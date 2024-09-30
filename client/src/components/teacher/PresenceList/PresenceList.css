@@ -1,0 +1,42 @@
+.presence-list {
+    background-color: #2c2c2c;
+    color: white;
+    padding: 20px;
+    width: 100%px;
+    height: 100%;
+  }
+  
+  .presence-list span {
+    margin-top: 0;
+    font-size: 21px;
+    font-family: Roboto;
+    margin-bottom: 5px;
+    margin-left: 5px;
+  }
+  
+  .presence-list ul {
+    /* list-style-type: none; */
+    padding: 0;
+  }
+  
+  .presence-list li {
+    margin-bottom: 5px;
+  }
+  
+  .connected span {
+    color: #fbfbfb;
+  }
+  
+  .disconnected span {
+    color: #fffefe;
+  }
+
+  .studentOfLine {
+    list-style: inside;
+    color: red
+  }
+
+  .studentonLine{
+    list-style: inside;
+    color: #35A554
+  }

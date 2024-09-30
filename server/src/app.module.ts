@@ -24,6 +24,9 @@ import { RaisedHandsController } from './controller/RaisedHands.controller';
 import { RoomController } from './controller/room.controller';
 import { RoomService } from './service/room.service';
 import { AuthModule } from './auth/auth.module';
+import { StudentController } from './controller/student.controller';
+import { PresenceService } from './service/presence.service';
+import { StudentService } from './service/student.service';
 
 @Module({
   imports: [
@@ -54,6 +57,7 @@ import { AuthModule } from './auth/auth.module';
     RedisController,
     RaisedHandsController,
     RoomController,
+    StudentController
   ],
   providers: [
     AppService,
@@ -66,6 +70,9 @@ import { AuthModule } from './auth/auth.module';
     ChatGateway,
     RedisService,
     RoomService,
+    PresenceService,
+    StudentService,
+    PresenceService,
   ],
 })
 export class AppModule {}
