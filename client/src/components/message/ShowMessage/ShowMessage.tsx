@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LoadMessage } from '../../../services/message/fetch/LoadMessage';
-import socket from '../../../services/webSocketService';
+import { webSocketService } from '../../../services/webSocketService';
 import '../../../App.css';
 import './ShowMessage.css';
 import { IMessagePostPayload } from '../../../../../common/interface/messageInterface';
@@ -10,40 +10,37 @@ import { useScrollToBottom } from '../../../services/useScrollBottom';
 import MessageEditor from '../EditMessage/EditMessage';
 import { useNavigation } from '../../../context/NavigationContext';
 import { ISectionChannel } from '../../../types/sectionTypes';
-import { ModalTypeEnum } from '../../../context/ModalContext';
-import { useModal } from '../../../context/ModalContext';
+import { ModalTypeEnum, useModal } from '../../../context/ModalContext';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 
-const ShowMessage: React.FC = () => {
+const ShowMessage = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
-  const [activeEdit, setActiveEdit] = useState<boolean>();
-  const [currentIndex, setCurrentIndex] = useState<number>();
-  const [currentMessage, setCurrentMessage] = useState<string>();
-  const [activeModalDelete, setActiveModalDelete] = useState<boolean>(false);
+  const [activeEdit, setActiveEdit] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+  const [currentMessage, setCurrentMessage] = useState<string | undefined>();
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
-  const { currentSection } = useNavigation();
+  const { currentSection, setCurrentSection } = useNavigation();
+  const { activeModal, setActiveModal } = useModal();
 
-  const name = 'Théo'; // TODO Need to use an 
+  const name = 'Théo';
 
   useEffect(() => {
-    // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)
       .catch((error) =>
         console.error('Erreur lors du chargement des messages :', error)
       );
 
-    // Load new messages with socket.Io
     const handleMessage = (payload: IMessagePostPayload) => {
-      setMessages((preMessages) => [...preMessages, payload]);
+      setMessages((prevMessages) => [...prevMessages, payload]);
     };
 
-    socket.on('message', handleMessage);
+    webSocketService.on('message', handleMessage);
 
     return () => {
-      socket.off('message', handleMessage);
+      webSocketService.off('message', handleMessage);
     };
   }, [currentSection]);
 
@@ -64,7 +61,6 @@ const ShowMessage: React.FC = () => {
     }));
   };
 
-  // Update message in message Array
   const updateMessage = (msg: string, index: number) => {
     setMessages((prevMessages) =>
       prevMessages.map((message, i) =>
@@ -87,9 +83,7 @@ const ShowMessage: React.FC = () => {
         {messages.map((message, index) => (
           <div className='message-el' key={index}>
             <span className='name'>{message.name} </span>
-            {currentIndex === index &&
-            activeEdit === true &&
-            name == message.name ? (
+            {currentIndex === index && activeEdit && name === message.name ? (
               <MessageEditor
                 name={message.name}
                 message={message.message}
@@ -108,12 +102,12 @@ const ShowMessage: React.FC = () => {
               <div className='span-action_container'>
                 <span
                   aria-label='Modifier ce message'
-                  className=' span-action edit-span'
+                  className='span-action edit-span'
                   onClick={() => handleEdit(index)}
                 >
                   <img
                     src='/icons/edit.png'
-                    alt='crayon édiion messages'
+                    alt='crayon édition messages'
                     className='icon-edit'
                   />
                 </span>

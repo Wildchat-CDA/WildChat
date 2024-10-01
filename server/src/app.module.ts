@@ -27,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
 import { StudentController } from './controller/student.controller';
 import { PresenceService } from './service/presence.service';
 import { StudentService } from './service/student.service';
+import { PresenceSimulatorService } from './service/presence-simulator.service';
 
 @Module({
   imports: [
@@ -54,10 +55,9 @@ import { StudentService } from './service/student.service';
     ChannelController,
     TypeController,
     ConfigController,
-    RedisController,
     RaisedHandsController,
     RoomController,
-    StudentController
+    StudentController,
   ],
   providers: [
     AppService,
@@ -67,12 +67,10 @@ import { StudentService } from './service/student.service';
     ChannelService,
     TypeService,
     ConfigService,
-    ChatGateway,
-    RedisService,
     RoomService,
     PresenceService,
     StudentService,
-    PresenceService,
+    PresenceSimulatorService,
   ],
 })
 export class AppModule {}
