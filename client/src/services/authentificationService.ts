@@ -42,6 +42,7 @@ export const login = async (email: string, password: string) => {
           secure: true,
           sameSite: 'strict',
         });
+        Cookies.set('user', response.data.id)
       }
 
     return response.data;
@@ -85,6 +86,7 @@ export const logout = async () => {
     console.error('Erreur lors de la déconnexion côté serveur:', error);
   } finally {
     Cookies.remove('token');
+    Cookies.remove('user')
   }
 };
 export const isAuthenticated = () => {

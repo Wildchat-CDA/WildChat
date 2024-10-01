@@ -5,6 +5,10 @@ import { fetchGetUser } from '../../services/user/fetch/FetchGetUser';
 import { useNavigation } from '../../context/NavigationContext';
 import { fetchPrivateChannel } from '../../services/channel/fetch/FetchPrivateChannel';
 import { useAuth } from '../../context/AuthentificationContext';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 
 
@@ -12,10 +16,22 @@ function PrivateMessagePage() {
   const [students, setStudents] = useState([]);
   const { setActiveContentMainComp, currentSection, setCurrentSection } =
     useNavigation();
-   const { user} = useAuth();
-  const userId = user?.id;
+  const { user } = useAuth();
 
-  console.log(userId, "userId contexte")
+
+  const token = jwtDecode(Cookies.get('token') as string); 
+  console.log(token, 'token');
+
+  // console.log(localStorage.getItem('user'), "user localstorage")
+  console.log(Cookies.get('user'), "cookie tentative desesperee");
+  
+  
+  
+  console.log(user , "utilisateur connecté")
+  // const userId = user?.id;
+const userId = parseInt(Cookies.get('user'), 10) ;
+
+  console.log(typeof userId, "userId contexte")
   
   const studentsList = students.filter(user => user.id !== userId);
 
