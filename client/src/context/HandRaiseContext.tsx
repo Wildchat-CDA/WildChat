@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { createContext, useState, useContext, useEffect } from 'react';
 import { webSocketService } from '../services/webSocketService';
+=======
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import webSocketService from '../services/webSocketService';
+>>>>>>> c14778c1838949fb784f3d0c0f7bd1b4369ec968
 
 interface HandRaiseData {
   userId: number;
@@ -27,12 +32,16 @@ export const HandRaiseProvider = ({ children }: { children: React.ReactNode }) =
       setRaisedHands(data);
     };
 
+<<<<<<< HEAD
     webSocketService.connect();
     webSocketService.on("raisedHandsUpdate", handleRaisedHandsUpdate);
 
     const checkConnection = setInterval(() => {
       setIsConnected(webSocketService.isSocketConnected());
     }, 1000);
+=======
+   webSocketService.onRaisedHandsUpdate(handleRaisedHandsUpdate);
+>>>>>>> c14778c1838949fb784f3d0c0f7bd1b4369ec968
 
     return () => {
       webSocketService.off("raisedHandsUpdate", handleRaisedHandsUpdate);
