@@ -5,14 +5,23 @@ import Cookies from "js-cookie";
 const API_URL = "http://localhost:3000";
 
 export const login = async (email: string, password: string) => {
-  const response = await axios.post(
-    `${API_URL}/login`,
-    { email, password },
-    { withCredentials: true }
-  );
-  if (response.data.token) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/login`,
+      { email, password },
+      { withCredentials: true }
+    );
+    
+    
+    if (response.data.token) {
+      Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });
+    }
+    
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la connexion:", error);
+    throw error;
   }
-  return response.data;
 };
 
 export const register = async (
@@ -21,17 +30,33 @@ export const register = async (
   email: string,
   password: string
 ) => {
-  const response = await axios.post(
-    `${API_URL}/register`,
-    { name, firstName, email, password },
-    { withCredentials: true }
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      `${API_URL}/register`,
+      { name, firstName, email, password },
+      { withCredentials: true }
+    );
+
+    if (response.data.token) {
+      Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });
+    }
+    
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de l'inscription:", error);
+    throw error;
+  }
 };
 
 export const logout = async () => {
-
-  await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
-
-  Cookies.remove("token");
+  try {
+    await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+  } catch (error) {
+    console.error("Erreur lors de la déconnexion côté serveur:", error);
+  } finally {
+    Cookies.remove("token");
+  }
+};
+export const isAuthenticated = () => {
+  return !!Cookies.get('token');
 };
