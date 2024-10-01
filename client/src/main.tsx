@@ -11,8 +11,9 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { LoginForm } from './components/authentification/Login';
 import { RegisterForm } from './components/authentification/Register';
 import PolitiquePrive from './pages/PolitiquePrive';
-
 import { MediaProvider } from './context/MediaContext';
+
+
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
@@ -36,20 +37,16 @@ root.render(
   <BrowserRouter>
     <AuthProvider>
       <Routes>
-        <Route path='/login' element={<LoginForm />} />
-        <Route path='/register' element={<RegisterForm />} />
-        <Route path='/politique_prive' element={<PolitiquePrive />} />
-
-        <Route
-          path='/'
-          element={
-            <ProtectedRoute>
-              <MediaProvider>
-                <App />
-              </MediaProvider>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/politique_prive" element={<PolitiquePrive />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <MediaProvider>
+              <App />
+            </MediaProvider>
+          </ProtectedRoute>
+        } />
       </Routes>
     </AuthProvider>
   </BrowserRouter>
