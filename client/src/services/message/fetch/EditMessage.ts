@@ -3,30 +3,32 @@ import { IMessageUpdatePayload } from "../../../../../common/interface/messageIn
 export async function editMessage(
   messageUpdate: IMessageUpdatePayload
 ): Promise<void> {
+  const apiUrl = `${import.meta.env.VITE_API_URL}:${
+    import.meta.env.VITE_API_PORT
+  }`;
+  const url = `${apiUrl}/room/${messageUpdate.roomId}/message`;
+
   try {
-    const apiUrl = `${import.meta.env.VITE_API_URL}:${
-      import.meta.env.VITE_API_PORT
-    }`;
-    const response = await fetch(
-      `${apiUrl}/room/${messageUpdate.roomId}/message`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messageUpdate,
-        }),
-      }
-    );
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(messageUpdate),
+    });
 
     if (!response.ok) {
+      const errorText = await response.text();
       throw new Error(
-        `Error: ${response.status} ${response.statusText} while updating message in room ${messageUpdate.roomId}`
+        `Error: ${response.status} ${response.statusText}. ${errorText}`
       );
     }
   } catch (error) {
     console.error("Failed to update message:", error);
-    throw new Error("Failed to update the message. Please try again later.");
+    if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error("An unknown error occurred while updating the message.");
+    }
   }
 }
