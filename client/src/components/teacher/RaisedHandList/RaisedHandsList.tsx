@@ -1,4 +1,4 @@
-
+import React from 'react';
 import useHandRaise from '../../../hooks/useHandRaise';
 import './RaisedHandsList.css';
 

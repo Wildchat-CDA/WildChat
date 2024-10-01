@@ -3,11 +3,6 @@ import { ISectionChannel } from '../types/sectionTypes';
 
 // Définition du type pour le contexte
 export interface NavigationContextType {
-  goToHome(): void;
-  goToPrivateMessages(): void;
-  goToAttendanceList(): void;
-  goToConnectedStudents(): void;
-  goToRaisedHands(): void;
   currentSection: ISectionChannel;
   setCurrentSection: React.Dispatch<React.SetStateAction<ISectionChannel>>;
   refresh: number;
