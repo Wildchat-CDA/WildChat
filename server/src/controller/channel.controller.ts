@@ -16,6 +16,7 @@ import { Config } from 'src/entity/config.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Request } from 'express';
 import { User } from 'src/entity/user.entity';
+import UserIdRequest from '../interface/userIdRequest.interface';
 
 @Controller('/channel')
 export class ChannelController {
@@ -77,9 +78,11 @@ export class ChannelController {
 
   @Get('/all/private')
   async getChannelsWithConfigPrivate(
-    @Req() request: Request,
+    @Req() request: UserIdRequest,
   ): Promise<Channel[]> {
+    console.log(request, 'request ');
     const userId = request['user'].id;
+    console.log(userId, 'userId controller channel');
 
     try {
       return await this.channelService.getChannelsWithConfigPrivate(userId);
