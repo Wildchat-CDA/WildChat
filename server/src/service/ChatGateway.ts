@@ -89,7 +89,7 @@ export class ChatGateway
   async joinChannel(@MessageBody() data: { peerId: string; roomUuid: string }) {
     console.log('data join channel : ', data);
     this.roomService.addUserOnRoom(data.peerId, data.roomUuid);
-    this.server.emit('join-channel', {
+    this.server.to(data.roomUuid).emit('join-channel', {
       peerID: data.peerId,
     });
   }
