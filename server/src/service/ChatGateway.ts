@@ -104,6 +104,10 @@ export class ChatGateway
     @MessageBody() data: { peerId: string; roomUuid: string },
   ) {
     console.log('data leave : ', data);
+    this.server.to(data.roomUuid).emit('leave-channel', {
+      peerId: data.peerId,
+    });
+
     client.leave(data.roomUuid);
     this.roomService.deletePeerIdUser(data);
   }
