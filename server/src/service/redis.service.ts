@@ -132,7 +132,26 @@ export class RedisService {
     }
 
     try {
-      await this.client.rPush(`roomPeerId:${data.roomUuid}`, `${data.peerId}`);
+      // Vérifie si le peerId existe déjà dans une autre room
+      const existingRoomUuid = await this.client.hGet(
+        'roomPeerIdMapping',
+        data.peerId,
+      );
+
+      if (existingRoomUuid) {
+        // Supprime le peerId de l'ancienne room
+        await this.client.lRem(
+          `roomPeerId:${existingRoomUuid}`,
+          0,
+          data.peerId,
+        );
+      }
+
+      // Ajoute le peerId dans la nouvelle room
+      await this.client.rPush(`roomPeerId:${data.roomUuid}`, data.peerId);
+
+      // Met à jour la nouvelle roomUuid dans le mapping de peerId
+      await this.client.hSet('roomPeerIdMapping', data.peerId, data.roomUuid);
     } catch (error) {
       console.error('Failed to post peerId:', error);
       throw new InternalServerErrorException('Failed to post peerId to Redis');
