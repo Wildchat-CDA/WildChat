@@ -58,10 +58,6 @@ export class AuthService {
       throw new Error('Identifiants invalides');
     }
 
-    // if (user.role.name !== 'professeur') {
-    //   throw new Error('Utilisateur non autorisé');
-    // }
-
     const isPasswordValid = await argon2.verify(user.password, password);
     if (!isPasswordValid) {
       throw new Error('Identifiants invalides');

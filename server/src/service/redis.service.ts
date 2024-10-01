@@ -88,12 +88,9 @@ export class RedisService implements OnModuleInit {
     roomId: string,
   ): Promise<void> {
     this.checkConnection();
-    console.log('Updating message:', { data, roomId });
     try {
       const key = `room:${roomId}`;
-      console.log('Fetching current messages for key:', key);
       const currentMessages = await this._client.lRange(key, 0, -1);
-      console.log('Current messages:', currentMessages);
 
       if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
@@ -106,7 +103,6 @@ export class RedisService implements OnModuleInit {
 
       const updatedMessage = `${data.name} : ${data.message}`;
       await this._client.lSet(key, data.index, updatedMessage);
-      console.log('Message updated successfully');
     } catch (error) {
       console.error('Failed to update message:', error);
       throw new InternalServerErrorException(

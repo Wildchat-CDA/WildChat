@@ -40,12 +40,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
     this.sendInitialPresenceList(client);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
       this.leaveChannel({ peerID }, client);
