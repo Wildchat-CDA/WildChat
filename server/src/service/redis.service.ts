@@ -127,7 +127,7 @@ export class RedisService {
     }
   }
   public async postPeerIdOnRoom(data: IPeerIdOnRoomPayload) {
-    if (data.peerId.length === 0) {
+    if (data.peerId === null || data.peerId.length === 0) {
       throw new Error('The peerId cannot be empty');
     }
 

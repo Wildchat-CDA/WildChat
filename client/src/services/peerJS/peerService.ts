@@ -1,7 +1,4 @@
 import Peer, { MediaConnection } from 'peerjs';
-import { loadPeerList } from './fetchPeerList';
-import { ISectionChannel } from '../../types/sectionTypes';
-import { loadPeerList } from './fetchPeerList';
 
 export default class PeerService {
   private peer = new Peer();
@@ -58,5 +55,6 @@ export default class PeerService {
     for (let call of this._activeCalls) {
       call.close();
     }
+    this._activeCalls = [];
   }
 }
