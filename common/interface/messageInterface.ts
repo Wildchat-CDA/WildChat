@@ -4,7 +4,10 @@ export interface IMessagePostPayload {
   roomId: string;
 }
 
-export interface IMessageGet extends IMessagePostPayload {}
+export interface IMessageGet extends IMessagePostPayload {
+  id: string;
+  unreadUsers?: string[];
+}
 
 export interface IMessageUpdatePayload extends IMessagePostPayload {
   index: number;
@@ -13,4 +16,9 @@ export interface IMessageUpdatePayload extends IMessagePostPayload {
 export interface IMessageDeletePayload {
   roomId: string;
   index: number | null;
+}
+
+export interface IImportantMessageUpdate {
+  messageId: string;
+  unreadUsers: string[];
 }
