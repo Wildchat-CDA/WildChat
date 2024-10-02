@@ -18,7 +18,10 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const token = Cookies.get('token');
+
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const token = cookie.encoded;
+  //TODO CALL TOKEN DECODED FROM Cookie
   const decoded: any = token && jwtDecode<JwtPayload>(token);
   const date = new Date(decoded?.exp * 1000);
   return token && decoded?.exp * 1000 > new Date().getTime() ? (

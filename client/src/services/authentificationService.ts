@@ -24,6 +24,8 @@
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { Role } from '../../../server/src/entity/role.entity';
 
 // TODO: mettre l'API_URL dans le .env après
 const API_URL = 'http://localhost:3000';
@@ -36,14 +38,31 @@ export const login = async (email: string, password: string) => {
       { withCredentials: true }
     );
 
-      if (response.data.accessToken) {
-        console.log(response, 'response authentification service');
-        Cookies.set('token', response.data.accessToken, {
-          secure: true,
-          sameSite: 'strict',
-        });
-        Cookies.set('user', response.data.id)
-      }
+    if (response.data.accessToken) {
+      console.log(response, 'response authentification service');
+     /* Cookies.set('token', response.data.accessToken, {
+        secure: true,
+        sameSite: 'strict',
+      });*/
+
+      const cookie = {
+        encoded: response.data.accessToken,
+        userInfo: {
+          email: response.data.email,
+          name: response.data.name,
+          role: response.data.role,
+          id: response.data.id,
+        },
+      };
+
+      console.log(cookie, 'COOKIE');
+
+      Cookies.set('token', JSON.stringify(cookie), {
+        secure: true,
+        sameSite: 'strict',
+      });
+//      Cookies.set('user', response.data.id);
+    }
 
     return response.data;
   } catch (error) {
@@ -86,7 +105,7 @@ export const logout = async () => {
     console.error('Erreur lors de la déconnexion côté serveur:', error);
   } finally {
     Cookies.remove('token');
-    Cookies.remove('user')
+    Cookies.remove('user');
   }
 };
 export const isAuthenticated = () => {
