@@ -4,10 +4,9 @@ import './index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthentificationContext';
 
-
 import Cookies from 'js-cookie';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
-import { Route, Routes, Navigate } from 'react-router-dom'; 
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 import { LoginForm } from './components/authentification/Login';
 import { RegisterForm } from './components/authentification/Register';
@@ -15,16 +14,23 @@ import PolitiquePrive from './pages/PolitiquePrive';
 import { MediaProvider } from './context/MediaContext';
 
 
+
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 
 const root = createRoot(rootElement);
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const token = Cookies.get('token');
   const decoded: any = token && jwtDecode<JwtPayload>(token);
   const date = new Date(decoded?.exp * 1000);
-  return (token && decoded?.exp * 1000 > new Date().getTime()) ? <>{children}</> : <Navigate to="/login" replace />;
+  return token && decoded?.exp * 1000 > new Date().getTime() ? (
+    <>{children}</>
+  ) : (
+    <Navigate to='/login' replace />
+  );
 };
 
 root.render(

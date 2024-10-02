@@ -19,7 +19,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
-  app.enableCors();
+  // app.enableCors();
   await app.listen(3000);
 }
 

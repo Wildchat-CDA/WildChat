@@ -2,6 +2,7 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import MediaControls from '../MediaControl/MediaControl';
 import './UserControl.css';
 
+
 interface UserControlProps {
   userId: string;
   firstName: string;

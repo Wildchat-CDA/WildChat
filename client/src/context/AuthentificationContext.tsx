@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { login as loginService, register as registerService } from '../services/authentificationService';
+import Cookies from 'js-cookie';
 
 interface User {
   token: string;
@@ -32,10 +33,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
+    console.log("je passe dans le login")
     setIsLoading(true);
     setError(null);
     try {
       const userData = await loginService(email, password);
+      console.log(userData, "userData ")
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
     } catch (err) {

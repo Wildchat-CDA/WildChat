@@ -15,7 +15,7 @@ export async function LoadMessage(
     const response = await fetch(
       `${apiUrl}/room/${currentChannel ? currentChannel.uuid : ""}`
     );
-
+ console.log(response, "reponse test des messages loadés")
     if (!response.ok) {
       throw new Error(
         `Error: ${response.status} ${response.statusText} while fetching messages from ${response.url}`

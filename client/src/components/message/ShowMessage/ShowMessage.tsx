@@ -14,6 +14,7 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 import { useModal } from '../../../context/ModalContext';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
+import { useAuth } from '../../../context/AuthentificationContext';
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -21,8 +22,9 @@ const ShowMessage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
+  const { user } = useAuth();
 
-  const name = 'Théo'; // TODO Need to use an 
+  const name = user?.name; // TODO Need to use an 
 
 
 

@@ -43,7 +43,6 @@ import { AuthModule } from './auth/auth.module';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
-   
     TypeOrmModule.forFeature([Section, Channel, Type, Config, User]),
     AuthModule,
   ],

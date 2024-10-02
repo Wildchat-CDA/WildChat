@@ -14,27 +14,37 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    
+
     @InjectRepository(Role)
     private roleRepository: Repository<Role>,
     private jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ status: number; message: string; user?: User }> {
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<{ status: number; message: string; user?: User }> {
     const { name, firstName, email, password } = registerDto;
-  
+
     const existingUser = await this.userRepository.findOneBy({ email });
     if (existingUser) {
-      return { status: HttpStatus.CONFLICT, message: 'Cet email est déjà utilisé' };
+      return {
+        status: HttpStatus.CONFLICT,
+        message: 'Cet email est déjà utilisé',
+      };
     }
-   
+
     const hashedPassword = await argon2.hash(password);
-   
-    const professeurRole = await this.roleRepository.findOneBy({ name: 'professeur' });
+
+    const professeurRole = await this.roleRepository.findOneBy({
+      name: 'professeur',
+    });
     if (!professeurRole) {
-      return { status: HttpStatus.BAD_REQUEST, message: 'Le rôle de professeur n\'existe pas' };
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: "Le rôle de professeur n'existe pas",
+      };
     }
-    
+
     const newUser = this.userRepository.create({
       name,
       firstName,
@@ -44,7 +54,11 @@ export class AuthService {
     });
 
     const savedUser = await this.userRepository.save(newUser);
-    return { status: HttpStatus.CREATED, message: 'Compte professeur créé avec succès', user: savedUser };
+    return {
+      status: HttpStatus.CREATED,
+      message: 'Compte professeur créé avec succès',
+      user: savedUser,
+    };
   }
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
@@ -67,9 +81,13 @@ export class AuthService {
       throw new Error('Identifiants invalides');
     }
 
-    const payload = { email: user.email, sub: user.id, roles: [user.role.name] };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      roles: [user.role.name],
+    };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '4h' });
-    
+
     const decodedToken = this.jwtService.decode(accessToken) as { exp: number };
     const expirationDate = new Date(decodedToken.exp * 1000);
 
@@ -79,7 +97,7 @@ export class AuthService {
       firstName: user.firstName,
       email: user.email,
       role: user.role.name,
-      
+
       expiration: expirationDate.toISOString(),
       accessToken: accessToken,
     };
