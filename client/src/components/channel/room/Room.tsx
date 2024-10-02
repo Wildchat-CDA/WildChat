@@ -34,7 +34,7 @@ function Room({
 }: IRoomProps) {
   // const { socketRef, myPeerID, setChannelUUID } = useAudio();
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
-  const [peerList, setPeerList] = useState([]);
+  const [peerList, setPeerList] = useState<string[]>([]);
 
   const handleRoom = (room: IChannel) => {
     affectedCurrentSection(room);
@@ -76,7 +76,10 @@ function Room({
 
   useEffect(() => {
     console.log('je passe dans room');
-    loadPeerList(currentSection).then((result) => setPeerList(result));
+    loadPeerList(currentSection).then((result) => {
+      console.log('result : ', result);
+      setPeerList(result);
+    });
   }, [currentSection]);
 
   return (
@@ -99,7 +102,7 @@ function Room({
               {vocalChannelPosition === room.uuid && (
                 <>
                   {' '}
-                  <UserIcons peerList={peerList} />
+                  <UserIcons peerList={peerList} setPeerList={setPeerList} />
                   <AudioCall currentSection={currentSection} />
                 </>
               )}

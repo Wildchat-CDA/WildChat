@@ -17,12 +17,7 @@ import {
   IMessageGet,
   IMessageUpdatePayload,
 } from '../../../common/interface/messageInterface';
-import { User } from 'src/entity/user.entity';
-
-export interface IPeerIdOnRoomPayload {
-  peerId: string;
-  roomUuid: string;
-}
+import { IPeerIdOnRoomPayload } from '../../../common/interface/redisInterface';
 
 @Injectable()
 export class RedisService implements OnModuleInit {
@@ -49,15 +44,16 @@ export class RedisService implements OnModuleInit {
   }
 
   public async deletePeerIdUser(data: IPeerIdOnRoomPayload) {
-    if (data.peerId.length === 0) {
+    if (data.peerId === null || data.peerId.length === 0) {
       throw new Error('Le peerId ne peut pas être vide');
     }
 
     try {
+      const peerData = `${data.peerId}:${data.name}`;
       const result = await this.client.lRem(
         `roomPeerId:${data.roomUuid}`,
         0,
-        `${data.peerId}`,
+        peerData,
       );
 
       if (result === 0) {
@@ -150,7 +146,10 @@ export class RedisService implements OnModuleInit {
       }
 
       // Ajoute le peerId dans la nouvelle room
-      await this.client.rPush(`roomPeerId:${data.roomUuid}`, data.peerId);
+      await this.client.rPush(
+        `roomPeerId:${data.roomUuid}`,
+        `${data.peerId}:${data.name}`,
+      );
 
       // Met à jour la nouvelle roomUuid dans le mapping de peerId
       await this.client.hSet('roomPeerIdMapping', data.peerId, data.roomUuid);

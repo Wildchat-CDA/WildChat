@@ -93,27 +93,29 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
 
-  @SubscribeMessage('join-channel')
+  @SubscribeMessage('join-room')
   async joinChannel(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { peerId: string; roomUuid: string },
+    @MessageBody() data: { peerId: string; roomUuid: string; name: string },
   ) {
     client.join(data.roomUuid);
     console.log('data join channel : ', data);
-    this.roomService.addUserOnRoom(data.peerId, data.roomUuid);
-    this.server.to(data.roomUuid).emit('join-channel', {
+    this.roomService.addUserOnRoom(data);
+    this.server.to(data.roomUuid).emit('join-room', {
       peerId: data.peerId,
+      name: data.name,
     });
   }
 
-  @SubscribeMessage('leave-channel')
+  @SubscribeMessage('leave-room')
   async leaveChannel(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { peerId: string; roomUuid: string },
+    @MessageBody() data: { peerId: string; roomUuid: string; name: string },
   ) {
     console.log('data leave : ', data);
-    this.server.to(data.roomUuid).emit('leave-channel', {
+    this.server.to(data.roomUuid).emit('leave-room', {
       peerId: data.peerId,
+      name: data.name,
     });
 
     client.leave(data.roomUuid);

@@ -7,16 +7,21 @@ export function AudioCall({ currentSection }) {
   const [peerList, setPeerList] = useState<string[]>([]); // État contenant la liste des peerId (chaînes) des utilisateurs connectés.
   const audiosRef = useRef<any>([]); // Référence pour stocker les références d'éléments audio distants pour chaque peer.
   const peerManagerRef = useRef(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
+  const name = 'Théo'; //TODO Recuperer le nom avec le context
 
   useEffect(() => {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.
-    loadPeerList(currentSection).then((result) => setPeerList(result));
+    loadPeerList(currentSection).then((result) => {
+      console.log('result AUDIO : ', result);
+      setPeerList(result);
+    });
 
     // Si le peerId est défini, envoie un événement au serveur via socket.io pour indiquer que cet utilisateur rejoint la channel (salle) spécifiée.
     if (peerService.peerId) {
-      webSocketService.emit('join-channel', {
+      webSocketService.emit('join-room', {
         peerId: peerService.peerId,
         roomUuid: currentSection.uuid,
+        name: name,
       });
     }
 
@@ -35,15 +40,16 @@ export function AudioCall({ currentSection }) {
     };
 
     // Écoute les événements "join-channel" et "leave-channel" envoyés par le serveur pour gérer l'ajout et la suppression des peers dans la salle.
-    webSocketService.on('leave-channel', leaveChannel);
-    webSocketService.on('join-channel', joinChannel);
+    webSocketService.on('leave-room', leaveChannel);
+    webSocketService.on('join-room', joinChannel);
 
     // Cleanup lors du démontage du composant (comme quand l'utilisateur quitte la section) :
     return () => {
-      webSocketService.off('join-channel', joinChannel);
-      webSocketService.emit('leave-channel', {
+      webSocketService.off('join-room', joinChannel);
+      webSocketService.emit('leave-room', {
         peerId: peerService.peerId,
         roomUuid: currentSection.uuid,
+        name: name,
       });
       peerService.closeCalls(); // Ferme toutes les connexions PeerJS en cours.
     };
