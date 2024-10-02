@@ -17,6 +17,7 @@ import {
   IMessageGet,
   IMessageUpdatePayload,
 } from '../../../common/interface/messageInterface';
+import { User } from 'src/entity/user.entity';
 
 @Injectable()
 export class RedisService implements OnModuleInit {
@@ -87,12 +88,9 @@ export class RedisService implements OnModuleInit {
     roomId: string,
   ): Promise<void> {
     this.checkConnection();
-    console.log('Updating message:', { data, roomId });
     try {
       const key = `room:${roomId}`;
-      console.log('Fetching current messages for key:', key);
       const currentMessages = await this._client.lRange(key, 0, -1);
-      console.log('Current messages:', currentMessages);
 
       if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
@@ -105,7 +103,6 @@ export class RedisService implements OnModuleInit {
 
       const updatedMessage = `${data.name} : ${data.message}`;
       await this._client.lSet(key, data.index, updatedMessage);
-      console.log('Message updated successfully');
     } catch (error) {
       console.error('Failed to update message:', error);
       throw new InternalServerErrorException(
@@ -182,5 +179,43 @@ export class RedisService implements OnModuleInit {
       ...formatHands(selfHands, 'self'),
       ...formatHands(tableHands, 'table'),
     ];
+  }
+
+
+
+  public async setUserPresence(userId: string, status: 'online' | 'offline'): Promise<void> {
+    try {
+      await this._client.set(`presence:${userId}`, status);
+    } catch (error) {
+      console.error('Failed to set user presence:', error);
+      throw new InternalServerErrorException('Failed to set user presence in Redis');
+    }
+  }
+
+  public async getUserPresence(userId: string): Promise<string> {
+    try {
+      const status = await this._client.get(`presence:${userId}`);
+      return status || 'offline';
+    } catch (error) {
+      console.error('Failed to get user presence:', error);
+      throw new InternalServerErrorException('Failed to get user presence from Redis');
+    }
+  }
+
+  public async getAllUserPresences(): Promise<Record<string, string>> {
+    try {
+      const keys = await this._client.keys('presence:*');
+      const presences = await Promise.all(
+        keys.map(async (key) => {
+          const userId = key.split(':')[1];
+          const status = await this._client.get(key);
+          return [userId, status];
+        })
+      );
+      return Object.fromEntries(presences);
+    } catch (error) {
+      console.error('Failed to get all user presences:', error);
+      throw new InternalServerErrorException('Failed to get all user presences from Redis');
+    }
   }
 }

@@ -3,15 +3,13 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthentificationContext';
-
-
 import Cookies from 'js-cookie';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 import { Route, Routes, Navigate } from 'react-router-dom'; 
-
 import { LoginForm } from './components/authentification/Login';
 import { RegisterForm } from './components/authentification/Register';
 import PolitiquePrive from './pages/PolitiquePrive';
+import CGU from './pages/CGU';
 import { MediaProvider } from './context/MediaContext';
 
 
@@ -34,6 +32,7 @@ root.render(
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/politique_prive" element={<PolitiquePrive />} />
+        <Route path="/CGU" element={<CGU />} />
         <Route path="/" element={
           <ProtectedRoute>
             <MediaProvider>

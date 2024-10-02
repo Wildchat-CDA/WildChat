@@ -1,0 +1,73 @@
+.presence-list {
+  background-color: #2c2c2c;
+  color: white;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  font-family: "Nunito", sans-serif;
+
+}
+
+.presence-list span {
+  margin-top: 0;
+  font-size: 21px;
+  font-family: Roboto, sans-serif;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+.presence-list ul {
+  padding: 0;
+  list-style-type: none;
+  margin-bottom: 30px;
+}
+
+.presence-list li {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+  color: white;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+
+.presence-list li::before {
+  content: "•";
+  font-size: 24px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 0;
+}
+
+.studentOffline li::before {
+  color: red;
+}
+
+.studentOnline li::before {
+  color: #35a554;
+}
+
+.connected span {
+  color: #fbfbfb;
+}
+
+.disconnected span {
+  color: #fffefe;
+}
+
+details > summary {
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
