@@ -1,7 +1,5 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom'; 
-import { LoginForm } from './components/authentification/Login';
-import { RegisterForm } from './components/authentification/Register';
 import MainContent from './components/common/mainContent/MainContent';
 import { HandRaiseProvider } from './context/HandRaiseContext';
 import { UserRoleProvider } from './context/UserRoleContext';
@@ -10,8 +8,6 @@ import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
 import { ModalProvider } from './context/ModalContext';
 import { AudioProvider } from './context/AudioContext';
-import PolitiquePrive from './pages/PolitiquePrive';
-import PlitiqueCgu from './pages/PlitiqueCgu';
 import Cookies from 'js-cookie';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 

@@ -119,6 +119,14 @@ function Navbar({ isMobile }: NavbarProps) {
             isActive={isMicrophoneOn}
             ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
           />
+
+          <IconButton
+            icon='add-new.png'
+            text='Ajouter un élève'
+            onClick={() => handleComponent(ContentSideBarEnum.AddStudent)}
+            ariaLabel="Ajouter un élève"
+          />
+
         </>
       );
     } else {
@@ -185,3 +193,5 @@ function Navbar({ isMobile }: NavbarProps) {
 }
 
 export default Navbar;
+
+

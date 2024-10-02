@@ -12,7 +12,6 @@ import PolitiquePrive from './pages/PolitiquePrive';
 import CGU from './pages/CGU';
 import { MediaProvider } from './context/MediaContext';
 
-
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 

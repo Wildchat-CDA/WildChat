@@ -3,6 +3,10 @@ import './ContentSidebar.css';
 import Setting from '../../../UserControlSettings/UserControlSettings';
 import ContentSideBarWrapper from './ContentSideBarWrapper';
 import { useNavigation } from '../../../../context/NavigationContext';
+import AddStudentsPage from '../../../../pages/studentAccount/AddStudentPage';
+import StudentForm from '../../../../pages/studentAccount/StudentForm';
+
+
 
 function ContentSidebar() {
   const { activeContentSideBar } = useNavigation();

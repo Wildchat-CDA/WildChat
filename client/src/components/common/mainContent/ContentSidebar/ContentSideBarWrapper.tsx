@@ -6,6 +6,7 @@ import {
 import SectionPage from '../../../../pages/sectionPage/SectionPage';
 import RaisedHandsList from '../../../teacher/RaisedHandList/RaisedHandsList';
 import PresenceList from '../../../teacher/PresenceList/PresenceList';
+import AddStudentsPage from '../../../../pages/studentAccount/AddStudentPage';
 
 interface ContentSideBarWrapperProps {
   activeContentSideBar: ActiveSideBarType;
@@ -30,6 +31,9 @@ function ContentSideBarWrapper({
     case ContentSideBarEnum.RaisedHand:
       content = <RaisedHandsList />;
       break;
+    case ContentSideBarEnum.AddStudent:
+      content = <AddStudentsPage />;
+      break;  
   }
 
   return <ContentSideBarActive>{content}</ContentSideBarActive>;
