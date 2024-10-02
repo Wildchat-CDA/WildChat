@@ -7,7 +7,8 @@ export const useAvatar = (userId: string) => {
     lastName: string;
     isLoading: boolean;
     error: string | null;
-  }>({
+  }>
+    ({
     avatarUrl: "/icons/avatar.png",
     firstName: "Théo",
     lastName: "Doré",

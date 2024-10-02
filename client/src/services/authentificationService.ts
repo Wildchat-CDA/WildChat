@@ -105,7 +105,7 @@ export const logout = async () => {
     console.error('Erreur lors de la déconnexion côté serveur:', error);
   } finally {
     Cookies.remove('token');
-    Cookies.remove('user');
+   
   }
 };
 export const isAuthenticated = () => {

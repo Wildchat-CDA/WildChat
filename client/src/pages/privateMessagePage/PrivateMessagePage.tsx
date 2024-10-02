@@ -1,43 +1,26 @@
 import { useEffect, useState } from 'react';
 import './PrivateMessagePage.css';
-
 import { fetchGetUser } from '../../services/user/fetch/FetchGetUser';
 import { useNavigation } from '../../context/NavigationContext';
 import { fetchPrivateChannel } from '../../services/channel/fetch/FetchPrivateChannel';
-import { useAuth } from '../../context/AuthentificationContext';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
 
-
-
-
+interface Student {
+  id: number;
+  name: string;
+}
 
 function PrivateMessagePage() {
   const [students, setStudents] = useState([]);
   const { setActiveContentMainComp, currentSection, setCurrentSection } =
     useNavigation();
-  const { user } = useAuth();
 
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const userId: number = parseInt(cookie.userInfo.id, 10);
 
-  const token = jwtDecode(Cookies.get('token') as string); 
-  console.log(token, 'token');
+  console.log(userId, 'id dans privateMessage');
 
-  // console.log(localStorage.getItem('user'), "user localstorage")
-  console.log(Cookies.get('user'), "cookie tentative desesperee");
-  
-  
-  
-  console.log(user , "utilisateur connecté")
-  // const userId = user?.id;
-const userId = parseInt(Cookies.get('user'), 10) ;
-
-  console.log(typeof userId, "userId contexte")
-  
-  const studentsList = students.filter(user => user.id !== userId);
-
-  console.log(studentsList, "students");
-
-  
+  const studentsList = students.filter((user: Student) => user.id !== userId);
 
   useEffect(() => {
     try {
@@ -50,9 +33,8 @@ const userId = parseInt(Cookies.get('user'), 10) ;
     }
   }, []);
 
-  function handleClick(targetUser) {
+  function handleClick(targetUser: number) {
     setActiveContentMainComp(true);
-   
 
     try {
       fetchPrivateChannel(userId, targetUser).then((data) => {
@@ -68,7 +50,7 @@ const userId = parseInt(Cookies.get('user'), 10) ;
     <div className='privateMessagePage-container'>
       <h1>Messages privés</h1>
       <div className='list-student-wrapper'>
-        {studentsList.map((student, i) => (
+        {studentsList.map((student: Student, i: number) => (
           <div className='student-wrapper' key={i}>
             <p>{student.name}</p>
             <button type='submit' onClick={() => handleClick(student.id)}>

@@ -4,17 +4,20 @@ import socket from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
 import { useNavigation } from '../../../context/NavigationContext';
-import { useAuth } from '../../../context/AuthentificationContext';
+// import { useAuth } from '../../../context/AuthentificationContext';
 import Cookies from 'js-cookie';
 
 const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const { user } = useAuth();
-  const name = user?.name; // TODO: Use context for user
+  // const { user } = useAuth();
+  // const name = user?.name; // TODO: Use context for user
   const { currentSection } = useNavigation();
 
-  const userId = parseInt(Cookies.get('user'), 10);
+
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const name = cookie.userInfo.name;
+ 
 
   const adjustHeight = () => {
     if (textAreaRef.current) {

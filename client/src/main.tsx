@@ -13,8 +13,6 @@ import { RegisterForm } from './components/authentification/Register';
 import PolitiquePrive from './pages/PolitiquePrive';
 import { MediaProvider } from './context/MediaContext';
 
-
-
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 
@@ -23,7 +21,16 @@ const root = createRoot(rootElement);
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const token = Cookies.get('token');
+  console.log(Cookies.get('token'), 'COOKIE MAIN');
+
+  if (!Cookies.get('token')) {
+    return <Navigate to='/login' replace />;
+  }
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const token = cookie.encoded;
+
+  console.log(token, 'token dans main');
+
   const decoded: any = token && jwtDecode<JwtPayload>(token);
   const date = new Date(decoded?.exp * 1000);
   return token && decoded?.exp * 1000 > new Date().getTime() ? (
@@ -37,16 +44,19 @@ root.render(
   <BrowserRouter>
     <AuthProvider>
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/politique_prive" element={<PolitiquePrive />} />
-        <Route path="/" element={
-          <ProtectedRoute>
-            <MediaProvider>
-              <App />
-            </MediaProvider>
-          </ProtectedRoute>
-        } />
+        <Route path='/login' element={<LoginForm />} />
+        <Route path='/register' element={<RegisterForm />} />
+        <Route path='/politique_prive' element={<PolitiquePrive />} />
+        <Route
+          path='/'
+          element={
+            <ProtectedRoute>
+              <MediaProvider>
+                <App />
+              </MediaProvider>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </AuthProvider>
   </BrowserRouter>

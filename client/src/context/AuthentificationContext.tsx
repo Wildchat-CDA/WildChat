@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { login as loginService, register as registerService } from '../services/authentificationService';
-import Cookies from 'js-cookie';
+
 
 interface User {
   token: string;

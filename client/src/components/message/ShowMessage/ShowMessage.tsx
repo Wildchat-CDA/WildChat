@@ -14,7 +14,8 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 import { useModal } from '../../../context/ModalContext';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
-import { useAuth } from '../../../context/AuthentificationContext';
+import Cookies from 'js-cookie';
+
 
 const ShowMessage: React.FC = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
@@ -22,9 +23,12 @@ const ShowMessage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-  const { user } = useAuth();
+  
 
-  const name = user?.name; // TODO Need to use an 
+ const cookie = JSON.parse(Cookies.get('token') as string);
+  const name = cookie.userInfo.name;
+  
+  
 
 
 
@@ -66,7 +70,7 @@ const ShowMessage: React.FC = () => {
       messageIndex: index,
       currentMessage: message,
     }));
-    console.log(currentSection,"fonction suppression")
+   
   };
 
   // Update message in message Array
@@ -94,7 +98,7 @@ const ShowMessage: React.FC = () => {
             <span className='name'>{message.name} </span>
             {currentIndex === index &&
             activeEdit === true &&
-            name == message.name ? (
+            name ===  message.name ? (
               <MessageEditor
                 name={message.name}
                 message={message.message}

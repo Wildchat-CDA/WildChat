@@ -4,6 +4,7 @@ import { editMessage } from '../../../services/message/fetch/EditMessage';
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';
 
+
 const MessageEditor: React.FC<IMessageUpdateProps> = ({
   name,
   message,
@@ -19,6 +20,7 @@ const MessageEditor: React.FC<IMessageUpdateProps> = ({
     setActiveEdit(false);
   };
 
+  
   const handleSaveClick = async () => {
     if (newMessage.length === 0) {
       setError('Message cannot be empty');
