@@ -2,11 +2,23 @@ import { useEffect, useRef, useState } from 'react';
 import { peerService } from '../../services/peerJS/peerService';
 import { webSocketService } from '../../services/webSocketService';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
+import { ISectionChannel } from '../../types/sectionTypes';
 
-export function AudioCall({ currentSection }) {
+interface IAudioProps {
+  currentSection: ISectionChannel;
+}
+
+interface IAudioRef {
+  peerId: string;
+  audioRef: HTMLAudioElement | null;
+}
+
+import { IPeerIdOnRoomPayload } from '../../../../common/interface/redisInterface';
+
+export function AudioCall({ currentSection }: IAudioProps) {
   const [peerList, setPeerList] = useState<string[]>([]); // État contenant la liste des peerId (chaînes) des utilisateurs connectés.
-  const audiosRef = useRef<any>([]); // Référence pour stocker les références d'éléments audio distants pour chaque peer.
-  const peerManagerRef = useRef(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
+  const audiosRef = useRef<IAudioRef[]>([]); // Référence pour stocker les références d'éléments audio distants pour chaque peer.
+  const peerManagerRef = useRef<boolean>(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
   const name = 'Théo'; //TODO Recuperer le nom avec le context
 
   useEffect(() => {
@@ -26,14 +38,14 @@ export function AudioCall({ currentSection }) {
     }
 
     // Quand un nouvel utilisateur rejoint la salle, on l'ajoute à la peerList.
-    const joinChannel = (data) => {
+    const joinChannel = (data: IPeerIdOnRoomPayload) => {
       // TODO : Ajouter une vérification pour éviter d'ajouter son propre peerId à la liste.
       peerManagerRef.current = true; // Marque qu'un nouveau peer a été ajouté.
       setPeerList((prevState) => [...prevState, data.peerId]); // Ajoute le peerId reçu à la liste des peers.
     };
 
     // Quand un utilisateur quitte la salle, on le retire de la peerList.
-    const leaveChannel = (data) => {
+    const leaveChannel = (data: IPeerIdOnRoomPayload) => {
       setPeerList(
         (prevState) => prevState.filter((peerId) => peerId !== data.peerId) // Filtre et supprime le peerId de l'utilisateur qui a quitté.
       );
