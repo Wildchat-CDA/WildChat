@@ -44,10 +44,10 @@ form {
 }
 
 .removeStudent-form button {
-  background-color: #35A554;
+  background-color: red;
   color: white;
   font-size: 12px;
-  width: 20%;
+  width: 30%;
   height: 30px;
   border-radius: 20px;
   margin-bottom: 40px;
@@ -56,7 +56,7 @@ form {
 }
 
 .removeStudent-form button:hover {
-  background-color: #C9302C;
+  background-color: #35A554;
 }
 
 .AddStudentBTN {
