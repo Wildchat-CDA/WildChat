@@ -5,11 +5,14 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Role } from './role.entity';
 import { Channel } from './channel.entity';
 
 @Entity()
+@Unique(['email']) 
+
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,7 +30,7 @@ export class User {
   password: string;
 
   @ManyToOne(() => Role, (role) => role.users)
-  role: Role[];
+  role: Role;
 
   @ManyToMany(() => Channel)
   @JoinTable()

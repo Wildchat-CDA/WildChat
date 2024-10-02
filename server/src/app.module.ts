@@ -25,6 +25,7 @@ import { RoomController } from './controller/room.controller';
 import { RoomService } from './service/room.service';
 import { UserController } from './controller/user.controller';
 import { UserService } from './service/user.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -42,32 +43,31 @@ import { UserService } from './service/user.service';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
+   
     TypeOrmModule.forFeature([Section, Channel, Type, Config, User]),
+    AuthModule,
   ],
   controllers: [
     AppController,
-    RedisController,
-    SectionController,
     ChannelController,
-    TypeController,
     ConfigController,
-    RedisController,
     RaisedHandsController,
+    RedisController,
     RoomController,
     UserController,
+    SectionController,
+    TypeController,
   ],
   providers: [
     AppService,
-    ChatGateway,
-    RedisService,
-    SectionService,
     ChannelService,
-    TypeService,
-    ConfigService,
     ChatGateway,
+    ConfigService,
     RedisService,
     RoomService,
     UserService,
+    SectionService,
+    TypeService,
   ],
 })
 export class AppModule {}
