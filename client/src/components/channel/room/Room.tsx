@@ -13,6 +13,7 @@ import { JoinChannelResponse } from '../../../types/audioTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { AudioCall } from '../../audio/AudioCall';
 import { useEffect, useState } from 'react';
+import { loadPeerList } from '../../../services/peerJS/fetchPeerList';
 
 interface IRoomProps {
   section: ISection;
@@ -33,6 +34,7 @@ function Room({
 }: IRoomProps) {
   // const { socketRef, myPeerID, setChannelUUID } = useAudio();
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
+  const [peerList, setPeerList] = useState([]);
 
   const handleRoom = (room: IChannel) => {
     affectedCurrentSection(room);
@@ -74,6 +76,7 @@ function Room({
 
   useEffect(() => {
     console.log('je passe dans room');
+    loadPeerList(currentSection).then((result) => setPeerList(result));
   }, [currentSection]);
 
   return (
@@ -96,7 +99,7 @@ function Room({
               {vocalChannelPosition === room.uuid && (
                 <>
                   {' '}
-                  <UserIcons />
+                  <UserIcons peerList={peerList} />
                   <AudioCall currentSection={currentSection} />
                 </>
               )}

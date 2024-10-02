@@ -9,10 +9,10 @@ const testUserArray = [
   { name: 'Pop' },
 ];
 
-const UserIcons = ({ users = testUserArray }) => {
+const UserIcons = ({ peerList }) => {
   return (
     <div className='users-list_container'>
-      {users.map((user, index) => {
+      {peerList.map((el, index) => {
         return (
           <li key={index} className='user-icon_list'>
             <div className='user-icon_container'>
@@ -22,7 +22,7 @@ const UserIcons = ({ users = testUserArray }) => {
                 className='user-icon'
               />
             </div>
-            <div className='user-name'> {user.name}</div>
+            <div className='user-name'> {el}</div>
           </li>
         );
       })}
