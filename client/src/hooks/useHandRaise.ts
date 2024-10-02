@@ -1,44 +1,55 @@
-import { useState, useEffect, useCallback } from "react";
-import { useHandRaise as useHandRaiseContext } from "../context/HandRaiseContext";
+import { useState, useEffect, useCallback } from 'react';
+import { webSocketService } from '../services/webSocketService';
+
+interface HandRaiseData {
+  userId: number;
+  userName: string;
+  type: 'self' | 'table';
+  table: string;
+  timestamp: number;
+}
 
 const useHandRaise = (userId: number, userName: string, table: string) => {
-  const { raisedHands, raiseHand, lowerHand } = useHandRaiseContext();
-  const [isHandRaised, setIsHandRaised] = useState<{
-    self: boolean;
-    table: boolean;
-  }>({ self: false, table: false });
+  const [raisedHands, setRaisedHands] = useState<HandRaiseData[]>([]);
+  const [isHandRaised, setIsHandRaised] = useState({
+    self: false,
+    table: false,
+  });
+
+  const raiseHand = useCallback(
+    (type: 'self' | 'table') => {
+      webSocketService.emit('raiseHand', { userId, userName, type, table });
+    },
+    [userId, userName, table]
+  );
+
+  const lowerHand = useCallback(
+    (type: 'self' | 'table') => {
+      webSocketService.emit('lowerHand', { userId, type });
+    },
+    [userId]
+  );
 
   useEffect(() => {
-    setIsHandRaised({
-      self: raisedHands.some(
-        (hand) => hand.userId === userId && hand.type === "self"
-      ),
-      table: raisedHands.some(
-        (hand) => hand.userId === userId && hand.type === "table"
-      ),
-    });
-  }, [raisedHands, userId]);
+    const handleRaisedHandsUpdate = (data: HandRaiseData[]) => {
+      setRaisedHands(data);
+      const userHands = data.filter((hand) => hand.userId === userId);
+      setIsHandRaised({
+        self: userHands.some((hand) => hand.type === 'self'),
+        table: userHands.some((hand) => hand.type === 'table'),
+      });
+    };
 
-  const raiseHandCallback = useCallback(
-    (type: "self" | "table") => {
-      raiseHand(userId, userName, type, table);
-    },
-    [userId, userName, table, raiseHand]
-  );
+    webSocketService.connect();
+    webSocketService.on('raisedHandsUpdate', handleRaisedHandsUpdate);
+    webSocketService.emit('getRaisedHands');
 
-  const lowerHandCallback = useCallback(
-    (type: "self" | "table") => {
-      lowerHand(userId, type);
-    },
-    [userId, lowerHand]
-  );
+    return () => {
+      webSocketService.off('raisedHandsUpdate', handleRaisedHandsUpdate);
+    };
+  }, [userId]);
 
-  return {
-    raisedHands,
-    isHandRaised,
-    raiseHand: raiseHandCallback,
-    lowerHand: lowerHandCallback,
-  };
+  return { raisedHands, isHandRaised, raiseHand, lowerHand };
 };
 
 export default useHandRaise;

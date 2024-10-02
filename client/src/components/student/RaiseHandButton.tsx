@@ -1,44 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
 import useHandRaise from '../../hooks/useHandRaise';
 
 interface RaiseHandButtonProps {
   studentId: number;
   studentName: string;
-  table: number;
+  table: string
 }
 
 function RaiseHandButton({ studentId, studentName, table }: RaiseHandButtonProps) {
   const { isHandRaised, raiseHand, lowerHand } = useHandRaise(studentId, studentName, table);
-  const [raisedForSelf, setRaisedForSelf] = useState(isHandRaised.self);
-  const [raisedForTable, setRaisedForTable] = useState(isHandRaised.table);
 
   const handleRaiseHandSelf = () => {
-    const newState = !raisedForSelf;
-    setRaisedForSelf(newState);
-    if (newState) {
-      raiseHand('self');
-    } else {
+    if (isHandRaised.self) {
       lowerHand('self');
+    } else {
+      raiseHand('self');
     }
   };
 
   const handleRaiseHandTable = () => {
-    const newState = !raisedForTable;
-    setRaisedForTable(newState);
-    if (newState) {
-      raiseHand('table');
-    } else {
+    if (isHandRaised.table) {
       lowerHand('table');
+    } else {
+      raiseHand('table');
     }
   };
 
   return (
     <div>
       <button onClick={handleRaiseHandSelf}>
-        {raisedForSelf ? 'Baisser la main pour soi' : 'Lever la main pour soi'}
+        {isHandRaised.self ? 'Baisser la main pour soi' : 'Lever la main pour soi'}
       </button>
       <button onClick={handleRaiseHandTable}>
-        {raisedForTable ? 'Baisser la main pour la table' : 'Lever la main pour la table'}
+        {isHandRaised.table ? 'Baisser la main pour la table' : 'Lever la main pour la table'}
       </button>
     </div>
   );

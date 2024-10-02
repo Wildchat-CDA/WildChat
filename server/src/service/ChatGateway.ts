@@ -1,17 +1,17 @@
 import {
-  MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  SubscribeMessage,
+  MessageBody,
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { StudentService } from './student.service';
+import { PresenceSimulatorService } from './presence-simulator.service';
 import { RedisService } from './redis.service';
 import { IMessagePostPayload } from '../../../common/interface/messageInterface';
-// import { RoomService } from './roomOld/room.service';
 import { RoomService } from './room.service';
 
 interface HandRaiseData {
@@ -22,32 +22,28 @@ interface HandRaiseData {
   timestamp: number;
 }
 
-@WebSocketGateway({
-  cors: true,
-})
-export class ChatGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
-  @WebSocketServer()
-  server: Server;
+@WebSocketGateway({ cors: true })
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer() server: Server;
 
   private socketToPeerMap = new Map<string, string>();
 
   constructor(
+    private readonly studentService: StudentService,
+    private readonly presenceSimulatorService: PresenceSimulatorService,
     private readonly redisService: RedisService,
     private readonly roomService: RoomService,
-  ) {}
-
-  afterInit() {
-    console.log('WebSocket server initialized');
+  ) {
+    this.presenceSimulatorService.onPresenceUpdate((updatedStudent) => {
+      this.server.emit('presenceUpdate', updatedStudent);
+    });
   }
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    this.sendInitialPresenceList(client);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
       // this.leaveChannel({ peerID }, client);
@@ -55,18 +51,30 @@ export class ChatGateway
     }
   }
 
+  @SubscribeMessage('getPresence')
+  handleGetPresence(client: Socket) {
+    this.sendInitialPresenceList(client);
+  }
+
+  private sendInitialPresenceList(client: Socket) {
+    const students = this.studentService.getAllStudents();
+    const presenceList = students.map((student) => ({
+      id: student.id,
+      name: student.name,
+      firstName: student.firstName,
+      status: student.onLine ? 'online' : 'offline',
+    }));
+    client.emit('initialPresence', presenceList);
+  }
+
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() data: IMessagePostPayload) {
-    console.log(data, 'Message received');
     await this.redisService.postMessage(data);
     this.server.emit('message', data);
   }
 
   @SubscribeMessage('raiseHand')
-  async handleRaiseHand(
-    @MessageBody()
-    data: Omit<HandRaiseData, 'timestamp'>,
-  ) {
+  async handleRaiseHand(@MessageBody() data: Omit<HandRaiseData, 'timestamp'>) {
     const handRaiseData: HandRaiseData = {
       ...data,
       timestamp: Date.now(),

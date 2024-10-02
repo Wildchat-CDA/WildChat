@@ -1,19 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom'; 
+import { LoginForm } from './components/authentification/Login';
+import { RegisterForm } from './components/authentification/Register';
+import MainContent from './components/common/mainContent/MainContent';
 import { HandRaiseProvider } from './context/HandRaiseContext';
 import { UserRoleProvider } from './context/UserRoleContext';
 import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
 import { ModalProvider } from './context/ModalContext';
-import MainContent from './components/common/mainContent/MainContent';
 import { AudioProvider } from './context/AudioContext';
+import PolitiquePrive from './pages/PolitiquePrive';
+import PlitiqueCgu from './pages/PlitiqueCgu';
+import Cookies from 'js-cookie';
+import { JwtPayload, jwtDecode } from 'jwt-decode';
 
-function App() {
-  const [screenSize, setScreenSize] = useState(window.innerWidth);
-  const [muted, setMuted] = useState(true);
 
-  useEffect(() => {
+
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const token = Cookies.get('token');
+  const decoded: any = token && jwtDecode<JwtPayload>(token);
+  const date = new Date(decoded?.exp * 1000);
+  return (token && decoded?.exp * 1000 > new Date().getTime()) ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+const App: React.FC = () => {
+  const [screenSize, setScreenSize] = React.useState(window.innerWidth);
+  const [muted, setMuted] = React.useState(true);
+
+  React.useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -42,8 +57,7 @@ function App() {
     </UserRoleProvider>
     // {/* </AudioProvider> */}
   );
-}
+};
 
 export default App;
 
-//get(:id/)

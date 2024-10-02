@@ -73,3 +73,6 @@ export default class PeerService {
     this._activeCalls = []; // Réinitialise la liste des appels actifs une fois fermés.
   }
 }
+
+const peerService = new PeerService();
+export { peerService };

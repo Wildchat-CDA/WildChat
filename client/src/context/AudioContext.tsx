@@ -9,7 +9,10 @@ import Peer, { MediaConnection } from 'peerjs';
 import io, { Socket } from 'socket.io-client';
 import { User, ChannelInfo, JoinChannelResponse } from '../types/audioTypes';
 
-const SOCKET_SERVER = 'http://localhost:3000';
+
+const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+
+const SOCKET_SERVER = apiUrl; 
 
 export const AudioContext = createContext<any>(null);
 
@@ -45,6 +48,11 @@ export const AudioProvider: React.FunctionComponent<{
         setMyPeerID(peerID);
 
         socketRef.current = io(SOCKET_SERVER);
+        
+        
+        socketRef.current.emit('join-channel', { peerID }, (response: JoinChannelResponse) => {
+          setChannelUUID(response.channelUUID);
+        });
 
         socketRef.current.emit(
           'join-channel',

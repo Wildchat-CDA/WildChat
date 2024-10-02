@@ -1,6 +1,6 @@
 import './ContentSidebar.css';
 
-import Setting from '../../../setting/Setting';
+import Setting from '../../../UserControlSettings/UserControlSettings';
 import ContentSideBarWrapper from './ContentSideBarWrapper';
 import { useNavigation } from '../../../../context/NavigationContext';
 

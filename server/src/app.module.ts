@@ -1,32 +1,40 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Role } from './entity/role.entity';
-import { User } from './entity/user.entity';
-import { Section } from './entity/section.entity';
-import { Channel } from './entity/channel.entity';
-import { Type } from './entity/type.entity';
-import { Config } from './entity/config.entity';
-import { ConfigModule } from '@nestjs/config';
-import { SectionController } from './controller/section.controller';
+import { AuthModule } from './auth/auth.module';
 import { ChannelController } from './controller/channel.controller';
-import { SectionService } from './service/section.service';
-import { ChannelService } from './service/channel.service';
-import { TypeController } from './controller/type.controller';
-import { TypeService } from './service/type.service';
 import { ConfigController } from './controller/config.controller';
-import { ConfigService } from './service/config.service';
-import { ChatGateway } from './service/ChatGateway';
-import { RedisService } from './service/redis.service';
-import { RedisController } from './controller/redis.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
-// import { RoomController } from './controller/room.controller';
+import { RedisController } from './controller/redis.controller';
+// import { RoomController } from './controller/room.controller'; //TODO Voir avec Sonia
+import { SectionController } from './controller/section.controller';
+import { StudentController } from './controller/student.controller';
+import { TypeController } from './controller/type.controller';
+import { Channel } from './entity/channel.entity';
+import { Config } from './entity/config.entity';
+import { Role } from './entity/role.entity';
+import { Section } from './entity/section.entity';
+import { Type } from './entity/type.entity';
+import { User } from './entity/user.entity';
+import { ChannelService } from './service/channel.service';
+import { ChatGateway } from './service/ChatGateway';
+import { ConfigService } from './service/config.service';
+import { PresenceService } from './service/presence.service';
+import { PresenceSimulatorService } from './service/presence-simulator.service';
+import { RedisService } from './service/redis.service';
 import { RoomService } from './service/room.service';
+import { SectionService } from './service/section.service';
+import { StudentService } from './service/student.service';
+import { TypeService } from './service/type.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -38,29 +46,31 @@ import { RoomService } from './service/room.service';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Section, Channel, Type, Config]),
+    AuthModule,
   ],
   controllers: [
     AppController,
-    RedisController,
-    SectionController,
     ChannelController,
-    TypeController,
     ConfigController,
-    RedisController,
     RaisedHandsController,
-    // RoomController,
+    RedisController,
+    // RoomController, // TODO Voir avec Sonia
+    SectionController,
+    TypeController,
+    StudentController,
   ],
   providers: [
     AppService,
-    ChatGateway,
-    RedisService,
-    SectionService,
     ChannelService,
-    TypeService,
-    ConfigService,
     ChatGateway,
+    ConfigService,
     RedisService,
     RoomService,
+    SectionService,
+    TypeService,
+    PresenceService,
+    StudentService,
+    PresenceSimulatorService,
   ],
 })
 export class AppModule {}

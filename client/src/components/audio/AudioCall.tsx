@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import PeerService from '../../services/peerJS/peerService';
-import socket from '../../services/webSocketService';
+import { peerService } from '../../services/peerJS/peerService';
+import { webSocketService } from '../../services/webSocketService';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
-
-const peerService = new PeerService(); // Initialisation du service PeerJS pour gérer les connexions peer-to-peer.
 
 export function AudioCall({ currentSection }) {
   const [peerList, setPeerList] = useState<string[]>([]); // État contenant la liste des peerId (chaînes) des utilisateurs connectés.
@@ -16,7 +14,7 @@ export function AudioCall({ currentSection }) {
 
     // Si le peerId est défini, envoie un événement au serveur via socket.io pour indiquer que cet utilisateur rejoint la channel (salle) spécifiée.
     if (peerService.peerId) {
-      socket.emit('join-channel', {
+      webSocketService.emit('join-channel', {
         peerId: peerService.peerId,
         roomUuid: currentSection.uuid,
       });
@@ -37,13 +35,13 @@ export function AudioCall({ currentSection }) {
     };
 
     // Écoute les événements "join-channel" et "leave-channel" envoyés par le serveur pour gérer l'ajout et la suppression des peers dans la salle.
-    socket.on('leave-channel', leaveChannel);
-    socket.on('join-channel', joinChannel);
+    webSocketService.on('leave-channel', leaveChannel);
+    webSocketService.on('join-channel', joinChannel);
 
     // Cleanup lors du démontage du composant (comme quand l'utilisateur quitte la section) :
     return () => {
-      socket.off('join-channel', joinChannel);
-      socket.emit('leave-channel', {
+      webSocketService.off('join-channel', joinChannel);
+      webSocketService.emit('leave-channel', {
         peerId: peerService.peerId,
         roomUuid: currentSection.uuid,
       });
