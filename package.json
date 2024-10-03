@@ -9,7 +9,13 @@
     "start:tunnel": "concurrently \"npm start --prefix server\" \"npm run tunnel\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install:all": "npm i && concurrently \"npm i --prefix client\" \"npm i --prefix server\"",
-    "setup": "npm run install:all && cd server && npx ts-node -r tsconfig-paths/register src/database/seed/index.seed.ts"
+    "setup": "npm run install:all && cd server && npx ts-node -r tsconfig-paths/register src/database/seed/index.seed.ts",
+    "db:seed": "cd server && npx ts-node -r tsconfig-paths/register src/database/seed/index.seed.ts",
+    "db:seed:table": "cd server && npx ts-node -r tsconfig-paths/register src/database/seed/index.seed.ts",
+    "db:update": "cd server && npx ts-node -r tsconfig-paths/register src/database/migrate/index.migrate.ts update",
+    "db:update:table": "cd server && npx ts-node -r tsconfig-paths/register src/database/migrate/index.migrate.ts update",
+    "db:clear": "cd server && npx ts-node -r tsconfig-paths/register src/database/migrate/index.migrate.ts clear",
+    "db:clear:table": "cd server && npx ts-node -r tsconfig-paths/register src/database/migrate/index.migrate.ts clear"
   },
   "repository": {
     "type": "git",
