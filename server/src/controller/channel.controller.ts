@@ -80,9 +80,7 @@ export class ChannelController {
   async getChannelsWithConfigPrivate(
     @Req() request: UserIdRequest,
   ): Promise<Channel[]> {
-    console.log(request, 'request ');
     const userId = request['user'].id;
-    console.log(userId, 'userId controller channel');
 
     try {
       return await this.channelService.getChannelsWithConfigPrivate(userId);
@@ -97,7 +95,7 @@ export class ChannelController {
 
   @Post('/private')
   async createPrivateChannel(
-    @Body('id') id: number,
+    @Body('userId') id: number,
     @Body('targetUser') targetUser: number,
   ): Promise<Channel> {
     return await this.channelService.createPrivateChannel(id, targetUser);

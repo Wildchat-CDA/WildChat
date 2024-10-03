@@ -25,6 +25,7 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const user = await login(data.email, data.password);
+      console.log(user, "user dans login")
       /*if(user?.accessToken){
         Cookies.set('token', user?.accessToken, { secure: true, sameSite: 'strict' });
       }*/

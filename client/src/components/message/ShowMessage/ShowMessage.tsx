@@ -28,12 +28,14 @@ const ShowMessage: React.FC = () => {
  const cookie = JSON.parse(Cookies.get('token') as string);
   const name = cookie.userInfo.name;
   
+  console.log(currentSection, "loadMessages pour tester mise à jour currentSection")
   
 
 
 
 
   useEffect(() => {
+    console.log("je passe par le useeffet je me rafraichisssss")
     // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)

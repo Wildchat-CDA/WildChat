@@ -90,12 +90,9 @@ export class ChannelService {
     return await this.channelRepository.save(channel);
   }
 
-  async createPrivateChannel(
-    userId: number,
-    userTarget: number,
-  ): Promise<Channel> {
+  async createPrivateChannel(id: number, userTarget: number): Promise<Channel> {
     const user = await this.userRepository.findOne({
-      where: { id: userId },
+      where: { id: id },
       relations: ['channels', 'channels.config.type'],
     });
 
@@ -107,19 +104,63 @@ export class ChannelService {
     const channelsUser1 = user.channels;
     const channelsUser2 = user2.channels;
 
+    console.log(channelsUser1, 'channels du user1');
+    console.log(channelsUser2, 'channels du user2');
+
     const commonChannels = [];
-    for (const channel1 of channelsUser1) {
-      for (const channel2 of channelsUser2) {
+
+    // for (const channel1 of channelsUser1) {
+    //   for (const channel2 of channelsUser2) {
+    //     if (channel1.id === channel2.id) {
+    //       commonChannels.push(channel1);
+    //     }
+    //   }
+    // }
+
+    for (let i = 0; i < channelsUser1.length; i++) {
+      const channel1 = channelsUser1[i];
+
+      for (let j = 0; j < channelsUser2.length; j++) {
+        const channel2 = channelsUser2[j];
+
         if (channel1.id === channel2.id) {
+          console.log('je rentre dans la condition channel');
           commonChannels.push(channel1);
-          break;
         }
       }
+      console.log(commonChannels, 'channel en commun');
     }
 
-    if (commonChannels.length > 0) {
-      return commonChannels[0];
-    } else {
+    // if (commonChannels.length > 0) {
+    //   return commonChannels[0];
+    // } else {
+    //   const newPrivateChannel = this.channelRepository.create({
+    //     uuid: uuidv4(),
+    //     title: 'channel Private',
+    //     slot: 2,
+    //   });
+    //   const newConfig = this.configRepository.create({
+    //     maxSlot: 2,
+    //     type: await this.typeRepository.findOne({
+    //       where: { name: 'private' },
+    //     }),
+    //   });
+    //   newPrivateChannel.config = newConfig;
+
+    //   await this.configRepository.save(newConfig);
+    //   const savedNewPrivateChannel =
+    //     await this.channelRepository.save(newPrivateChannel);
+
+    //   user.channels.push(newPrivateChannel);
+    //   user2.channels.push(newPrivateChannel);
+
+    //   await this.userRepository.save(user);
+    //   await this.userRepository.save(user2);
+
+    //   return savedNewPrivateChannel;
+    // }
+
+    if (commonChannels.length === 0) {
       const newPrivateChannel = this.channelRepository.create({
         uuid: uuidv4(),
         title: 'channel Private',
@@ -144,9 +185,9 @@ export class ChannelService {
       await this.userRepository.save(user2);
 
       return savedNewPrivateChannel;
+    } else {
+      return commonChannels[0];
     }
-
-    // // Créer un nouveau canal privé
   }
 
   // async createPrivateChannel(): Promise<Channel> {
@@ -217,7 +258,7 @@ export class ChannelService {
       where: { id: userId },
       relations: ['channels', 'channels.config.type'],
     });
-
+    console.log(user, 'user à chercher dans channelservice');
     const privateChannels = user.flatMap((user) =>
       user.channels.filter(
         (channel) =>

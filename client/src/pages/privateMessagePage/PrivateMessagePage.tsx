@@ -12,6 +12,7 @@ interface Student {
 
 function PrivateMessagePage() {
   const [students, setStudents] = useState([]);
+  const [targetUser, setTargetUser]=useState(false)
   const { setActiveContentMainComp, currentSection, setCurrentSection } =
     useNavigation();
 
@@ -34,17 +35,25 @@ function PrivateMessagePage() {
   }, []);
 
   function handleClick(targetUser: number) {
+    console.log("je passe dans handleClick")
     setActiveContentMainComp(true);
+    setTargetUser(true);
 
     try {
       fetchPrivateChannel(userId, targetUser).then((data) => {
+        console.log(userId, "userId dans fetchPrivateChannel")
+         console.log(targetUser, 'targetUser dans fetchPrivateChannel');
         console.log(data.uuid, 'uuid');
         setCurrentSection((prevState) => ({
           ...prevState,
           uuid: data.uuid,
         }));
+        console.log(currentSection, "le uuid mis dans currentSection quand le fetch est fait")
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
+    setTargetUser(false);
   }
   return (
     <div className='privateMessagePage-container'>
