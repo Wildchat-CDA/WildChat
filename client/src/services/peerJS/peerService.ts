@@ -1,5 +1,5 @@
 import Peer, { MediaConnection } from 'peerjs'; // Importation de Peer et MediaConnection depuis PeerJS.
-
+import { IAudioRef } from '../../components/audio/AudioCall';
 export default class PeerService {
   // Déclaration des propriétés privées :
   private peer = new Peer(); // Initialisation d'une instance PeerJS.
@@ -38,7 +38,7 @@ export default class PeerService {
   }
 
   // Méthode pour établir une nouvelle connexion avec un peer distant via son ID, et diffuser le flux audio.
-  addNewPeer(remotePeerId, audioRef) {
+  addNewPeer(remotePeerId: string, audioRef: HTMLAudioElement) {
     // Si le flux local n'est pas encore disponible, on renvoie une erreur.
     if (this._localStream === null) throw new Error('local stream is missing');
 
@@ -56,7 +56,7 @@ export default class PeerService {
     // Écoute les appels entrants d'autres peers.
     this.peer.on('call', (remoteCall) => {
       // Répond à l'appel avec le flux audio local.
-      remoteCall.answer(this._localStream);
+      remoteCall.answer(this._localStream!);
 
       // Écoute le flux du peer distant et l'attache également à l'élément audio.
       remoteCall.on('stream', (remoteStream) => {

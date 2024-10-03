@@ -1,15 +1,22 @@
 import './UserIcons.css';
 import { webSocketService } from '../../services/webSocketService';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { IPeerIdOnRoomPayload } from '../../../../common/interface/redisInterface';
+import { loadPeerList } from '../../services/peerJS/fetchPeerList';
+import { NavigationContextType } from '../../context/NavigationContext';
 
 interface IUserIconsProps {
-  peerList: string[];
-  setPeerList: React.Dispatch<React.SetStateAction<string[]>>;
+  currentSection: NavigationContextType['currentSection'];
 }
 
-const UserIcons = ({ peerList, setPeerList }: IUserIconsProps) => {
+const UserIcons = ({ currentSection }: IUserIconsProps) => {
+  const [peerList, setPeerList] = useState<string[]>([]);
   useEffect(() => {
+    console.log('je passe dans room');
+    loadPeerList(currentSection).then((result) => {
+      console.log('result : ', result);
+      setPeerList(result);
+    });
     const addName = (data: IPeerIdOnRoomPayload) => {
       const userData = parsedData(data);
       setPeerList((prevState: string[]) => [...prevState, userData]);
@@ -33,7 +40,7 @@ const UserIcons = ({ peerList, setPeerList }: IUserIconsProps) => {
       webSocketService.off('join-room', addName);
       webSocketService.off('leave-room', deleteName);
     };
-  }, [peerList]);
+  }, [currentSection]);
 
   return (
     <div className='users-list_container'>

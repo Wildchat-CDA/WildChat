@@ -32,27 +32,13 @@ function Room({
   setActiveModal,
   activeModal,
 }: IRoomProps) {
-  // const { socketRef, myPeerID, setChannelUUID } = useAudio();
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
-  const [peerList, setPeerList] = useState<string[]>([]);
 
   const handleRoom = (room: IChannel) => {
     affectedCurrentSection(room);
   };
 
   const affectedCurrentSection = (room: IChannel) => {
-    //TODO USE user uuid
-    const userUuid = '7a0fc143-0f76-442d-9c05-df3c37a4c5cf';
-    // console.log('MyPeed :: ', myPeerID);
-    console.log('roomUUID ', room.uuid);
-    // socketRef.current.emit('join-channel', {
-    //   peerID: myPeerID,
-    //   roomUuid: room.uuid,
-    //   userUuid: userUuid,
-    // });
-    console.log('uuid : ', userUuid);
-    // setChannelUUID(room.uuid);
-
     setVocalChannelPosition(room.uuid);
     setCurrentSection({
       sectionId: section.id,
@@ -74,13 +60,7 @@ function Room({
     setActiveModal(ModalTypeEnum.DeleteRoom);
   };
 
-  useEffect(() => {
-    console.log('je passe dans room');
-    loadPeerList(currentSection).then((result) => {
-      console.log('result : ', result);
-      setPeerList(result);
-    });
-  }, [currentSection]);
+  useEffect(() => {}, []);
 
   return (
     <div className='rooms-container'>
@@ -102,7 +82,7 @@ function Room({
               {vocalChannelPosition === room.uuid && (
                 <>
                   {' '}
-                  <UserIcons peerList={peerList} setPeerList={setPeerList} />
+                  <UserIcons currentSection={currentSection} />
                   <AudioCall currentSection={currentSection} />
                 </>
               )}

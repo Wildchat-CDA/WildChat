@@ -8,7 +8,7 @@ interface IAudioProps {
   currentSection: ISectionChannel;
 }
 
-interface IAudioRef {
+export interface IAudioRef {
   peerId: string;
   audioRef: HTMLAudioElement | null;
 }
