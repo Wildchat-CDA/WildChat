@@ -6,10 +6,10 @@ import { loadPeerList } from '../../services/peerJS/fetchPeerList';
 import { NavigationContextType } from '../../context/NavigationContext';
 
 interface IUserIconsProps {
-  currentSection: NavigationContextType['currentSection'];
+  room: NavigationContextType['currentSection'];
 }
 
-const UserIcons = ({ room }: any) => {
+const UserIcons = ({ room }: IUserIconsProps) => {
   const [peerList, setPeerList] = useState<string[]>([]);
 
   useEffect(() => {

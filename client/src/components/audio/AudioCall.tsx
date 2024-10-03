@@ -24,11 +24,10 @@ export function AudioCall({ currentSection }: IAudioProps) {
   useEffect(() => {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.
     loadPeerList(currentSection).then((result) => {
-
+      // Je retire mon peerId si il est déjà présent dans le resultat
       const list = result.filter(
         (row) => row.split(':')[0].trim() !== peerService.peerId
       );
- 
       setPeerList(list);
     });
 
@@ -84,6 +83,7 @@ export function AudioCall({ currentSection }: IAudioProps) {
       peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute ce peer spécifique.
       peerManagerRef.current = false; // Réinitialise la variable pour la prochaine mise à jour.
     }
+    console.log('peerList : ', peerList);
   }, [peerList]); // useEffect se déclenche à chaque fois que peerList change.
 
   return (

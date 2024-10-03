@@ -1,8 +1,13 @@
-import Peer, { MediaConnection } from 'peerjs'; // Importation de Peer et MediaConnection depuis PeerJS.
-import { IAudioRef } from '../../components/audio/AudioCall';
+import Peer from 'peerjs'; // Importation de Peer et MediaConnection depuis PeerJS.
+
 export default class PeerService {
   // Déclaration des propriétés privées :
-  private peer = new Peer(); // Initialisation d'une instance PeerJS.
+  private peer = new Peer({
+    host: 'localhost', // Hôte de ton serveur PeerJS
+    port: 9000, // Port de ton serveur
+    path: '/peerjs', // Chemin de ton serveur PeerJS
+    secure: false, // Secure doit être false si tu n'utilises pas HTTPS
+  }); // Initialisation d'une instance PeerJS.
   private _peerId: string | null = null; // Stocke l'identifiant du peer (sera défini une fois connecté).
   private _localStream: MediaStream | null = null; // Stocke le flux audio local (sera défini après l'autorisation d'accès au microphone).
   private _activeCalls: any[] = []; // Tableau pour stocker toutes les connexions actives avec d'autres peers.
@@ -43,6 +48,7 @@ export default class PeerService {
     if (this._localStream === null) throw new Error('local stream is missing');
 
     // Appelle le peer distant en lui envoyant le flux audio local.
+    // if (remotePeerId !== this.peerId) {
     const call = this.peer.call(remotePeerId, this._localStream);
 
     // Écoute le flux audio du peer distant et l'attache à l'élément audio HTML via audioRef.
@@ -52,6 +58,8 @@ export default class PeerService {
 
     // Ajoute cet appel actif à la liste _activeCalls pour pouvoir le gérer plus tard (fermer, etc.).
     this._activeCalls.push({ call, remotePeerId });
+    console.log('Active call : ', this._activeCalls);
+    // }
 
     // Écoute les appels entrants d'autres peers.
     this.peer.on('call', (remoteCall) => {
@@ -72,6 +80,7 @@ export default class PeerService {
 
       call.call.close(); // Ferme chaque appel.
     }
+
     this._activeCalls = []; // Réinitialise la liste des appels actifs une fois fermés.
   }
 }

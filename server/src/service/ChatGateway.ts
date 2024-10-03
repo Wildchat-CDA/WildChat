@@ -46,6 +46,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleDisconnect(client: Socket) {
     console.log(`client ${client.id} disconnected`);
     //TODO Supprimer dans redis le peerId du client
+
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
       this.socketToPeerMap.delete(client.id);
@@ -102,6 +103,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       client.join(data.roomUuid);
+
       this.roomService.addUserOnRoom(data);
       // Utilisé pour l'audio dans le composant AudioCall [FRONT]
       this.server.to(data.roomUuid).emit('join-room', {
@@ -109,6 +111,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         name: data.name,
         roomUuid: data.roomUuid,
       });
+
       // Utilisé pour l'affichage des users dans une room, composant UserIcons [FRONT]
       this.server.emit('join', {
         peerId: data.peerId,
@@ -138,10 +141,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         peerId: data.peerId,
         name: data.name,
         roomUuid: data.roomUuid,
+        client: client.id,
       });
 
       client.leave(data.roomUuid);
-      this.roomService.deletePeerIdUser(data);
+      const payload = { ...data, clientId: client.id };
+      this.roomService.deletePeerIdUser(payload);
     } catch (err) {
       console.error(err);
     }

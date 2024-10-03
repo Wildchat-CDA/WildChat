@@ -15,6 +15,10 @@ export class RoomService {
   }
 
   deletePeerIdUser(data) {
-    this.redisService.deletePeerIdUser(data);
+    try {
+      this.redisService.deletePeerIdUser(data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
