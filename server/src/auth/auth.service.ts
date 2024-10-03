@@ -111,7 +111,7 @@ export class AuthService {
         
         const token = uuidv4();
         await this.redisService.setToken(token, savedUser.id, 86400); // jeton : 24 heures
-        console.log('Token:', token);
+        //console.log('Token:', token);
         
         
         return {

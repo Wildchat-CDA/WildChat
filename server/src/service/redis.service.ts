@@ -219,16 +219,43 @@ export class RedisService implements OnModuleInit {
     }
   }
 
+
   public async setToken(token: string, userId: number, expirationTime: number): Promise<void> {
-    await this._client.set(`magic_link:${token}`, userId.toString());
-  }
+    this.checkConnection(); 
+    try {
+        await this._client.set(`magiclink:${token}`, userId.toString(), {
+            EX: expirationTime
+        });
+        console.log("Token créé:", token, "ID de l'utilisateur:", userId);
+    } catch (error) {
+        console.error('Échec de la création du token:', error);
+        throw new InternalServerErrorException('Échec de l\'enregistrement du token dans Redis');
+    }
+}
 
-  public async getToken(token: string): Promise<string | null> {
-    return await this._client.get(`magic_link:${token}`);
-  }
+public async getToken(token: string): Promise<string | null> {
+    this.checkConnection();
+    try {
+        const value = await this._client.get(`magiclink:${token}`); 
+        console.log("Récupération du token:", token, "Value:", value);
+        return value;
+    } catch (error) {
+        console.error('Échec de la récupération du token:', error);
+        throw new InternalServerErrorException('Échec de la récupération du token dans Redis');
+    }
+}
 
-  public async deleteToken(token: string): Promise<void> {
-    await this._client.del(`magic_link:${token}`);
-  }
+public async deleteToken(token: string): Promise<void> {
+    this.checkConnection();
+    try {
+        await this._client.del('magiclink'); 
+        await this._client.del(`magiclink:${token}`);
+        console.log("Token supprimé:", token);
+    } catch (error) {
+        console.error('Échec de la suppression du token:', error);
+        throw new InternalServerErrorException('Échec de la suppression du token dans Redis');
+    }
+}
 
 }
+
