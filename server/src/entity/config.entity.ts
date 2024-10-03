@@ -55,12 +55,6 @@ export class Config {
   // Si vrai, seuls les rôles autorisés peuvent poster, les autres ne peuvent que lire
   // Parfait pour les canaux d'annonces ou de consignes
 
-  @Column({ default: 0 })
-  slowModeInterval: number;
-  // Intervalle en secondes entre chaque message d'un même utilisateur
-  // Utile pour ralentir les discussions animées ou encourager la réflexion avant de poster
-  // 0 signifie que le mode lent est désactivé
-
   @Column({ default: true })
   allowReactions: boolean;
   // Autorise ou non l'utilisation de réactions aux messages
