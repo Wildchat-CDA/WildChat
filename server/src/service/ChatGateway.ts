@@ -44,6 +44,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
+    console.log(`client ${client.id} disconnected`);
+    //TODO Supprimer dans redis le peerId du client
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
       // this.leaveChannel({ peerID }, client);
@@ -104,9 +106,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(data.roomUuid).emit('join-room', {
       peerId: data.peerId,
       name: data.name,
+      roomUuid: data.roomUuid,
     });
   }
-
   @SubscribeMessage('leave-room')
   async leaveChannel(
     @ConnectedSocket() client: Socket,
@@ -116,6 +118,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(data.roomUuid).emit('leave-room', {
       peerId: data.peerId,
       name: data.name,
+      roomUuid: data.roomUuid,
     });
 
     client.leave(data.roomUuid);

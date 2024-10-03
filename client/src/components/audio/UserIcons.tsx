@@ -9,24 +9,33 @@ interface IUserIconsProps {
   currentSection: NavigationContextType['currentSection'];
 }
 
-const UserIcons = ({ currentSection }: IUserIconsProps) => {
+const UserIcons = ({ room }: any) => {
   const [peerList, setPeerList] = useState<string[]>([]);
+
   useEffect(() => {
     console.log('je passe dans room');
-    loadPeerList(currentSection).then((result) => {
+    loadPeerList(room).then((result) => {
       console.log('result : ', result);
       setPeerList(result);
     });
     const addName = (data: IPeerIdOnRoomPayload) => {
-      const userData = parsedData(data);
-      setPeerList((prevState: string[]) => [...prevState, userData]);
+      console.log('addName userIicon ');
+
+      if (data.roomUuid === room.uuid) {
+        const userData = parsedData(data);
+        setPeerList((prevState: string[]) => [...prevState, userData]);
+      }
     };
 
     const deleteName = (data: IPeerIdOnRoomPayload) => {
-      const userData = parsedData(data);
-      setPeerList((prevState: string[]) =>
-        prevState.filter((infos) => infos !== userData)
-      );
+      console.log('deleteName userIcon ');
+
+      if (data.roomUuid === room.uuid) {
+        const userData = parsedData(data);
+        setPeerList((prevState: string[]) =>
+          prevState.filter((infos) => infos !== userData)
+        );
+      }
     };
 
     const parsedData = (data: IPeerIdOnRoomPayload) => {
@@ -40,7 +49,7 @@ const UserIcons = ({ currentSection }: IUserIconsProps) => {
       webSocketService.off('join-room', addName);
       webSocketService.off('leave-room', deleteName);
     };
-  }, [currentSection]);
+  }, []);
 
   return (
     <div className='users-list_container'>

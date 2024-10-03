@@ -72,12 +72,12 @@ export function AudioCall({ currentSection }: IAudioProps) {
     if (peerManagerRef.current === false) {
       // Si aucun peer n'a été ajouté récemment (cas initial ou mise à jour générale de la peerList) :
       for (let obj of audiosRef.current) {
-        peerService.addNewPeer(obj.peerId, obj.audioRef); // Ajoute chaque peer de la liste actuelle avec son élément audio.
+        peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute chaque peer de la liste actuelle avec son élément audio.
       }
     } else {
       // Si un peer a été ajouté récemment (optimisation pour éviter de tout re-parcourir) :
       const obj = audiosRef.current[audiosRef.current.length - 1]; // Récupère le dernier peer ajouté.
-      peerService.addNewPeer(obj.peerId, obj.audioRef); // Ajoute ce peer spécifique.
+      peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute ce peer spécifique.
       peerManagerRef.current = false; // Réinitialise la variable pour la prochaine mise à jour.
     }
   }, [peerList]); // useEffect se déclenche à chaque fois que peerList change.

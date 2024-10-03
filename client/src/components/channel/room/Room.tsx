@@ -14,6 +14,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { AudioCall } from '../../audio/AudioCall';
 import { useEffect, useState } from 'react';
 import { loadPeerList } from '../../../services/peerJS/fetchPeerList';
+import { useNavigation } from '../../../context/NavigationContext';
+import { webSocketService } from '../../../services/webSocketService';
 
 interface IRoomProps {
   section: ISection;
@@ -33,10 +35,16 @@ function Room({
   activeModal,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
+  const { refresh, setRefresh } = useNavigation();
 
   const handleRoom = (room: IChannel) => {
+    console.log(currentSection, 'CURRENT SECTION BEFORE');
     affectedCurrentSection(room);
   };
+
+  useEffect(() => {
+    console.log(currentSection, 'CURRENT SECTION LOADED');
+  }, [currentSection]);
 
   const affectedCurrentSection = (room: IChannel) => {
     setVocalChannelPosition(room.uuid);
@@ -60,8 +68,6 @@ function Room({
     setActiveModal(ModalTypeEnum.DeleteRoom);
   };
 
-  useEffect(() => {}, []);
-
   return (
     <div className='rooms-container'>
       {section.channels.map((room) => (
@@ -79,10 +85,10 @@ function Room({
               {room.title}
             </span>
             <div className='users'>
+              <UserIcons room={room} />
               {vocalChannelPosition === room.uuid && (
                 <>
-                  {' '}
-                  <UserIcons currentSection={currentSection} />
+                  {/* <UserIcons currentSection={currentSection} /> */}
                   <AudioCall currentSection={currentSection} />
                 </>
               )}
