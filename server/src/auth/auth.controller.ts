@@ -1,4 +1,15 @@
-import { Controller, Post, Body, HttpCode, HttpException, UsePipes, ValidationPipe, BadRequestException, HttpStatus, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpException,
+  UsePipes,
+  ValidationPipe,
+  BadRequestException,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -12,27 +23,27 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  @UsePipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    exceptionFactory: (errors) => {
-      const messages = errors.map(error => 
-        Object.values(error.constraints).join(', ')
-      );
-      return new BadRequestException(messages.join('. '));
-    }
-  }))
-
-
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+        const messages = errors.map((error) =>
+          Object.values(error.constraints).join(', '),
+        );
+        return new BadRequestException(messages.join('. '));
+      },
+    }),
+  )
   async register(@Body() registerDto: RegisterDto) {
     try {
       const result = await this.authService.register(registerDto);
-      
+
       if (result.user) {
         return { message: result.message, userId: result.user.id };
       } else {
-        return { message: result.message };  
+        return { message: result.message };
       }
     } catch (error) {
       throw new HttpException(error.message, error.status || 400);
@@ -45,12 +56,11 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     try {
       const result = await this.authService.login(loginDto);
-      return result; 
+      return result;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
   }
- 
 
   @Post('invite')
   @UseGuards(RolesGuard, JwtAuthGuard)
@@ -64,10 +74,13 @@ export class AuthController {
       );
       return {
         message: result.message,
-        token: result.token
+        token: result.token,
       };
     } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

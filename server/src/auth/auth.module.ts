@@ -11,20 +11,20 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/service/redis.service';
 
 @Module({
-    imports: [
-      TypeOrmModule.forFeature([User, Role]),
-      PassportModule,
-      JwtModule.registerAsync({
-        imports: [ConfigModule],
-        useFactory: async (configService: ConfigService) => ({
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '42' },
-        }),
-        inject: [ConfigService],
+  imports: [
+    TypeOrmModule.forFeature([User, Role]),
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '42' },
       }),
-      ConfigModule,
-    ],
-    providers: [AuthService, JwtStrategy, RedisService],
-    controllers: [AuthController],
-  })
-  export class AuthModule {}
+      inject: [ConfigService],
+    }),
+    ConfigModule,
+  ],
+  providers: [AuthService, JwtStrategy, RedisService],
+  controllers: [AuthController],
+})
+export class AuthModule {}
