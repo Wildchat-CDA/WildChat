@@ -43,7 +43,6 @@ const Section = ({ type }: ISectionProps) => {
     } catch (error) {
       console.error(error);
     }
-    console.log('refresh : ', refresh);
   }, [refresh]);
 
   const handleShow = (section: ISection, index: number) => {

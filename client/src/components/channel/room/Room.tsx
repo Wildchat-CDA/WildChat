@@ -8,14 +8,7 @@ import EditButton from '../../common/button/edit/EditButton';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 import UserIcons from '../../audio/UserIcons';
-import { useAudio } from '../../../context/AudioContext';
-import { JoinChannelResponse } from '../../../types/audioTypes';
-import { v4 as uuidv4 } from 'uuid';
 import { AudioCall } from '../../audio/AudioCall';
-import { useEffect, useState } from 'react';
-import { loadPeerList } from '../../../services/peerJS/fetchPeerList';
-import { useNavigation } from '../../../context/NavigationContext';
-import { webSocketService } from '../../../services/webSocketService';
 
 interface IRoomProps {
   section: ISection;
@@ -35,16 +28,10 @@ function Room({
   activeModal,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
-  const { refresh, setRefresh } = useNavigation();
 
   const handleRoom = (room: IChannel) => {
-    console.log(currentSection, 'CURRENT SECTION BEFORE');
     affectedCurrentSection(room);
   };
-
-  useEffect(() => {
-    console.log(currentSection, 'CURRENT SECTION LOADED');
-  }, [currentSection]);
 
   const affectedCurrentSection = (room: IChannel) => {
     setVocalChannelPosition(room.uuid);

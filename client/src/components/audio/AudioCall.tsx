@@ -24,8 +24,12 @@ export function AudioCall({ currentSection }: IAudioProps) {
   useEffect(() => {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.
     loadPeerList(currentSection).then((result) => {
-      console.log('result AUDIO : ', result);
-      setPeerList(result);
+
+      const list = result.filter(
+        (row) => row.split(':')[0].trim() !== peerService.peerId
+      );
+ 
+      setPeerList(list);
     });
 
     // Si le peerId est défini, envoie un événement au serveur via socket.io pour indiquer que cet utilisateur rejoint la channel (salle) spécifiée.

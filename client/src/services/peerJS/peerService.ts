@@ -5,7 +5,7 @@ export default class PeerService {
   private peer = new Peer(); // Initialisation d'une instance PeerJS.
   private _peerId: string | null = null; // Stocke l'identifiant du peer (sera défini une fois connecté).
   private _localStream: MediaStream | null = null; // Stocke le flux audio local (sera défini après l'autorisation d'accès au microphone).
-  private _activeCalls: MediaConnection[] = []; // Tableau pour stocker toutes les connexions actives avec d'autres peers.
+  private _activeCalls: any[] = []; // Tableau pour stocker toutes les connexions actives avec d'autres peers.
 
   constructor() {
     // Événement déclenché quand le peer est connecté et reçoit un ID unique.
@@ -51,7 +51,7 @@ export default class PeerService {
     });
 
     // Ajoute cet appel actif à la liste _activeCalls pour pouvoir le gérer plus tard (fermer, etc.).
-    this._activeCalls.push(call);
+    this._activeCalls.push({ call, remotePeerId });
 
     // Écoute les appels entrants d'autres peers.
     this.peer.on('call', (remoteCall) => {
@@ -68,7 +68,9 @@ export default class PeerService {
   // Méthode pour fermer toutes les connexions actives avec d'autres peers.
   closeCalls() {
     for (let call of this._activeCalls) {
-      call.close(); // Ferme chaque appel.
+      console.log(call.call.connectionId, call.remotePeerId, 'closed');
+
+      call.call.close(); // Ferme chaque appel.
     }
     this._activeCalls = []; // Réinitialise la liste des appels actifs une fois fermés.
   }

@@ -13,14 +13,10 @@ const UserIcons = ({ room }: any) => {
   const [peerList, setPeerList] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log('je passe dans room');
     loadPeerList(room).then((result) => {
-      console.log('result : ', result);
       setPeerList(result);
     });
     const addName = (data: IPeerIdOnRoomPayload) => {
-      console.log('addName userIicon ');
-
       if (data.roomUuid === room.uuid) {
         const userData = parsedData(data);
         setPeerList((prevState: string[]) => [...prevState, userData]);
@@ -28,8 +24,6 @@ const UserIcons = ({ room }: any) => {
     };
 
     const deleteName = (data: IPeerIdOnRoomPayload) => {
-      console.log('deleteName userIcon ');
-
       if (data.roomUuid === room.uuid) {
         const userData = parsedData(data);
         setPeerList((prevState: string[]) =>
@@ -42,12 +36,12 @@ const UserIcons = ({ room }: any) => {
       return data.peerId + ':' + data.name;
     };
 
-    webSocketService.on('join-room', addName);
-    webSocketService.on('leave-room', deleteName);
+    webSocketService.on('join', addName);
+    webSocketService.on('leave', deleteName);
 
     return () => {
-      webSocketService.off('join-room', addName);
-      webSocketService.off('leave-room', deleteName);
+      webSocketService.off('join', addName);
+      webSocketService.off('leave', deleteName);
     };
   }, []);
 

@@ -48,7 +48,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     //TODO Supprimer dans redis le peerId du client
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
-      // this.leaveChannel({ peerID }, client);
       this.socketToPeerMap.delete(client.id);
     }
   }
@@ -95,34 +94,57 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.emit('raisedHandsUpdate', raisedHands);
   }
 
+  // Canal utilisé quand un utilisateur rejoint une room
   @SubscribeMessage('join-room')
   async joinChannel(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { peerId: string; roomUuid: string; name: string },
   ) {
-    client.join(data.roomUuid);
-    console.log('data join channel : ', data);
-    this.roomService.addUserOnRoom(data);
-    this.server.to(data.roomUuid).emit('join-room', {
-      peerId: data.peerId,
-      name: data.name,
-      roomUuid: data.roomUuid,
-    });
+    try {
+      client.join(data.roomUuid);
+      this.roomService.addUserOnRoom(data);
+      // Utilisé pour l'audio dans le composant AudioCall [FRONT]
+      this.server.to(data.roomUuid).emit('join-room', {
+        peerId: data.peerId,
+        name: data.name,
+        roomUuid: data.roomUuid,
+      });
+      // Utilisé pour l'affichage des users dans une room, composant UserIcons [FRONT]
+      this.server.emit('join', {
+        peerId: data.peerId,
+        name: data.name,
+        roomUuid: data.roomUuid,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
+
+  // Canal utilisé quand un utilisateur part d'une room
   @SubscribeMessage('leave-room')
   async leaveChannel(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { peerId: string; roomUuid: string; name: string },
   ) {
-    console.log('data leave : ', data);
-    this.server.to(data.roomUuid).emit('leave-room', {
-      peerId: data.peerId,
-      name: data.name,
-      roomUuid: data.roomUuid,
-    });
+    try {
+      // Utilisé pour l'audio dans le composant AudioCall [FRONT]
+      this.server.to(data.roomUuid).emit('leave-room', {
+        peerId: data.peerId,
+        name: data.name,
+        roomUuid: data.roomUuid,
+      });
+      // Utilisé pour l'affichage des users dans une room, composant UserIcons [FRONT]
+      this.server.emit('leave', {
+        peerId: data.peerId,
+        name: data.name,
+        roomUuid: data.roomUuid,
+      });
 
-    client.leave(data.roomUuid);
-    this.roomService.deletePeerIdUser(data);
+      client.leave(data.roomUuid);
+      this.roomService.deletePeerIdUser(data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // @SubscribeMessage('join-channel')

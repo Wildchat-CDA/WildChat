@@ -17,7 +17,6 @@ export async function loadPeerList(
     }
 
     const payload: string[] = await response.json();
-    console.log('Peer Id List fetch : ', payload);
     return payload;
   } catch (error) {
     console.error('Failed to load messages:', error);
