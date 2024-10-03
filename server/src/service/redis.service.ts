@@ -218,4 +218,17 @@ export class RedisService implements OnModuleInit {
       throw new InternalServerErrorException('Failed to get all user presences from Redis');
     }
   }
+
+  public async setToken(token: string, userId: number, expirationTime: number): Promise<void> {
+    await this._client.set(`magic_link:${token}`, userId.toString());
+  }
+
+  public async getToken(token: string): Promise<string | null> {
+    return await this._client.get(`magic_link:${token}`);
+  }
+
+  public async deleteToken(token: string): Promise<void> {
+    await this._client.del(`magic_link:${token}`);
+  }
+
 }

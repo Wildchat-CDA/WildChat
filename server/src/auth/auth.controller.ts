@@ -1,8 +1,11 @@
-import { Controller, Post, Body, HttpCode, HttpException, UsePipes, ValidationPipe, BadRequestException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpException, UsePipes, ValidationPipe, BadRequestException, HttpStatus, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { InviteStudentDto } from './dto/invite-student.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller()
 export class AuthController {
@@ -45,6 +48,26 @@ export class AuthController {
       return result; 
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
+  }
+ 
+
+  @Post('invite')
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async inviteStudent(@Body() inviteStudentDto: InviteStudentDto) {
+    try {
+      const result = await this.authService.inviteStudent(
+        inviteStudentDto.email,
+        inviteStudentDto.name,
+        inviteStudentDto.firstName,
+      );
+      return {
+        message: result.message,
+        token: result.token
+      };
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.BAD_REQUEST);
     }
   }
 }

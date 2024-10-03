@@ -8,6 +8,7 @@ import { User } from '../entity/user.entity';
 import { Role } from '../entity/role.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisService } from 'src/service/redis.service';
 
 @Module({
     imports: [
@@ -23,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       ConfigModule,
     ],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy, RedisService],
     controllers: [AuthController],
   })
   export class AuthModule {}

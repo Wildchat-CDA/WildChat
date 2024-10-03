@@ -21,7 +21,7 @@ const AddStudentsPage  = () => {
   };
 
   const updateStudent = (id: number, updatedStudent: Student) => {
-    setStudents(students.map(student => student.id === id ? updatedStudent : student));
+    setStudents(students.map(student =>student.id !== null && student.id === id ? updatedStudent : student));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
