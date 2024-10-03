@@ -2,13 +2,13 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background: linear-gradient(to bottom, #2B2D31, #3C3F43);
+  background: linear-gradient(to bottom, #2b2d31, #3c3f43);
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   overflow-y: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 form {
@@ -31,16 +31,25 @@ form {
   margin-bottom: 20px;
   border-radius: 20px;
   height: 30px;
-  width: 70%; 
+  width: 70%;
   padding: 0 10px;
-  border: 2px solid #35A554;
+  border: 2px solid #35a554;
   background-color: #fff;
+}
+
+/* Ajout de la règle pour les labels en blanc */
+.student-form label {
+  color: white; /* Couleur des labels en blanc */
+  font-size: 14px;
+  margin-bottom: 5px;
+  align-self: flex-start;
+  padding-left: 15%;
 }
 
 .removeStudent-form {
   display: flex;
-  justify-content: center; 
-  width: 100%; 
+  justify-content: center;
+  width: 100%;
 }
 
 .removeStudent-form button {
@@ -51,12 +60,12 @@ form {
   height: 30px;
   border-radius: 20px;
   margin-bottom: 40px;
-  border: none; 
+  border: none;
   cursor: pointer;
 }
 
 .removeStudent-form button:hover {
-  background-color: #35A554;
+  background-color: #35a554;
 }
 
 .AddStudentBTN {
@@ -69,23 +78,18 @@ form {
 
 .add-student-button,
 .submit-button {
-  background-color: #35A554;
+  background-color: #35a554;
   color: white;
   font-size: 12px;
   height: 30px;
   width: 30%;
   border: none;
   border-radius: 25px;
-  margin: 5px 0; 
-  cursor: pointer; 
+  margin: 5px 0;
+  cursor: pointer;
 }
 
 .add-student-button:hover,
 .submit-button:hover {
-  background-color: #2A7B4C; 
-}
-
-h1 {
-  text-align: center; 
-  margin-bottom: 20px;
+  background-color: #2a7b4c;
 }

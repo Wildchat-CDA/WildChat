@@ -1,55 +1,82 @@
 import React, { useState } from 'react';
 import StudentForm from './StudentForm';
+import { inviteStudents, StudentInvite } from '../../services/auth/studentService';
 import './addStudent.css';
 
 export interface Student {
-  id: number;
-  lastName: string;
-  firstName: string;
-  email: string;
+    id: number;
+    lastName: string;
+    firstName: string;
+    email: string;
 }
 
-const AddStudentsPage  = () => {
-  const [students, setStudents] = useState<Student[]>([{ id: 1, lastName: '', firstName: '', email: '' }]);
+function AddStudentsPage() {
+    const [students, setStudents] = useState<Student[]>([{ id: 1, lastName: '', firstName: '', email: '' }]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-  const addStudent = () => {
-    setStudents([...students, { id: Date.now(), lastName: '', firstName: '', email: '' }]);
-  };
+    function addStudent() {
+        setStudents(prevStudents => [...prevStudents, { id: Date.now(), lastName: '', firstName: '', email: '' }]);
+    }
 
-  const removeStudent = (id: number) => {
-    setStudents(students.filter(student => student.id !== id));
-  };
+    function removeStudent(id: number) {
+        setStudents(prevStudents => prevStudents.filter(student => student.id !== id));
+    }
 
-  const updateStudent = (id: number, updatedStudent: Student) => {
-    setStudents(students.map(student =>student.id !== null && student.id === id ? updatedStudent : student));
-  };
+    function updateStudent(id: number, updatedStudent: Student) {
+        setStudents(prevStudents => prevStudents.map(student => student.id === id ? updatedStudent : student));
+    }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Étudiants à ajouter:', students);
-  };
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setIsLoading(true);
+        setError(null);
 
-  return (
-    <>
-    <div className="add-students-page">
-      <h1>Ajouter des étudiants</h1>
-      <form onSubmit={handleSubmit}>
-        {students.map((student) => (
-          <StudentForm
-            key={student.id}
-            student={student}
-            onUpdate={(updatedStudent) => updateStudent(student.id, updatedStudent)}
-            onRemove={() => removeStudent(student.id)}
-          />
-        ))}
-        <div className='AddStudentBTN'>
-        <button className='add-student-button' type="button" onClick={addStudent}>Ajouter un étudiant</button>
-        <button className='submit-button ' type="submit">Envoyer les invitations</button>
+        try {
+            const studentsToInvite: StudentInvite[] = students.map(student => ({
+                name: student.lastName,
+                firstName: student.firstName,
+                email: student.email
+            }));
+
+            const result = await inviteStudents(studentsToInvite);
+            console.log('Invitations envoyées:', result);
+        } catch (err: unknown) {
+            setError('Erreur lors de l\'envoi des invitations. Veuillez réessayer.');
+            if (err instanceof Error) {
+                console.error('Erreur:', err.message);
+            } else {
+                console.error('Une erreur inconnue est survenue');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <div className="add-students-page">
+            <h1>Ajouter des étudiants</h1>
+            {error && <div className="error-message">{error}</div>}
+            <form onSubmit={handleSubmit}>
+                {students.map((student) => (
+                    <StudentForm
+                        key={student.id}
+                        student={student}
+                        onUpdate={(updatedStudent) => updateStudent(student.id, updatedStudent)}
+                        onRemove={() => removeStudent(student.id)}
+                    />
+                ))}
+                <div className='AddStudentBTN'>
+                    <button className='add-student-button' type="button" onClick={addStudent}>
+                        Ajouter un étudiant
+                    </button>
+                    <button className='submit-button' type="submit" disabled={isLoading}>
+                        {isLoading ? 'Envoi en cours...' : 'Envoyer les invitations'}
+                    </button>
+                </div>
+            </form>
         </div>
-      </form>
-    </div>
-    </>
-  );
-};
+    );
+}
 
 export default AddStudentsPage;
