@@ -4,6 +4,7 @@ import { fetchGetUser } from '../../services/user/fetch/FetchGetUser';
 import { useNavigation } from '../../context/NavigationContext';
 import { fetchPrivateChannel } from '../../services/channel/fetch/FetchPrivateChannel';
 import Cookies from 'js-cookie';
+import { useScrollToBottom } from '../../services/useScrollBottom';
 
 interface Student {
   id: number;
@@ -12,7 +13,6 @@ interface Student {
 
 function PrivateMessagePage() {
   const [students, setStudents] = useState([]);
-  const [targetUser, setTargetUser]=useState(false)
   const { setActiveContentMainComp, currentSection, setCurrentSection } =
     useNavigation();
 
@@ -22,6 +22,8 @@ function PrivateMessagePage() {
   console.log(userId, 'id dans privateMessage');
 
   const studentsList = students.filter((user: Student) => user.id !== userId);
+
+   const scrollRef = useScrollToBottom(students);
 
   useEffect(() => {
     try {
@@ -35,25 +37,29 @@ function PrivateMessagePage() {
   }, []);
 
   function handleClick(targetUser: number) {
-    console.log("je passe dans handleClick")
+    console.log('je passe dans handleClick');
     setActiveContentMainComp(true);
-    setTargetUser(true);
 
     try {
       fetchPrivateChannel(userId, targetUser).then((data) => {
-        console.log(userId, "userId dans fetchPrivateChannel")
-         console.log(targetUser, 'targetUser dans fetchPrivateChannel');
+        console.log(userId, 'userId dans fetchPrivateChannel');
+        console.log(targetUser, 'targetUser dans fetchPrivateChannel');
         console.log(data.uuid, 'uuid');
         setCurrentSection((prevState) => ({
           ...prevState,
           uuid: data.uuid,
+          sectionTitle: data.sectionTitle,
+          channelTitle: data.channelTitle
+          
         }));
-        console.log(currentSection, "le uuid mis dans currentSection quand le fetch est fait")
+        console.log(
+          currentSection,
+          'le uuid mis dans currentSection quand le fetch est fait'
+        );
       });
     } catch (error) {
       console.error(error);
     }
-    setTargetUser(false);
   }
   return (
     <div className='privateMessagePage-container'>
@@ -68,6 +74,7 @@ function PrivateMessagePage() {
           </div>
         ))}
       </div>
+      <div ref={scrollRef}></div>
     </div>
   );
 }
