@@ -18,18 +18,18 @@ function UserControlSettings({
   onLogout
 }: UserControlSettingsProps) {
   return (
-    <div className="user-control-settings">
-      <div className="user-info">
-        <UserAvatar 
+    <div className='user-control-settings'>
+      <div className='user-info'>
+        <UserAvatar
           userId={userId}
           onChangeAvatar={onChangeAvatar}
           onChangeAccount={onChangeAccount}
           onLogout={onLogout}
         />
-      </div>
-      <div className="control-panel">
-        <MediaControl userId={userId} />
-        <button onClick={onSettingsClick} className="settings-button">Settings</button>
+        {/* <div className='control-panel'> */}
+          <MediaControl userId={userId} />
+          {/* <button onClick={onSettingsClick} className="settings-button">Settings</button> */}
+        {/* </div> */}
       </div>
     </div>
   );

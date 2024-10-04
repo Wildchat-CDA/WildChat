@@ -13,21 +13,34 @@ import { ISectionChannel } from '../../../types/sectionTypes';
 import { ModalTypeEnum, useModal } from '../../../context/ModalContext';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
+import Cookies from 'js-cookie';
+
 
 const ShowMessage = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
-  const [activeEdit, setActiveEdit] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
-  const [currentMessage, setCurrentMessage] = useState<string | undefined>();
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-
+  const [activeEdit, setActiveEdit] = useState<boolean>();
+  const [currentIndex, setCurrentIndex] = useState<number>();
+  const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-  const { activeModal, setActiveModal } = useModal();
+  
 
+ const cookie = JSON.parse(Cookies.get('token') as string);
+  const name = cookie.userInfo.name;
+  
+  console.log(currentSection, "loadMessages pour tester mise à jour currentSection")
+  
+
+
+
+<<<<<<< HEAD
   // TODO Need to use an userContext
   const name = 'Théo';
+=======
+>>>>>>> feature/private-messaging
 
   useEffect(() => {
+    console.log("je passe par le useeffet je me rafraichisssss")
+    // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)
       .catch((error) =>
@@ -45,6 +58,8 @@ const ShowMessage = () => {
     };
   }, [currentSection]);
 
+  
+
   const scrollRef = useScrollToBottom(messages);
 
   const handleEdit = (index: number) => {
@@ -60,6 +75,7 @@ const ShowMessage = () => {
       messageIndex: index,
       currentMessage: message,
     }));
+   
   };
 
   const updateMessage = (msg: string, index: number) => {
@@ -84,7 +100,9 @@ const ShowMessage = () => {
         {messages.map((message, index) => (
           <div className='message-el' key={index}>
             <span className='name'>{message.name} </span>
-            {currentIndex === index && activeEdit && name === message.name ? (
+            {currentIndex === index &&
+            activeEdit === true &&
+            name ===  message.name ? (
               <MessageEditor
                 name={message.name}
                 message={message.message}

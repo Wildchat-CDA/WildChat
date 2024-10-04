@@ -253,6 +253,7 @@ export class RedisService implements OnModuleInit {
       if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
       }
+
       if (data.message.length === 0) {
         throw new Error(
           'The message cannot be empty. Please enter some text before submitting.',

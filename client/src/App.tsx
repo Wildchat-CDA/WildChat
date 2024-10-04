@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom'; 
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { LoginForm } from './components/authentification/Login';
 import { RegisterForm } from './components/authentification/Register';
 import MainContent from './components/common/mainContent/MainContent';
@@ -11,17 +11,25 @@ import MobileLayout from './components/layout/MobileLayout';
 import { ModalProvider } from './context/ModalContext';
 import { AudioProvider } from './context/AudioContext';
 import PolitiquePrive from './pages/PolitiquePrive';
-import PlitiqueCgu from './pages/PlitiqueCgu';
+
 import Cookies from 'js-cookie';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  // const cookie = JSON.parse(Cookies.get('token') as string);
+  // const token = cookie.encoded;
 
-
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = Cookies.get('token');
+  //TODO CALL TOKEN DECODED FROM
   const decoded: any = token && jwtDecode<JwtPayload>(token);
   const date = new Date(decoded?.exp * 1000);
-  return (token && decoded?.exp * 1000 > new Date().getTime()) ? <>{children}</> : <Navigate to="/login" replace />;
+  return token && decoded?.exp * 1000 > new Date().getTime() ? (
+    <>{children}</>
+  ) : (
+    <Navigate to='/login' replace />
+  );
 };
 
 const App: React.FC = () => {
@@ -55,9 +63,8 @@ const App: React.FC = () => {
         </NavigationProvider>
       </HandRaiseProvider>
     </UserRoleProvider>
-    // {/* </AudioProvider> */}
+    // </AudioProvider>
   );
 };
 
 export default App;
-
