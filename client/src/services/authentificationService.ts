@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import axios from "axios"
 
 // //TODO mettre le API_URL dans le .env apres
@@ -29,6 +30,13 @@ import { Role } from '../../../server/src/entity/role.entity';
 
 // TODO: mettre l'API_URL dans le .env après
 const API_URL = 'http://localhost:3000';
+=======
+import axios from "axios";
+import Cookies from "js-cookie";
+
+// TODO: mettre l'API_URL dans le .env après
+const API_URL = "http://localhost:3000";
+>>>>>>> dev
 
 export const login = async (email: string, password: string) => {
   try {
@@ -37,6 +45,7 @@ export const login = async (email: string, password: string) => {
       { email, password },
       { withCredentials: true }
     );
+<<<<<<< HEAD
 
     if (response.data.accessToken) {
       console.log(response, 'response authentification service');
@@ -67,6 +76,17 @@ export const login = async (email: string, password: string) => {
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la connexion:', error);
+=======
+    
+    
+    if (response.data.token) {
+      Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });
+    }
+    
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la connexion:", error);
+>>>>>>> dev
     throw error;
   }
 };
@@ -111,3 +131,4 @@ export const logout = async () => {
 export const isAuthenticated = () => {
   return !!Cookies.get('token');
 };
+

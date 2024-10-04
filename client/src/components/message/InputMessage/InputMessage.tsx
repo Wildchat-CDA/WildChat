@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { handleKeyDown } from '../../../services/eventHandlerService';
-import socket from '../../../services/webSocketService';
+import { webSocketService } from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
 import { useNavigation } from '../../../context/NavigationContext';
@@ -32,15 +32,20 @@ const InputMessage = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.length !== 0) {
+    if (input.trim()) {
       const payload = {
         name,
         message: input,
-        roomId: currentSection ? currentSection.uuid : '',
+        roomId: currentSection?.uuid || '',
       };
-      socket.emit('message', payload);
+      webSocketService.emit('message', payload);
       setInput('');
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    adjustHeight();
   };
 
   return (
@@ -54,13 +59,10 @@ const InputMessage = () => {
           ref={textAreaRef}
           className='input-message'
           value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-            adjustHeight();
-          }}
+          onChange={handleInputChange}
           onKeyDown={(e) => handleKeyDown(e, onSubmit, () => setInput(''))}
           placeholder='Envoyer un message'
-        ></textarea>
+        />
       </form>
     </div>
   );

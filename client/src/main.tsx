@@ -11,6 +11,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { LoginForm } from './components/authentification/Login';
 import { RegisterForm } from './components/authentification/Register';
 import PolitiquePrive from './pages/PolitiquePrive';
+import CGU from './pages/CGU';
 import { MediaProvider } from './context/MediaContext';
 
 const rootElement = document.getElementById('root');
@@ -44,19 +45,17 @@ root.render(
   <BrowserRouter>
     <AuthProvider>
       <Routes>
-        <Route path='/login' element={<LoginForm />} />
-        <Route path='/register' element={<RegisterForm />} />
-        <Route path='/politique_prive' element={<PolitiquePrive />} />
-        <Route
-          path='/'
-          element={
-            <ProtectedRoute>
-              <MediaProvider>
-                <App />
-              </MediaProvider>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/politique_prive" element={<PolitiquePrive />} />
+        <Route path="/CGU" element={<CGU />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <MediaProvider>
+              <App />
+            </MediaProvider>
+          </ProtectedRoute>
+        } />
       </Routes>
     </AuthProvider>
   </BrowserRouter>
