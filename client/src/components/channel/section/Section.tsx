@@ -140,6 +140,7 @@ const Section = ({ type }: ISectionProps) => {
                   currentSection={currentSection}
                   setActiveModal={setActiveModal}
                   activeModal={activeModal}
+                  type={type}
                 />
                 <AddButton action={() => handleNewRoom(section)} />
               </>

@@ -13,6 +13,7 @@ const UserIcons = ({ room }: IUserIconsProps) => {
   const [peerList, setPeerList] = useState<string[]>([]);
 
   useEffect(() => {
+    console.log('room ', room);
     loadPeerList(room).then((result) => {
       setPeerList(result);
     });

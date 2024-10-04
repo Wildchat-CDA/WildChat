@@ -26,6 +26,7 @@ function Room({
   currentSection,
   setActiveModal,
   activeModal,
+  type,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
 
@@ -72,8 +73,8 @@ function Room({
               {room.title}
             </span>
             <div className='users'>
-              <UserIcons room={room} />
-              {vocalChannelPosition === room.uuid && (
+              {type === 'classRoom' && <UserIcons room={room} />}
+              {vocalChannelPosition === room.uuid && type === 'classRoom' && (
                 <>
                   {/* <UserIcons currentSection={currentSection} /> */}
                   <AudioCall currentSection={currentSection} />
