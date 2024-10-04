@@ -3,6 +3,7 @@ import { peerService } from '../../services/peerJS/peerService';
 import { webSocketService } from '../../services/webSocketService';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
 import { ISectionChannel } from '../../types/sectionTypes';
+import Cookies from 'js-cookie';
 
 interface IAudioProps {
   currentSection: ISectionChannel;
@@ -19,7 +20,9 @@ export function AudioCall({ currentSection }: IAudioProps) {
   const [peerList, setPeerList] = useState<string[]>([]); // État contenant la liste des peerId (chaînes) des utilisateurs connectés.
   const audiosRef = useRef<IAudioRef[]>([]); // Référence pour stocker les références d'éléments audio distants pour chaque peer.
   const peerManagerRef = useRef<boolean>(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
-  const name = 'Théo'; //TODO Recuperer le nom avec le context
+
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const name = cookie.userInfo.name;
 
   useEffect(() => {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.
