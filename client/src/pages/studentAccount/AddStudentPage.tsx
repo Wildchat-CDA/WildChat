@@ -33,11 +33,19 @@ function AddStudentsPage() {
         setError(null);
 
         try {
-            const studentsToInvite: StudentInvite[] = students.map(student => ({
-                name: student.lastName,
-                firstName: student.firstName,
-                email: student.email
-            }));
+            
+            const studentsToInvite: StudentInvite[] = students
+                .filter(student => student.email.trim() !== '')
+                .map(student => ({
+                    name: student.lastName,
+                    firstName: student.firstName,
+                    email: student.email
+                }));
+            
+            if (studentsToInvite.length === 0) {
+                setError('Veuillez ajouter au moins un étudiant.');
+                return;
+            }
 
             const result = await inviteStudents(studentsToInvite);
             console.log('Invitations envoyées:', result);
@@ -80,3 +88,4 @@ function AddStudentsPage() {
 }
 
 export default AddStudentsPage;
+

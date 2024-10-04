@@ -298,8 +298,8 @@ export class RedisService implements OnModuleInit {
       );
       const result = await this._client.set(
         `magiclink:${token}`,
-        userId.toString(),
-        {
+        userId,
+     {
           EX: expirationTime,
         },
       );
@@ -310,11 +310,11 @@ export class RedisService implements OnModuleInit {
         `Immediate verification - Stored token value: ${storedValue}`,
       );
 
-      const ttl = await this._client.ttl(`magiclink:${token}`);
-      console.log(`Token TTL: ${ttl}`);
+    const ttl = await this._client.ttl(`magiclink:${token}`);
+     console.log(`Token TTL: ${ttl}`);
 
-      const allKeys = await this._client.keys('magiclink:*');
-      console.log('All magiclink keys after setting:', allKeys);
+    const allKeys = await this._client.keys('magiclink:*');
+      console.log('All magiclink keys after setting:', allKeys)
     } catch (error) {
       console.error('Failed to create token:', error);
       throw new InternalServerErrorException('Failed to store token in Redis');

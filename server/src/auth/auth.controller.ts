@@ -62,25 +62,22 @@ export class AuthController {
     }
   }
 
+
   @Post('invite')
-  @UseGuards(RolesGuard, JwtAuthGuard)
-  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async inviteStudent(@Body() inviteStudentDto: InviteStudentDto) {
-    try {
-      const result = await this.authService.inviteStudent(
-        inviteStudentDto.email,
-        inviteStudentDto.name,
-        inviteStudentDto.firstName,
-      );
-      return {
-        message: result.message,
-        token: result.token,
-      };
-    } catch (error) {
-      throw new HttpException(
-        error.message,
-        error.status || HttpStatus.BAD_REQUEST,
-      );
-    }
+@UseGuards(RolesGuard, JwtAuthGuard)
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[]) {
+  try {
+    const result = await this.authService.inviteStudents(inviteStudentDto);
+    return {
+      message: result.message,
+      token: result.token,
+    };
+  } catch (error) {
+    throw new HttpException(
+      error.message,
+      error.status || HttpStatus.BAD_REQUEST,
+    );
   }
+}
 }

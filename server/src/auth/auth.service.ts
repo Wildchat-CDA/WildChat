@@ -105,48 +105,49 @@ export class AuthService {
 
     return response;
   }
-
-  async inviteStudent(
-    email: string,
-    name: string,
-    firstName: string,
-  ): Promise<
+  
+  async inviteStudents(students: { name: string; firstName: string; email: string }[]): Promise<
     | { status: number; message: string; token?: never }
     | { status: number; message: string; token: string }
-  > {
-    const existingUser = await this.userRepository.findOneBy({ email });
-    if (existingUser) {
-      return {
-        status: HttpStatus.CONFLICT,
-        message: 'Cet email est déjà utilisé',
-      };
+> {
+    const tokens: string[] = []; 
+
+    for (const student of students) {
+        const { email, name, firstName } = student;
+
+        const existingUser = await this.userRepository.findOneBy({ email });
+        if (existingUser) {
+            return {
+                status: HttpStatus.CONFLICT,
+                message: `Cet email (${email}) est déjà utilisé`,
+            };
+        }
+
+        const studentRole = await this.roleRepository.findOneBy({ name: 'eleve' });
+        if (!studentRole) {
+            return {
+                status: HttpStatus.BAD_REQUEST,
+                message: "Le rôle d'élève n'existe pas",
+            };
+        }
+
+        const newUser = this.userRepository.create({
+            email,
+            name,
+            firstName,
+            role: studentRole,
+        });
+
+        const savedUser = await this.userRepository.save(newUser);
+        const token = uuidv4();
+        await this.redisService.setToken(token, savedUser.id, 86400); // jeton : 24 heures
+        tokens.push(token); 
     }
-
-    const studentRole = await this.roleRepository.findOneBy({ name: 'eleve' });
-    if (!studentRole) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: "Le rôle d'élève n'existe pas",
-      };
-    }
-
-    const newUser = this.userRepository.create({
-      email,
-      name,
-      firstName,
-      role: studentRole,
-    });
-
-    const savedUser = await this.userRepository.save(newUser);
-
-    const token = uuidv4();
-    await this.redisService.setToken(token, savedUser.id, 86400); // jeton : 24 heures
-    //console.log('Token:', token);
 
     return {
-      status: HttpStatus.CREATED,
-      message: 'Invitation envoyée avec succès',
-      token: token,
+        status: HttpStatus.CREATED,
+        message: 'Invitations envoyées avec succès',
+        token: tokens.join(', '),
     };
-  }
+}
 }
