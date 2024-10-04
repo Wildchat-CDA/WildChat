@@ -43,15 +43,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (client) {
       this.sendInitialPresenceList(client);
       //TODO Fonctionnalité en cours, commentaire normal
-      // this.roomService.setClientToPeer(client);
+      this.roomService.setClientToPeer(client);
     }
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     console.log(`client ${client.id} disconnected`);
-    //TODO Supprimer dans redis le peerId du client
-    // Fonctionalité en cours, commentaire normal
-    // this.roomService.deleteClientToPeer(client);
+
+    try {
+      // Suppression du peerId dans la room à partir du client
+      const data = await this.roomService.deletePeerFromClient(client); // Utilisez await pour attendre la résolution de la promesse
+
+      if (data) {
+        this.server.to(data.roomUuid).emit('leave-room', {
+          peerId: data.peerId,
+          name: data.name,
+          roomUuid: data.roomUuid,
+          client: data.client,
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion du client:', error);
+    }
+
+    // Gestion de la suppression du peerID dans la socketToPeerMap
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
       this.socketToPeerMap.delete(client.id);

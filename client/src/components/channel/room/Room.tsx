@@ -31,6 +31,10 @@ function Room({
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
 
   const handleRoom = (room: IChannel) => {
+    console.log('je passe');
+    if (type === 'library') {
+      setActiveContentMainComp(true);
+    }
     affectedCurrentSection(room);
   };
 
@@ -67,7 +71,6 @@ function Room({
               className='room-span'
               onClick={() => {
                 handleRoom(room);
-                setActiveContentMainComp(true);
               }}
             >
               {room.title}

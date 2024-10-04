@@ -43,43 +43,52 @@ export class RedisService implements OnModuleInit {
     return this._client;
   }
 
-  public async deleteClientToPeer(client) {
+  // Permet de supprimer le supprimet le peerId du client lors du rafraichissement de la page via le socket client
+  public async deletePeerFromClient(client: any): Promise<any> {
+    // Je récupère toutes les valeurs dont j'ai besoin pour effectuer la suppression
     try {
-      // Vérifie si un peerId est associé à ce client
-      const peerId = await this.client.hGet(`client:${client.id}`, 'peerId');
+      const peerId = await this._client.hGet(`client:${client.id}`, 'peerId');
+      const name = await this._client.hGet(`client:${client.id}`, 'name');
+      const clientId = await this._client.hGet(
+        `client:${client.id}`,
+        'clientId',
+      );
+      const roomUuid = await this._client.hGet(
+        `client:${client.id}`,
+        'roomUuid',
+      );
 
-      if (peerId) {
-        console.log(
-          `Client ${client.id} est associé au peerId : ${peerId}. Suppression...`,
+      if (peerId && name && clientId && roomUuid) {
+        const peerData = `${peerId}:${name}`;
+        const result = await this._client.lRem(
+          `roomPeerId:${roomUuid}`,
+          0,
+          peerData,
         );
 
-        // Appelle la méthode pour supprimer le peerId associé au client
+        if (result === 0) {
+          console.warn(
+            `Le peerId ${peerId} n'a pas été trouvé dans la room ${roomUuid}`,
+          );
+        } else {
+          console.log(
+            `Le peerId ${peerId} a été supprimé de la room ${roomUuid}`,
+          );
+        }
+
         const data = {
-          peerId: peerId,
-          roomUuid: null,
-          name: null,
-          client: null,
+          peerId,
+          name,
+          roomUuid,
+          client,
         };
-        await this.deletePeerIdUser(data);
 
-        // Supprime également le peerId du hSet client
-        await this.client.hDel(`client:${client.id}`, 'peerId');
-
-        console.log(
-          `Le peerId ${peerId} a été supprimé pour le client ${client.id}.`,
-        );
-      } else {
-        console.log(
-          `Aucun peerId trouvé pour le client ${client.id}. Pas de suppression nécessaire.`,
-        );
+        return data;
       }
     } catch (error) {
-      console.error(
-        'Erreur lors de la suppression du peerId pour le client:',
-        error,
-      );
+      console.error('Erreur lors de la suppression du peerId:', error);
       throw new InternalServerErrorException(
-        'Failed to delete peerId for client.',
+        'Erreur lors de la suppression du peerId de Redis',
       );
     }
   }
@@ -174,7 +183,12 @@ export class RedisService implements OnModuleInit {
       }
 
       // Affecte le peerId au client dans son hSet
-      await this.client.hSet(`client:${client.id}`, 'peerId', data.peerId);
+      await this.client.hSet(`client:${client.id}`, {
+        peerId: data.peerId,
+        name: data.name,
+        roomUuid: data.roomUuid,
+      });
+
       console.log(`Affecté peerId ${data.peerId} au client ${client.id}.`);
     } catch (error) {
       console.error("Erreur lors de l'affectation du peerId au client:", error);
@@ -202,6 +216,7 @@ export class RedisService implements OnModuleInit {
       throw new InternalServerErrorException('Failed to post message to Redis');
     }
   }
+
   public async postPeerIdOnRoom(data: IPeerIdOnRoomPayload, client) {
     this.checkConnection();
     this.affectedClientToPeer(data, client);
