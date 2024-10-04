@@ -25,9 +25,9 @@ export function AudioCall({ currentSection }: IAudioProps) {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.
     loadPeerList(currentSection).then((result) => {
       // Je retire mon peerId si il est déjà présent dans le resultat
-      const list = result.filter(
-        (row) => row.split(':')[0].trim() !== peerService.peerId
-      );
+      const list = result
+        .filter((row) => row.split(':')[0].trim() !== peerService.peerId) // Filtrer par peerId
+        .map((row) => row.split(':')[0].trim()); // Extraire uniquement le peerId (partie avant le ":"
       setPeerList(list);
     });
 
@@ -85,19 +85,22 @@ export function AudioCall({ currentSection }: IAudioProps) {
     }
     console.log('peerList : ', peerList);
   }, [peerList]); // useEffect se déclenche à chaque fois que peerList change.
-
   return (
     <>
-      {peerList.map((peerId, index) => (
-        <div key={index}>
-          <audio
-            ref={
-              (audioRef) => (audiosRef.current[index] = { audioRef, peerId }) // Associe chaque peerId à son élément audio correspondant.
-            }
-            autoPlay // L'audio démarre automatiquement quand il est reçu.
-          />
-        </div>
-      ))}
+      {peerList.map((datas, index) => {
+        const peerId = datas.split(':')[0].trim(); // Déclare la variable avant le JSX.
+        console.log('peerId : ', peerId);
+        return (
+          <div key={index}>
+            <audio
+              ref={
+                (audioRef) => (audiosRef.current[index] = { audioRef, peerId }) // Associe chaque peerId à son élément audio correspondant.
+              }
+              autoPlay // L'audio démarre automatiquement quand il est reçu.
+            />
+          </div>
+        );
+      })}
     </>
   );
 }

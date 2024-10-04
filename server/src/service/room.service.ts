@@ -10,8 +10,16 @@ export class RoomService {
     this._allRooms = [];
   }
 
-  addUserOnRoom(data) {
-    this.redisService.postPeerIdOnRoom(data);
+  setClientToPeer(client) {
+    this.redisService.setClientToPeer(client);
+  }
+
+  deleteClientToPeer(client) {
+    this.redisService.deleteClientToPeer(client);
+  }
+
+  addUserOnRoom(data, client) {
+    this.redisService.postPeerIdOnRoom(data, client);
   }
 
   deletePeerIdUser(data) {
