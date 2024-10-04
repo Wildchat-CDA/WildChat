@@ -15,31 +15,23 @@ import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 import Cookies from 'js-cookie';
 
-
 const ShowMessage = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-  
 
- const cookie = JSON.parse(Cookies.get('token') as string);
+  const cookie = JSON.parse(Cookies.get('token') as string);
   const name = cookie.userInfo.name;
-  
-  console.log(currentSection, "loadMessages pour tester mise à jour currentSection")
-  
 
-
-
-<<<<<<< HEAD
-  // TODO Need to use an userContext
-  const name = 'Théo';
-=======
->>>>>>> feature/private-messaging
+  console.log(
+    currentSection,
+    'loadMessages pour tester mise à jour currentSection'
+  );
 
   useEffect(() => {
-    console.log("je passe par le useeffet je me rafraichisssss")
+    console.log('je passe par le useeffet je me rafraichisssss');
     // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)
@@ -58,8 +50,6 @@ const ShowMessage = () => {
     };
   }, [currentSection]);
 
-  
-
   const scrollRef = useScrollToBottom(messages);
 
   const handleEdit = (index: number) => {
@@ -75,7 +65,6 @@ const ShowMessage = () => {
       messageIndex: index,
       currentMessage: message,
     }));
-   
   };
 
   const updateMessage = (msg: string, index: number) => {
@@ -102,7 +91,7 @@ const ShowMessage = () => {
             <span className='name'>{message.name} </span>
             {currentIndex === index &&
             activeEdit === true &&
-            name ===  message.name ? (
+            name === message.name ? (
               <MessageEditor
                 name={message.name}
                 message={message.message}
