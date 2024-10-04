@@ -18,7 +18,6 @@ import Cookies from 'js-cookie';
 
 const ShowMessage = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
-<<<<<<< HEAD
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
@@ -37,19 +36,6 @@ const ShowMessage = () => {
   useEffect(() => {
     console.log("je passe par le useeffet je me rafraichisssss")
     // Load messages with redis (init)
-=======
-  const [activeEdit, setActiveEdit] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
-  const [currentMessage, setCurrentMessage] = useState<string | undefined>();
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-
-  const { currentSection, setCurrentSection } = useNavigation();
-  const { activeModal, setActiveModal } = useModal();
-
-  const name = 'Théo';
-
-  useEffect(() => {
->>>>>>> dev
     LoadMessage(currentSection)
       .then(setMessages)
       .catch((error) =>
@@ -109,13 +95,9 @@ const ShowMessage = () => {
         {messages.map((message, index) => (
           <div className='message-el' key={index}>
             <span className='name'>{message.name} </span>
-<<<<<<< HEAD
             {currentIndex === index &&
             activeEdit === true &&
             name ===  message.name ? (
-=======
-            {currentIndex === index && activeEdit && name === message.name ? (
->>>>>>> dev
               <MessageEditor
                 name={message.name}
                 message={message.message}

@@ -5,11 +5,8 @@ import {
 } from '../../../../context/NavigationContext';
 import SectionPage from '../../../../pages/sectionPage/SectionPage';
 import RaisedHandsList from '../../../teacher/RaisedHandList/RaisedHandsList';
-<<<<<<< HEAD
 import PrivateMessagePage from '../../../../pages/privateMessagePage/PrivateMessagePage';
-=======
 import PresenceList from '../../../teacher/PresenceList/PresenceList';
->>>>>>> dev
 
 interface ContentSideBarWrapperProps {
   activeContentSideBar: ActiveSideBarType;
@@ -24,12 +21,7 @@ function ContentSideBarWrapper({
       content = <SectionPage />;
       break;
     case ContentSideBarEnum.PrivateMessage:
-<<<<<<< HEAD
       content = <PrivateMessagePage />; //TODO : METTRE MON COMPOSANT ICI
-=======
-      content = 'COMPOSANT private message';
-
->>>>>>> dev
       break;
     case ContentSideBarEnum.PresenceList:
       //content = 'COMPOSANT presence list';
