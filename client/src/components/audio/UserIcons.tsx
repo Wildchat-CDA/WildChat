@@ -3,17 +3,17 @@ import { webSocketService } from '../../services/webSocketService';
 import { useEffect, useState } from 'react';
 import { IPeerIdOnRoomPayload } from '../../../../common/interface/redisInterface';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
-import { NavigationContextType } from '../../context/NavigationContext';
+import { IChannel } from '../../types/sectionTypes';
 
 interface IUserIconsProps {
-  room: NavigationContextType['currentSection'];
+  room: IChannel;
 }
 
 const UserIcons = ({ room }: IUserIconsProps) => {
+  console.log('room', room);
   const [peerList, setPeerList] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log('room ', room);
     loadPeerList(room).then((result) => {
       setPeerList(result);
     });
@@ -25,6 +25,7 @@ const UserIcons = ({ room }: IUserIconsProps) => {
     };
 
     const deleteName = (data: IPeerIdOnRoomPayload) => {
+      console.log('je passe dans delete name');
       if (data.roomUuid === room.uuid) {
         const userData = parsedData(data);
         setPeerList((prevState: string[]) =>

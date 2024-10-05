@@ -9,6 +9,7 @@ import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 import UserIcons from '../../audio/UserIcons';
 import { AudioCall } from '../../audio/AudioCall';
+import { ISectionProps } from '../section/Section';
 
 interface IRoomProps {
   section: ISection;
@@ -17,6 +18,7 @@ interface IRoomProps {
   setActiveContentMainComp: NavigationContextType['setActiveContentMainComp'];
   setActiveModal: ModalContextType['setActiveModal'];
   activeModal: ModalContextType['activeModal'];
+  type: ISectionProps['type'];
 }
 
 function Room({
@@ -79,7 +81,6 @@ function Room({
               {type === 'classRoom' && <UserIcons room={room} />}
               {vocalChannelPosition === room.uuid && type === 'classRoom' && (
                 <>
-                  {/* <UserIcons currentSection={currentSection} /> */}
                   <AudioCall currentSection={currentSection} />
                 </>
               )}

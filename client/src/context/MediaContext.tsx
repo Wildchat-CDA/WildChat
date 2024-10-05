@@ -1,5 +1,10 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
+interface IAudioObjg {
+  peerId: string;
+  roomUuid: string;
+  name: string;
+}
 interface MediaState {
   isMicrophoneOn: boolean;
   isWebcamOn: boolean;
@@ -12,6 +17,8 @@ interface MediaState {
   availableMicrophones: MediaDeviceInfo[];
   availableWebcams: MediaDeviceInfo[];
   availableSpeakers: MediaDeviceInfo[];
+  isCalling: boolean;
+  audioObj: IAudioObjg;
 }
 
 interface MediaContextType extends MediaState {
@@ -24,11 +31,17 @@ interface MediaContextType extends MediaState {
   selectWebcam: (deviceId: string) => void;
   selectSpeaker: (deviceId: string) => void;
   refreshDevices: () => Promise<void>;
+  toggleCall: (prevState: boolean) => void;
+  setAudioObjg: (prevState: IAudioObjg) => void;
 }
 
-export const MediaContext = createContext<MediaContextType | undefined>(undefined);
+export const MediaContext = createContext<MediaContextType | undefined>(
+  undefined
+);
 
-export const MediaProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const MediaProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const [state, setState] = useState<MediaState>({
     isMicrophoneOn: false,
     isWebcamOn: false,
@@ -41,16 +54,28 @@ export const MediaProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     availableMicrophones: [],
     availableWebcams: [],
     availableSpeakers: [],
+    isCalling: false,
+    audioObj: {
+      peerId: '',
+      roomUuid: '',
+      name: '',
+    },
   });
 
   const refreshDevices = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
-        availableMicrophones: devices.filter(device => device.kind === 'audioinput'),
-        availableWebcams: devices.filter(device => device.kind === 'videoinput'),
-        availableSpeakers: devices.filter(device => device.kind === 'audiooutput'),
+        availableMicrophones: devices.filter(
+          (device) => device.kind === 'audioinput'
+        ),
+        availableWebcams: devices.filter(
+          (device) => device.kind === 'videoinput'
+        ),
+        availableSpeakers: devices.filter(
+          (device) => device.kind === 'audiooutput'
+        ),
       }));
     } catch (error) {
       console.error('Error enumerating devices:', error);
@@ -61,55 +86,78 @@ export const MediaProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     refreshDevices();
     navigator.mediaDevices.addEventListener('devicechange', refreshDevices);
     return () => {
-      navigator.mediaDevices.removeEventListener('devicechange', refreshDevices);
+      navigator.mediaDevices.removeEventListener(
+        'devicechange',
+        refreshDevices
+      );
     };
   }, []);
 
   const toggleMicrophone = () => {
-    setState(prevState => ({ ...prevState, isMicrophoneOn: !prevState.isMicrophoneOn }));
+    setState((prevState) => ({
+      ...prevState,
+      isMicrophoneOn: !prevState.isMicrophoneOn,
+    }));
   };
 
   const toggleWebcam = () => {
-    setState(prevState => ({ ...prevState, isWebcamOn: !prevState.isWebcamOn }));
+    setState((prevState) => ({
+      ...prevState,
+      isWebcamOn: !prevState.isWebcamOn,
+    }));
   };
 
   const toggleScreenSharing = () => {
-    setState(prevState => ({ ...prevState, isScreenSharing: !prevState.isScreenSharing }));
+    setState((prevState) => ({
+      ...prevState,
+      isScreenSharing: !prevState.isScreenSharing,
+    }));
   };
 
   const setMicrophoneVolume = (volume: number) => {
-    setState(prevState => ({ ...prevState, microphoneVolume: volume }));
+    setState((prevState) => ({ ...prevState, microphoneVolume: volume }));
   };
 
   const setSpeakerVolume = (volume: number) => {
-    setState(prevState => ({ ...prevState, speakerVolume: volume }));
+    setState((prevState) => ({ ...prevState, speakerVolume: volume }));
   };
 
   const selectMicrophone = (deviceId: string) => {
-    setState(prevState => ({ ...prevState, selectedMicrophone: deviceId }));
+    setState((prevState) => ({ ...prevState, selectedMicrophone: deviceId }));
   };
 
   const selectWebcam = (deviceId: string) => {
-    setState(prevState => ({ ...prevState, selectedWebcam: deviceId }));
+    setState((prevState) => ({ ...prevState, selectedWebcam: deviceId }));
   };
 
   const selectSpeaker = (deviceId: string) => {
-    setState(prevState => ({ ...prevState, selectedSpeaker: deviceId }));
+    setState((prevState) => ({ ...prevState, selectedSpeaker: deviceId }));
+  };
+
+  const toggleCall = (isCalling: boolean) => {
+    setState((prevState) => ({ ...prevState, isCalling: isCalling }));
+  };
+  const setAudioObjg = (audioObj: IAudioObjg) => {
+    setState((prevState) => ({ ...prevState, audioObj: audioObj }));
   };
 
   return (
-    <MediaContext.Provider value={{
-      ...state,
-      toggleMicrophone,
-      toggleWebcam,
-      toggleScreenSharing,
-      setMicrophoneVolume,
-      setSpeakerVolume,
-      selectMicrophone,
-      selectWebcam,
-      selectSpeaker,
-      refreshDevices,
-    }}>
+    <MediaContext.Provider
+      value={{
+        ...state,
+        toggleMicrophone,
+        toggleWebcam,
+        toggleScreenSharing,
+        setMicrophoneVolume,
+        setSpeakerVolume,
+        selectMicrophone,
+        selectWebcam,
+        selectSpeaker,
+        refreshDevices,
+        toggleCall,
+        setAudioObjg,
+      }}
+    >
       {children}
     </MediaContext.Provider>
   );

@@ -5,7 +5,7 @@ const SectionPage = () => {
   return (
     <div className='page-section_container'>
       <Section type={'library'} />
-      <Section type={`classRoom`} />
+      <Section type={'classRoom'} />
     </div>
   );
 };

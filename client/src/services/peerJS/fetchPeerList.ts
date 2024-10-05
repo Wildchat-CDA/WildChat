@@ -1,7 +1,8 @@
+import { IChannel } from '../../types/sectionTypes';
 import { ISectionChannel } from '../../types/sectionTypes';
 
 export async function loadPeerList(
-  currentChannel: ISectionChannel | null
+  currentChannel: IChannel | ISectionChannel | null
 ): Promise<string[]> {
   try {
     const response = await fetch(

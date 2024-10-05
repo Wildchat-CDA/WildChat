@@ -10,9 +10,10 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 import EditButton from '../../common/button/edit/EditButton';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
+import { webSocketService } from '../../../services/webSocketService';
 
-interface ISectionProps {
-  type: string;
+export interface ISectionProps {
+  type: 'library' | 'classRoom';
 }
 
 const Section = ({ type }: ISectionProps) => {

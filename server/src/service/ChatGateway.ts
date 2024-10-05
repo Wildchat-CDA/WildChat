@@ -55,11 +55,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const data = await this.roomService.deletePeerFromClient(client); // Utilisez await pour attendre la résolution de la promesse
 
       if (data) {
-        this.server.to(data.roomUuid).emit('leave-room', {
+        console.log('je passe dans data', data);
+        this.server.emit('leave', {
           peerId: data.peerId,
           name: data.name,
           roomUuid: data.roomUuid,
-          client: data.client,
         });
       }
     } catch (error) {

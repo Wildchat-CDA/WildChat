@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { MediaContext } from '../../../context/MediaContext';
 import IconButton from '../button/IconButton/IconButton';
 import './mediaControl.css';
@@ -11,14 +11,17 @@ function MediaControl({ userId }: MediaControlProps) {
   const mediaContext = useContext(MediaContext);
 
   if (!mediaContext) {
-    throw new Error("MediaControl must be used within MediaProvider");
+    throw new Error('MediaControl must be used within MediaProvider');
   }
 
-  const { 
-    isMicrophoneOn, 
-    toggleMicrophone, 
-    speakerVolume, 
-    setSpeakerVolume 
+  const {
+    isMicrophoneOn,
+    toggleMicrophone,
+    speakerVolume,
+    setSpeakerVolume,
+    isCalling,
+    toggleCall,
+    audioObj,
   } = mediaContext;
 
   const toggleSpeaker = () => {
@@ -27,14 +30,28 @@ function MediaControl({ userId }: MediaControlProps) {
 
   const isSpeakerOn = speakerVolume > 0;
 
+  const handleCall = () => {
+    console.log("couper l'appel");
+    console.log(audioObj, 'AUDIO OBJET');
+    toggleCall(false);
+  };
+
   return (
-    <div className="media-control">
-      <div className="media-buttons">
+    <div className='media-control'>
+      <div className='media-buttons'>
         <IconButton
           icon={isMicrophoneOn ? 'microphone.png' : 'unmute.png'}
-          text={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}
+          text={
+            isMicrophoneOn
+              ? 'Désactiver le microphone'
+              : 'Activer le microphone'
+          }
           onClick={toggleMicrophone}
-          ariaLabel={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}
+          ariaLabel={
+            isMicrophoneOn
+              ? 'Désactiver le microphone'
+              : 'Activer le microphone'
+          }
         />
         <IconButton
           icon={isSpeakerOn ? 'volume.png' : 'mute.png'}
@@ -43,11 +60,21 @@ function MediaControl({ userId }: MediaControlProps) {
           ariaLabel={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
         />
         <IconButton
-          icon="ecrou.png"
-          text="Réglages"
-          onClick={() => {/* Logique pour ouvrir les réglages */}}
-          ariaLabel="Ouvrir les réglages"
+          icon='ecrou.png'
+          text='Réglages'
+          onClick={() => {
+            /* Logique pour ouvrir les réglages */
+          }}
+          ariaLabel='Ouvrir les réglages'
         />
+        {isCalling && (
+          <IconButton
+            icon='raccrocher.png'
+            text='Quitter le salon vocal'
+            onClick={handleCall}
+            ariaLabel='Quitter le salon vocal'
+          />
+        )}
       </div>
     </div>
   );

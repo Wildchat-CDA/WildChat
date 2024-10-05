@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { peerService } from '../../services/peerJS/peerService';
 import { webSocketService } from '../../services/webSocketService';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
 import { ISectionChannel } from '../../types/sectionTypes';
+import { MediaContext } from '../../context/MediaContext';
 import Cookies from 'js-cookie';
 
 interface IAudioProps {
@@ -20,6 +21,8 @@ export function AudioCall({ currentSection }: IAudioProps) {
   const [peerList, setPeerList] = useState<string[]>([]); // État contenant la liste des peerId (chaînes) des utilisateurs connectés.
   const audiosRef = useRef<IAudioRef[]>([]); // Référence pour stocker les références d'éléments audio distants pour chaque peer.
   const peerManagerRef = useRef<boolean>(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
+  const mediaContext = useContext(MediaContext);
+  const { toggleCall, setAudioObjg } = mediaContext;
 
   const cookie = JSON.parse(Cookies.get('token') as string);
   const name = cookie.userInfo.name;
@@ -32,6 +35,12 @@ export function AudioCall({ currentSection }: IAudioProps) {
         .filter((row) => row.split(':')[0].trim() !== peerService.peerId) // Filtrer par peerId
         .map((row) => row.split(':')[0].trim()); // Extraire uniquement le peerId (partie avant le ":"
       setPeerList(list);
+      toggleCall(true);
+      setAudioObjg((prevState) => ({
+        peerId: peerService.peerId,
+        roomUid: currentSection.uuid,
+        name: name,
+      }));
     });
 
     // Si le peerId est défini, envoie un événement au serveur via socket.io pour indiquer que cet utilisateur rejoint la channel (salle) spécifiée.

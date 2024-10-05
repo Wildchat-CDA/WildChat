@@ -169,6 +169,7 @@ export class RedisService implements OnModuleInit {
     }
 
     try {
+      console.log('ROOMUUID : ', data.roomUuid);
       // Récupère l'ID de peer existant pour le client
       const existingPeerId = await this.client.hGet(
         `client:${client.id}`,
@@ -183,12 +184,12 @@ export class RedisService implements OnModuleInit {
       }
 
       // Affecte le peerId au client dans son hSet
-      await this.client.hSet(`client:${client.id}`, {
+      const result = await this.client.hSet(`client:${client.id}`, {
         peerId: data.peerId,
         name: data.name,
         roomUuid: data.roomUuid,
       });
-
+      console.log('result : ', result);
       console.log(`Affecté peerId ${data.peerId} au client ${client.id}.`);
     } catch (error) {
       console.error("Erreur lors de l'affectation du peerId au client:", error);
@@ -227,8 +228,8 @@ export class RedisService implements OnModuleInit {
     try {
       // Vérifie si le peerId existe déjà dans une autre room
       const existingRoomUuid = await this.client.hGet(
-        'roomPeerIdMapping',
-        data.peerId,
+        `client:${client.id}`,
+        'roomUuid',
       );
 
       if (existingRoomUuid) {
@@ -247,7 +248,7 @@ export class RedisService implements OnModuleInit {
       );
 
       // Met à jour la nouvelle roomUuid dans le mapping de peerId
-      await this.client.hSet('roomPeerIdMapping', data.peerId, data.roomUuid);
+      await this.client.hSet(`client:${client.id}`, 'roomUuid', data.roomUuid);
     } catch (error) {
       console.error('Failed to post peerId:', error);
       throw new InternalServerErrorException('Failed to post peerId to Redis');
