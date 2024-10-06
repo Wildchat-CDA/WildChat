@@ -9,6 +9,9 @@ import {
   BadRequestException,
   HttpStatus,
   UseGuards,
+  Get,
+  Param,
+  Put,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -17,6 +20,7 @@ import { InviteStudentDto } from './dto/invite-student.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { SetPasswordDto } from './dto/set-password.dto';
 
 @Controller()
 export class AuthController {
@@ -62,8 +66,7 @@ export class AuthController {
     }
   }
 
-
-  @Post('invite')
+@Post('invite')
 @UseGuards(RolesGuard, JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[]) {
@@ -71,7 +74,23 @@ async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[]) {
     const result = await this.authService.inviteStudents(inviteStudentDto);
     return {
       message: result.message,
-      token: result.token,
+      invitations: result.invitations,
+    };
+  } catch (error) {
+    throw new HttpException(
+      error.message,
+      error.status || HttpStatus.BAD_REQUEST,
+    );
+  }
+}
+
+@Put('invite/:token')
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+async setPassword(@Param('token') token: string, @Body() setPasswordDto: SetPasswordDto) {
+  try {
+    const result = await this.authService.setPassword(token, setPasswordDto.password);
+    return {
+      message: result.message,
     };
   } catch (error) {
     throw new HttpException(

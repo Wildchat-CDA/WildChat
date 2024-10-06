@@ -7,7 +7,6 @@ interface StudentFormProps {
   onUpdate: (updatedStudent: Student) => void;
   onRemove: () => void;
 }
-
 function StudentForm({ student, onUpdate, onRemove }: StudentFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

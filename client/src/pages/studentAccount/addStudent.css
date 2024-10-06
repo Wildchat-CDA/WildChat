@@ -93,3 +93,48 @@ form {
 .submit-button:hover {
   background-color: #2a7b4c;
 }
+
+
+/*pour les notifications mais a revoir cette page*/
+.notifications {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.error {
+    background-color: #f44336;
+}
+
+.magic-links {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.magic-links h2 {
+    margin-top: 0;
+}
+
+.magic-links ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.magic-links li {
+    margin-bottom: 10px;
+}
