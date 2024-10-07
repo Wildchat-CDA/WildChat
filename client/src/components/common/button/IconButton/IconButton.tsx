@@ -11,28 +11,34 @@ interface IconButtonProps {
   mainsLevees?: boolean;
 }
 
-function IconButton({ 
-  icon, 
-  text, 
-  onClick, 
-  ariaLabel, 
+function IconButton({
+  icon,
+  text,
+  onClick,
+  ariaLabel,
   isActive = false,
   accueil,
   messagesPrives,
   listePresences,
   elevesConnectes,
-  mainsLevees
+  mainsLevees,
 }: IconButtonProps) {
   return (
     <button
-      className={`nav-item ${isActive ? 'active' : ''} ${accueil ? 'accueil' : ''} 
-                 ${messagesPrives ? 'messages-prives' : ''} ${listePresences ? 'liste-presences' : ''}
-                 ${elevesConnectes ? 'eleves-connectes' : ''} ${mainsLevees ? 'mains-levees' : ''}`}
+      className={`nav-item ${isActive ? 'active' : ''} ${
+        accueil ? 'accueil' : ''
+      } 
+                 ${messagesPrives ? 'messages-prives' : ''} ${
+        listePresences ? 'liste-presences' : ''
+      }
+                 ${elevesConnectes ? 'eleves-connectes' : ''} ${
+        mainsLevees ? 'mains-levees' : ''
+      }`}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-pressed={isActive}
     >
-      <div className='icon-wrapper'>
+      <div className='icon-wrapper '>
         <img
           src={`/icons/${icon}`}
           alt=''

@@ -2,6 +2,7 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import MediaControls from '../MediaControl/MediaControl';
 import './UserControl.css';
 
+
 interface UserControlProps {
   userId: string;
   firstName: string;
@@ -23,7 +24,7 @@ function UserControl({
 }: UserControlProps) {
   return (
     <div className="user-control">
-      <div className="user-info">
+      <div className="user-infos">
         <UserAvatar 
           userId={userId}
           onChangeAvatar={onChangeAvatar}

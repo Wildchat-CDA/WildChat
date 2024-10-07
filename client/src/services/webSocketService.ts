@@ -1,4 +1,4 @@
-import { io, Socket } from "socket.io-client";
+import { io, Socket } from 'socket.io-client';
 
 class WebSocketService {
   private static instance: WebSocketService | null = null;
@@ -32,16 +32,16 @@ class WebSocketService {
         timeout: 20000,
       });
 
-      this.socket.on("connect", () => {
+      this.socket.on('connect', () => {
         this.isConnected = true;
         resolve();
       });
 
-      this.socket.on("disconnect", (reason) => {
+      this.socket.on('disconnect', (reason) => {
         this.isConnected = false;
       });
 
-      this.socket.on("connect_error", (error) => {
+      this.socket.on('connect_error', (error) => {
         reject(error);
       });
     });

@@ -13,11 +13,13 @@ export const fetchUser = async (userId: string): Promise<UserInfo> => {
     const response = await axios.get(`http://localhost:3000/user/${userId}`);
     return response.data;
   } catch (error) {
-    return {
-      id: userId,
-      firstName: "Théo",
-      lastName: "Doré",
-      avatarUrl: "/path-to-default-avatar.png",
-    };
+    throw new Error ("User not Found")
+    // return {
+    //   id: userId,
+      
+    //    firstName: "Théo",
+    //   lastName: "Doré",
+    //   avatarUrl: "/path-to-default-avatar.png",
+    // };
   }
 };

@@ -11,13 +11,21 @@ import { AudioProvider } from './context/AudioContext';
 import Cookies from 'js-cookie';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  // const cookie = JSON.parse(Cookies.get('token') as string);
+  // const token = cookie.encoded;
 
-
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = Cookies.get('token');
+  //TODO CALL TOKEN DECODED FROM
   const decoded: any = token && jwtDecode<JwtPayload>(token);
   const date = new Date(decoded?.exp * 1000);
-  return (token && decoded?.exp * 1000 > new Date().getTime()) ? <>{children}</> : <Navigate to="/login" replace />;
+  return token && decoded?.exp * 1000 > new Date().getTime() ? (
+    <>{children}</>
+  ) : (
+    <Navigate to='/login' replace />
+  );
 };
 
 const App: React.FC = () => {
@@ -33,28 +41,26 @@ const App: React.FC = () => {
   const isMobile = screenSize <= 768;
 
   return (
-
-          <AudioProvider isMuted={muted}>
-            <UserRoleProvider>
-              <HandRaiseProvider>
-                <NavigationProvider>
-                  <ModalProvider>
-                    {isMobile ? (
-                      <MobileLayout muted={muted} setMuted={setMuted}>
-                        <MainContent isMobile={true} />
-                      </MobileLayout>
-                    ) : (
-                      <DesktopLayout muted={muted} setMuted={setMuted}>
-                        <MainContent isMobile={false} />
-                      </DesktopLayout>
-                    )}
-                  </ModalProvider>
-                </NavigationProvider>
-              </HandRaiseProvider>
-            </UserRoleProvider>
-          </AudioProvider>
+    // <AudioProvider isMuted={muted}>
+    <UserRoleProvider>
+      <HandRaiseProvider>
+        <NavigationProvider>
+          <ModalProvider>
+            {isMobile ? (
+              <MobileLayout muted={muted} setMuted={setMuted}>
+                <MainContent isMobile={true} />
+              </MobileLayout>
+            ) : (
+              <DesktopLayout muted={muted} setMuted={setMuted}>
+                <MainContent isMobile={false} />
+              </DesktopLayout>
+            )}
+          </ModalProvider>
+        </NavigationProvider>
+      </HandRaiseProvider>
+    </UserRoleProvider>
+    // </AudioProvider>
   );
 };
 
 export default App;
-
