@@ -1,4 +1,4 @@
-.add-students-page {
+ .add-students-page {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
@@ -9,6 +9,8 @@
   justify-content: flex-start;
   overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", sans-serif;
+
 }
 
 form {
@@ -150,4 +152,59 @@ form {
 
 li a{
   color: #f5f5f5;
+} 
+
+.set-password-page {
+  width: 100%;
+  max-width: 550px;
+  padding: 20px;
+  color: white;
+
+}
+
+.set-password-page h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  padding-left: 15px;
+}
+
+button.ChangePassword {
+  background-color: #35a554;
+  color: white;
+  font-size: 13px;
+  border: none;
+  border-radius: 15px;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.error-message{
+  padding: 15px;
+  font-size: 20px;
+}
+
+button.ChangePassword:hover {
+  background-color: #2a7b4c;
+}
+
+@media (max-width: 768px) {
+  .set-password-page {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .set-password-page {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .form-group input {
+    font-size: 10px;
+}
 }

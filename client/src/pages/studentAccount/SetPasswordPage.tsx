@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../../components/common/Logo';
-import "../../components/authentification/Auth.css"
+import "./addStudent.css"
 
 const schema = z.object({
   password: z.string()
@@ -72,7 +72,7 @@ function SetPasswordPage() {
             autoComplete="password"
             {...register('password')}
           />
-          {errors.password && <span>{errors.password.message}</span>}
+          {errors.password && <span className="error-message">{errors.password.message}</span>}
         </div>
         <div className='form-group'>
           <label htmlFor="confirmPassword" aria-label='confirmPassword'>Confirmer le mot de passe</label>
