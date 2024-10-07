@@ -10,6 +10,8 @@ import ModalWrapper from '../../common/modal/ModalWrapper';
 import UserIcons from '../../audio/UserIcons';
 import { AudioCall } from '../../audio/AudioCall';
 import { ISectionProps } from '../section/Section';
+import { MediaContext } from '../../../context/MediaContext';
+import { useContext, useState } from 'react';
 
 interface IRoomProps {
   section: ISection;
@@ -31,11 +33,16 @@ function Room({
   type,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
+  const mediaContext = useContext(MediaContext);
+  const { toggleCall, isCalling } = mediaContext;
 
   const handleRoom = (room: IChannel) => {
     console.log('je passe');
     if (type === 'library') {
       setActiveContentMainComp(true);
+    }
+    if (type === 'classRoom') {
+      toggleCall(true);
     }
     affectedCurrentSection(room);
   };
@@ -62,6 +69,12 @@ function Room({
     setActiveModal(ModalTypeEnum.DeleteRoom);
   };
 
+  const callAutorization = (room: IChannel) => {
+    return (
+      vocalChannelPosition === room.uuid && type === 'classRoom' && isCalling
+    );
+  };
+
   return (
     <div className='rooms-container'>
       {section.channels.map((room) => (
@@ -79,7 +92,7 @@ function Room({
             </span>
             <div className='users'>
               {type === 'classRoom' && <UserIcons room={room} />}
-              {vocalChannelPosition === room.uuid && type === 'classRoom' && (
+              {callAutorization(room) && (
                 <>
                   <AudioCall currentSection={currentSection} />
                 </>
