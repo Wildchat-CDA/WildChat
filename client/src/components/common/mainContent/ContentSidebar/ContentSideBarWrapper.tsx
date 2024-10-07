@@ -6,7 +6,7 @@ import {
 import SectionPage from '../../../../pages/sectionPage/SectionPage';
 import RaisedHandsList from '../../../teacher/RaisedHandList/RaisedHandsList';
 import PresenceList from '../../../teacher/PresenceList/PresenceList';
-import AddStudentsPage from '../../../../pages/studentAccount/AddStudentPage';
+import AddStudentsPage from '../../../teacher/addStudent/AddStudentPage';
 
 interface ContentSideBarWrapperProps {
   activeContentSideBar: ActiveSideBarType;

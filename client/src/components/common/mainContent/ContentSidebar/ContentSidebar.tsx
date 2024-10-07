@@ -3,8 +3,8 @@ import './ContentSidebar.css';
 import Setting from '../../../UserControlSettings/UserControlSettings';
 import ContentSideBarWrapper from './ContentSideBarWrapper';
 import { useNavigation } from '../../../../context/NavigationContext';
-import AddStudentsPage from '../../../../pages/studentAccount/AddStudentPage';
-import StudentForm from '../../../../pages/studentAccount/StudentForm';
+import AddStudentsPage from '../../../teacher/addStudent/AddStudentPage';
+import StudentForm from '../../../teacher/addStudent/StudentForm';
 
 
 

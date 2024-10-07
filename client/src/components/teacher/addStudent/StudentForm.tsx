@@ -1,6 +1,6 @@
 import React from 'react';
 import { Student } from './AddStudentPage';
-import './addStudent.css';
+import '../../../pages/studentAccount/addStudent.css';
 
 interface StudentFormProps {
   student: Student;

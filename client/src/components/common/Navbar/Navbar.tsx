@@ -90,31 +90,31 @@ function Navbar({ isMobile }: NavbarProps) {
         <>
           <IconButton
             icon='home.png'
-            text='Accueil'
+            text={isMobile ? "" : 'Accueil'}
             onClick={() => handleComponent(ContentSideBarEnum.Home)}
             ariaLabel="Aller à l'accueil"
           />
             <IconButton
             icon='email.png'
-            text='Message privée'
+            text={isMobile ? "" :'Message privée'}
             onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             ariaLabel="Voir les messages privés"
           />
           <IconButton
             icon='listStudent.png'
-            text='Liste des présences'
+            text={isMobile ? "" : 'Liste des présences'}
             onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             ariaLabel="Voir la liste des présences"
           />
            <IconButton
             icon='palm.png'
-            text='Mains levées'
+            text={isMobile ? "" : 'Mains levées'}
             onClick={() => handleComponent(ContentSideBarEnum.RaisedHand)}
             ariaLabel="Voir la liste des mains levées"
           />
           <IconButton
             icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
-            text='Prendre la parole'
+            text={isMobile ? "" : 'Prendre la parole'}
             onClick={toggleMicrophone}
             isActive={isMicrophoneOn}
             ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
@@ -122,7 +122,7 @@ function Navbar({ isMobile }: NavbarProps) {
 
           <IconButton
             icon='add-new.png'
-            text='Ajouter un élève'
+            text={isMobile ? "" : 'Ajouter un élève'}
             onClick={() => handleComponent(ContentSideBarEnum.AddStudent)}
             ariaLabel="Ajouter un élève"
           />

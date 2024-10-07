@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import StudentForm from './StudentForm';
-import { inviteStudents, StudentInvite } from '../../services/auth/studentService';
-import './addStudent.css';
+import { inviteStudents, StudentInvite } from '../../../services/auth/studentService';
+import '../../../pages/studentAccount/addStudent.css';
 
 export interface Student {
     id: number;
