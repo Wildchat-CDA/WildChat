@@ -7,7 +7,6 @@ export const inviteStudents = async (students: StudentInvite[]) => {
   const tokenCookie = document.cookie
     .split("; ")
     .find((row) => row.startsWith("token="))
-    ?.split("=")[1];
 
   if (!tokenCookie) {
     throw new Error("Token non trouvé");
@@ -27,7 +26,7 @@ export const inviteStudents = async (students: StudentInvite[]) => {
     },
   };
 
-  console.log("Détails de la requête : ", {
+  console.info("Détails de la requête : ", {
     url: `${API_URL}/invite`,
     method: "POST",
     data: students,
@@ -47,8 +46,8 @@ export const inviteStudents = async (students: StudentInvite[]) => {
       })),
       config
     );
-    console.log("Réponse du serveur : ", response);
-    console.log("token dans serviceStudent:", token)
+    console.info("Réponse du serveur : ", response);
+    
     return response.data;
   } catch (error: unknown) {
     console.error("Erreur lors de l'invitation des étudiants:", error);
