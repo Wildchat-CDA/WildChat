@@ -80,7 +80,9 @@ export class SectionService {
 
       const newConfig = this.configRepository.create({
         maxSlot: 1,
-        type: await this.typeRepository.findOneBy({ id: 1 }),
+        type: await this.typeRepository.findOne({
+          where: { name: 'public' },
+        }),
       });
 
       newChannel.config = newConfig;
@@ -136,7 +138,9 @@ export class SectionService {
 
         const newConfig = this.configRepository.create({
           maxSlot: 1,
-          type: await this.typeRepository.findOneBy({ id: 1 }),
+          type: await this.typeRepository.findOne({
+            where: { name: 'public' },
+          }),
         });
 
         newChannel.config = newConfig;

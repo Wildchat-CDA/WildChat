@@ -22,7 +22,7 @@
 }
 
 .logo-text {
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-weight: 200;
   font-size: 14px;
   margin-top: 5px;
@@ -63,7 +63,7 @@
 }
 
 .nav-text {
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-weight: 200;
   font-size: 12px;
   margin-top: 5px;
@@ -86,11 +86,11 @@
   font-weight: 700;
 }
 
-.nav-item[aria-pressed="true"] .icon-wrapper {
+.nav-item[aria-pressed='true'] .icon-wrapper {
   background-color: #35a554;
 }
 
-.nav-item[aria-pressed="true"] .nav-text {
+.nav-item[aria-pressed='true'] .nav-text {
   color: #35a554;
   background-color: #35a554;
 }
@@ -119,7 +119,7 @@
 
   .nav-item {
     width: 100%;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
   }
 
   .nav-text {

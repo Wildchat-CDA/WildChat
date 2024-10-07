@@ -1,6 +1,12 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
-import Peer, { MediaConnection } from "peerjs";
-import io, { Socket } from "socket.io-client";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import Peer, { MediaConnection } from 'peerjs';
+import io, { Socket } from 'socket.io-client';
 import { User, ChannelInfo, JoinChannelResponse } from '../types/audioTypes';
 
 
@@ -10,11 +16,22 @@ const SOCKET_SERVER = apiUrl;
 
 export const AudioContext = createContext<any>(null);
 
-export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode, isMuted: boolean }> = ({ children, isMuted }) => {
-  const [myPeerID, setMyPeerID] = useState<string>("");
-  const [channelUUID, setChannelUUID] = useState<string>("");
+export function useAudio() {
+  const context = useContext(AudioContext);
+  if (context === undefined) {
+    throw new Error('useAudioContext must be used within an AudioProvider');
+  }
+  return context;
+}
+
+export const AudioProvider: React.FunctionComponent<{
+  children: React.ReactNode;
+  isMuted: boolean;
+}> = ({ children, isMuted }) => {
+  const [myPeerID, setMyPeerID] = useState<string>('');
+  const [channelUUID, setChannelUUID] = useState<string>('');
   const [connectedUsers, setConnectedUsers] = useState<User[]>([]);
-  
+
   const localAudioRef = useRef<HTMLAudioElement>(null);
   const remoteAudioRef = useRef<HTMLAudioElement>(null);
   const peerRef = useRef<Peer | null>(null);
@@ -25,8 +42,9 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
   useEffect(() => {
     const initializePeerAndSocket = async () => {
       peerRef.current = new Peer();
-      
-      peerRef.current.on("open", (peerID) => {
+      console.log('PeerRef AudioContext :', peerRef.current);
+
+      peerRef.current.on('open', (peerID) => {
         setMyPeerID(peerID);
 
         socketRef.current = io(SOCKET_SERVER);
@@ -36,11 +54,23 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
           setChannelUUID(response.channelUUID);
         });
 
+        socketRef.current.emit(
+          'join-channel',
+          { peerID },
+          (response: JoinChannelResponse) => {
+            setChannelUUID(response.channelUUID);
+          }
+        );
+        console.log('sockerRef.current AudioContext :', socketRef.current);
         setupSocketListeners();
       });
 
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: false,
+          audio: true,
+        });
+        console.log('stream : ', stream);
         streamRef.current = stream;
         if (localAudioRef.current) {
           localAudioRef.current.srcObject = stream;
@@ -59,25 +89,25 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
 
   const setupSocketListeners = () => {
     if (!socketRef.current) return;
-
     socketRef.current.on('user-joined', (data: { users: User[] }) => {
+      console.log('DATA : ', data);
       setConnectedUsers(data.users);
-      const newUser = data.users.find(user => user.peerID !== myPeerID);
+      const newUser = data.users.find((user) => user.peerID !== myPeerID);
       if (newUser && streamRef.current) {
         callUser(newUser.peerID);
       }
     });
-
-    socketRef.current.on('user-disconnected', (data: { peerID: string, uuid: string, users: User[] }) => {
-      setConnectedUsers(data.users);
-      
-      const connection = connectionsRef.current.get(data.peerID);
-      if (connection) {
-        connection.close();
-        connectionsRef.current.delete(data.peerID);
+    socketRef.current.on(
+      'user-disconnected',
+      (data: { peerID: string; uuid: string; users: User[] }) => {
+        setConnectedUsers(data.users);
+        const connection = connectionsRef.current.get(data.peerID);
+        if (connection) {
+          connection.close();
+          connectionsRef.current.delete(data.peerID);
+        }
       }
-    });
-
+    );
     socketRef.current.emit('request-channel-info', (info: ChannelInfo) => {
       setChannelUUID(info.channelUUID);
       setConnectedUsers(info.users);
@@ -93,19 +123,21 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
       peerRef.current.destroy();
     }
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
     }
-    connectionsRef.current.forEach(connection => connection.close());
+    connectionsRef.current.forEach((connection) => connection.close());
   };
 
   useEffect(() => {
     if (peerRef.current) {
-      peerRef.current.on("call", handleIncomingCall);
+      peerRef.current.on('call', handleIncomingCall);
+      console.log('local :', localAudioRef);
+      console.log('remote : ', remoteAudioRef);
     }
 
     return () => {
       if (peerRef.current) {
-        peerRef.current.off("call", handleIncomingCall);
+        peerRef.current.off('call', handleIncomingCall);
       }
     };
   }, []);
@@ -113,7 +145,7 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
   const handleIncomingCall = (call: MediaConnection) => {
     if (streamRef.current) {
       call.answer(streamRef.current);
-      call.on("stream", (remoteStream: MediaStream) => {
+      call.on('stream', (remoteStream: MediaStream) => {
         if (remoteAudioRef.current) {
           remoteAudioRef.current.srcObject = remoteStream;
         }
@@ -125,7 +157,7 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
   const callUser = (remotePeerID: string) => {
     if (streamRef.current && peerRef.current) {
       const call = peerRef.current.call(remotePeerID, streamRef.current);
-      call.on("stream", (remoteStream) => {
+      call.on('stream', (remoteStream) => {
         if (remoteAudioRef.current) {
           remoteAudioRef.current.srcObject = remoteStream;
         }
@@ -135,25 +167,26 @@ export const AudioProvider: React.FunctionComponent<{ children: React.ReactNode,
   };
 
   const contextValue = {
+    peerRef,
+    socketRef,
     myPeerID,
     channelUUID,
     connectedUsers,
     localAudioRef,
     remoteAudioRef,
     callUser,
-    handleIncomingCall
+    handleIncomingCall,
+    setChannelUUID,
   };
- 
-  const isMute = () => {
-    
-  }
 
-  isMute()
+  const isMute = () => {};
+
+  isMute();
 
   return (
     <AudioContext.Provider value={contextValue}>
       {children}
-      <audio ref={localAudioRef} autoPlay  playsInline muted={isMuted} />
+      <audio ref={localAudioRef} autoPlay playsInline muted={isMuted} />
       <audio ref={remoteAudioRef} autoPlay playsInline muted={isMuted} />
     </AudioContext.Provider>
   );

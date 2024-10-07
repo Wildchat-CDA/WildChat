@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { webSocketService } from "../services/webSocketService";
+import { useState, useEffect, useCallback } from 'react';
+import { webSocketService } from '../services/webSocketService';
 
 interface HandRaiseData {
   userId: number;
   userName: string;
-  type: "self" | "table";
+  type: 'self' | 'table';
   table: string;
   timestamp: number;
 }
@@ -17,15 +17,15 @@ const useHandRaise = (userId: number, userName: string, table: string) => {
   });
 
   const raiseHand = useCallback(
-    (type: "self" | "table") => {
-      webSocketService.emit("raiseHand", { userId, userName, type, table });
+    (type: 'self' | 'table') => {
+      webSocketService.emit('raiseHand', { userId, userName, type, table });
     },
     [userId, userName, table]
   );
 
   const lowerHand = useCallback(
-    (type: "self" | "table") => {
-      webSocketService.emit("lowerHand", { userId, type });
+    (type: 'self' | 'table') => {
+      webSocketService.emit('lowerHand', { userId, type });
     },
     [userId]
   );
@@ -35,17 +35,17 @@ const useHandRaise = (userId: number, userName: string, table: string) => {
       setRaisedHands(data);
       const userHands = data.filter((hand) => hand.userId === userId);
       setIsHandRaised({
-        self: userHands.some((hand) => hand.type === "self"),
-        table: userHands.some((hand) => hand.type === "table"),
+        self: userHands.some((hand) => hand.type === 'self'),
+        table: userHands.some((hand) => hand.type === 'table'),
       });
     };
 
     webSocketService.connect();
-    webSocketService.on("raisedHandsUpdate", handleRaisedHandsUpdate);
-    webSocketService.emit("getRaisedHands");
+    webSocketService.on('raisedHandsUpdate', handleRaisedHandsUpdate);
+    webSocketService.emit('getRaisedHands');
 
     return () => {
-      webSocketService.off("raisedHandsUpdate", handleRaisedHandsUpdate);
+      webSocketService.off('raisedHandsUpdate', handleRaisedHandsUpdate);
     };
   }, [userId]);
 

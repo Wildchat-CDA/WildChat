@@ -21,6 +21,11 @@ function UserAvatar({
   const { avatarUrl, firstName, lastName, isLoading, error } = useAvatar(userId);
   const navigate = useNavigate();
 
+
+  const cookie = JSON.parse(Cookies.get('token') as string);
+ const name = cookie.userInfo.name;
+  
+
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   
   const onLogout = () => {
@@ -52,33 +57,35 @@ function UserAvatar({
     }
     return (
       <img
-        src={avatarUrl || "/icons/avatar.png"}
-        alt={`Avatar de ${firstName} ${lastName}`}
+        src={avatarUrl || '/icons/avatar.png'}
+        // alt={`Avatar de ${firstName} ${lastName}`}
+        alt={`Avatar de  ${name}`}
         className={`user-avatar ${error ? 'default-avatar' : ''}`}
-        width="40"
-        height="40"
+        width='40'
+        height='40'
       />
     );
   };
 
   return (
-    <div className="user-avatar-container">
+    <div className='user-avatar-container'>
       <button
-        className="user-avatar-button"
+        className='user-avatar-button'
         onClick={toggleDropdown}
-        aria-label="Menu utilisateur"
+        aria-label='Menu utilisateur'
         aria-expanded={showDropdown}
       >
         {renderAvatar()}
-        <span className="user-name">
-          {isLoading ? 'Chargement...' : `${firstName} ${lastName}`}
+        <span className='user-name'>
+          {/* {isLoading ? 'Chargement...' : `${firstName} ${lastName}`} */}
+          {isLoading ? 'Chargement...' : ` ${name}`}
         </span>
       </button>
       {showDropdown && (
-        <div className="dropdown-avatar-menu">
+        <div className='dropdown-avatar-menu'>
           <Dropdown
             items={dropdownItems}
-            aria-label="Options utilisateur"
+            aria-label='Options utilisateur'
             onClose={() => setShowDropdown(false)}
           />
         </div>
