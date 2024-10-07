@@ -23,7 +23,7 @@ export function AudioCall({ currentSection }: IAudioProps) {
   const peerManagerRef = useRef<boolean>(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
 
   const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.name;
+  const name = cookie.userInfo.firstname;
 
   useEffect(() => {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.

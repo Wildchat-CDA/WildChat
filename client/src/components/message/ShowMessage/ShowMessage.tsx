@@ -23,7 +23,7 @@ const ShowMessage = () => {
   const { currentSection, setCurrentSection } = useNavigation();
 
   const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.name;
+  const name = cookie.userInfo.firstname;
 
   console.log(
     currentSection,

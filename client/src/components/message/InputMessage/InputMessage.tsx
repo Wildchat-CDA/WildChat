@@ -16,7 +16,7 @@ const InputMessage = () => {
 
 
   const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.name;
+  const name = cookie.userInfo.firstname;
  
 
   const adjustHeight = () => {

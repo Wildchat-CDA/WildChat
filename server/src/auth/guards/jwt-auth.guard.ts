@@ -25,7 +25,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       request.user = decoded;
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Token invalide');
+      throw new UnauthorizedException(error, 'Token invalide');
     }
   }
 }
