@@ -93,6 +93,7 @@ async setPassword(@Param('token') token: string, @Body() setPasswordDto: SetPass
       message: result.message,
     };
   } catch (error) {
+    console.error('Erreur lors de la définition du mot de passe:', error);
     throw new HttpException(
       error.message,
       error.status || HttpStatus.BAD_REQUEST,

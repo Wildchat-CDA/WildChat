@@ -15,13 +15,13 @@ const schema = z.object({
 });
 
 type FormData = z.infer<typeof schema>;
- 
+
 const API_URL = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
 
 function SetPasswordPage() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -29,12 +29,23 @@ function SetPasswordPage() {
     try {
       const response = await axios.put(`${API_URL}/invite/${token}`, {
         password: data.password,
-        
       });
+      console.log('Réponse du serveur:', response.data);
       navigate('/login');
-      console.log(response.data, response.status);
     } catch (error) {
-      console.error('Erreur lors de la définition du mot de passe:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Erreur Axios:', error.response?.data);
+        setError('password', { 
+          type: 'manual', 
+          message: error.response?.data?.message || 'Une erreur est survenue lors de la définition du mot de passe' 
+        });
+      } else {
+        console.error('Erreur inattendue:', error);
+        setError('password', { 
+          type: 'manual', 
+          message: 'Une erreur inattendue est survenue' 
+        });
+      }
     }
   };
 
@@ -47,15 +58,20 @@ function SetPasswordPage() {
           <input
             type="password"
             id="password"
+            placeholder="Votre Mot de passe"
+            autoComplete="password"
             {...register('password')}
           />
           {errors.password && <span>{errors.password.message}</span>}
         </div>
         <div>
-          <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
+          <label htmlFor="confirmPassword" aria-label='confirmPassword'>Confirmer le mot de passe</label>
           <input
             type="password"
+            placeholder="Votre Email"
+            autoComplete="email"
             id="confirmPassword"
+            
             {...register('confirmPassword')}
           />
           {errors.confirmPassword && <span>{errors.confirmPassword.message}</span>}
