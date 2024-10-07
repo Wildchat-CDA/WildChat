@@ -12,6 +12,7 @@ import {
   Get,
   Param,
   Put,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -65,11 +66,14 @@ export class AuthController {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
   }
-
 @Post('invite')
 @UseGuards(RolesGuard, JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[]) {
+async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[], @Req() req) {
+  console.log('Headers reçus:', req.headers);
+  console.log('Token reçu:', req.headers.authorization);
+  console.log('Body reçu:', inviteStudentDto);
+
   try {
     const result = await this.authService.inviteStudents(inviteStudentDto);
     return {
@@ -77,13 +81,13 @@ async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[]) {
       invitations: result.invitations,
     };
   } catch (error) {
+    console.error('Erreur dans inviteStudents:', error);
     throw new HttpException(
       error.message,
       error.status || HttpStatus.BAD_REQUEST,
     );
   }
 }
-
 @Put('invite/:token')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 async setPassword(@Param('token') token: string, @Body() setPasswordDto: SetPasswordDto) {

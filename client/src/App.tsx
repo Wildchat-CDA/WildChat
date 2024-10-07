@@ -14,8 +14,9 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // const cookie = JSON.parse(Cookies.get('token') as string);
+  const cookie = JSON.parse(Cookies.get('token') as string);
   // const token = cookie.encoded;
+  // console.log("token dans app:" ,token)
 
   const token = Cookies.get('token');
   //TODO CALL TOKEN DECODED FROM
