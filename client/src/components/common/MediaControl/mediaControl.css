@@ -1,7 +1,7 @@
 .media-control {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
 }
 
 .media-control .icon-button span {
@@ -13,11 +13,11 @@
   background-color: #232428;
   /* test css */
     
-    position: absolute;
-    bottom: 5.5%;
+    /* position: absolute;
+    bottom: 5.5%; */
    
     /* left: 9%; */
-        left: 5%;
+        /* left: 5%; */
        width:31.6%
 }
 
