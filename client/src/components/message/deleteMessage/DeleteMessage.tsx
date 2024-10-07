@@ -9,13 +9,7 @@ import Cookies from 'js-cookie';
 interface IDeleteMessageProps {
   setMessage: IModalMessagePayload['setMessages'];
   setActiveModal: ModalContextType['setActiveModal'];
-
-  }
-
-    // const cookie = JSON.parse(Cookies.get('token') as string);
-    // const name = cookie.userInfo.name;
-
-
+}
 
 const DeleteMessage = ({ setMessage, setActiveModal }: IDeleteMessageProps) => {
   const { currentSection } = useNavigation();

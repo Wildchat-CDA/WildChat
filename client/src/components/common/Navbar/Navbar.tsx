@@ -17,11 +17,13 @@ interface NavbarProps {
 }
 
 function Navbar({ isMobile }: NavbarProps) {
-  const { userRole } = useUserRole();
+  const { userRole, userInfos } = useUserRole();
+  const { currentSection } = useNavigation();
+
   const { isHandRaised, raiseHand, lowerHand } = useHandRaise(
     1,
-    'Current User',
-    'Table-1'
+    userInfos.firstname,
+    currentSection.channelTitle
   );
   const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);
   const [showMediaDropdown, setShowMediaDropdown] = useState(false);

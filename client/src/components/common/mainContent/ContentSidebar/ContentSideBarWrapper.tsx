@@ -7,6 +7,7 @@ import SectionPage from '../../../../pages/sectionPage/SectionPage';
 import RaisedHandsList from '../../../teacher/RaisedHandList/RaisedHandsList';
 import PrivateMessagePage from '../../../../pages/privateMessagePage/PrivateMessagePage';
 import PresenceList from '../../../teacher/PresenceList/PresenceList';
+import { useUserRole } from '../../../../context/UserRoleContext';
 
 interface ContentSideBarWrapperProps {
   activeContentSideBar: ActiveSideBarType;
@@ -15,7 +16,9 @@ interface ContentSideBarWrapperProps {
 function ContentSideBarWrapper({
   activeContentSideBar,
 }: ContentSideBarWrapperProps) {
+  const { userRole } = useUserRole();
   let content = null;
+
   switch (activeContentSideBar) {
     case ContentSideBarEnum.Home:
       content = <SectionPage />;
@@ -24,11 +27,10 @@ function ContentSideBarWrapper({
       content = <PrivateMessagePage />; //TODO : METTRE MON COMPOSANT ICI
       break;
     case ContentSideBarEnum.PresenceList:
-      //content = 'COMPOSANT presence list';
-      content = < PresenceList/>;
+      content = userRole === 'teacher' && <PresenceList />;
       break;
     case ContentSideBarEnum.RaisedHand:
-      content = <RaisedHandsList />;
+      content = userRole === 'teacher' && <RaisedHandsList />;
       break;
   }
 

@@ -4,6 +4,7 @@ import { useAvatar } from '../../../hooks/useAvatar';
 import { useNavigate } from 'react-router-dom';
 import './userAvatar.css';
 import Cookies from 'js-cookie';
+import { useUserRole } from '../../../context/UserRoleContext';
 
 interface UserAvatarProps {
   userId: string;
@@ -20,10 +21,10 @@ function UserAvatar({
   const [showDropdown, setShowDropdown] = useState(false);
   const { avatarUrl, firstName, lastName, isLoading, error } =
     useAvatar(userId);
+  const { userInfos } = useUserRole();
   const navigate = useNavigate();
 
-  const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.firstname;
+  const firstname = userInfos.firstname;
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
@@ -61,7 +62,7 @@ function UserAvatar({
       <img
         src={avatarUrl || '/icons/avatar.png'}
         // alt={`Avatar de ${firstName} ${lastName}`}
-        alt={`Avatar de  ${name}`}
+        alt={`Avatar de  ${firstname}`}
         className={`user-avatar ${error ? 'default-avatar' : ''}`}
         width='40'
         height='40'
@@ -80,7 +81,7 @@ function UserAvatar({
         {renderAvatar()}
         <span className='user-name'>
           {/* {isLoading ? 'Chargement...' : `${firstName} ${lastName}`} */}
-          {isLoading ? 'Chargement...' : ` ${name}`}
+          {isLoading ? 'Chargement...' : ` ${firstname}`}
         </span>
       </button>
       {showDropdown && (
