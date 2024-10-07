@@ -1,7 +1,8 @@
 .input-message-container {
   width: 100%;
-  height: 10%;
+  height: 100px;
   background-color: var(--color-secondary);
+  overflow-y: scroll;
 }
 
 .form-container {
