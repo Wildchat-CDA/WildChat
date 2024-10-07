@@ -3,6 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Logo from '../../components/common/Logo';
+import "../../components/authentification/Auth.css"
 
 const schema = z.object({
   password: z.string()
@@ -50,10 +52,18 @@ function SetPasswordPage() {
   };
 
   return (
+    <div className="auth-container">
+    <div className="auth-logo">
+     <Logo width={150} height={200} color="white" aria-hidden="true" />
+     <div className="auth-logo-title">
+       <p>WILD</p>
+       <p>CHAT</p>
+     </div>
+     </div>
     <div className="set-password-page">
       <h1>Définir votre mot de passe</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className='form-group'>
           <label htmlFor="password">Mot de passe</label>
           <input
             type="password"
@@ -64,7 +74,7 @@ function SetPasswordPage() {
           />
           {errors.password && <span>{errors.password.message}</span>}
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="confirmPassword" aria-label='confirmPassword'>Confirmer le mot de passe</label>
           <input
             type="password"
@@ -74,11 +84,13 @@ function SetPasswordPage() {
             
             {...register('confirmPassword')}
           />
-          {errors.confirmPassword && <span>{errors.confirmPassword.message}</span>}
+          {errors.confirmPassword && <span className="error-message">{errors.confirmPassword.message}</span>}
         </div>
-        <button type="submit">Définir le mot de passe</button>
+        <button type="submit" className="ChangePassword">Définir le mot de passe</button>
       </form>
     </div>
+    </div>
+
   );
 }
 
