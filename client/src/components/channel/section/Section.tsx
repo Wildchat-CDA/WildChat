@@ -10,7 +10,6 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 import EditButton from '../../common/button/edit/EditButton';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
-import { webSocketService } from '../../../services/webSocketService';
 
 export interface ISectionProps {
   type: 'library' | 'classRoom';

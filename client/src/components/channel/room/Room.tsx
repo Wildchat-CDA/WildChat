@@ -10,8 +10,7 @@ import ModalWrapper from '../../common/modal/ModalWrapper';
 import UserIcons from '../../audio/UserIcons';
 import { AudioCall } from '../../audio/AudioCall';
 import { ISectionProps } from '../section/Section';
-import { MediaContext } from '../../../context/MediaContext';
-import { useContext, useState } from 'react';
+import { useMedia } from '../../../context/MediaContext';
 
 interface IRoomProps {
   section: ISection;
@@ -33,8 +32,8 @@ function Room({
   type,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
-  const mediaContext = useContext(MediaContext);
-  const { toggleCall, isCalling } = mediaContext;
+
+  const { toggleCall, isCalling } = useMedia();
 
   const handleRoom = (room: IChannel) => {
     console.log('je passe');

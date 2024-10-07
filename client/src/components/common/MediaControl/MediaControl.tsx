@@ -21,7 +21,7 @@ function MediaControl({ userId }: MediaControlProps) {
     setSpeakerVolume,
     isCalling,
     toggleCall,
-    audioObj,
+
   } = mediaContext;
 
   const toggleSpeaker = () => {
@@ -31,8 +31,6 @@ function MediaControl({ userId }: MediaControlProps) {
   const isSpeakerOn = speakerVolume > 0;
 
   const handleCall = () => {
-    console.log("couper l'appel");
-    console.log(audioObj, 'AUDIO OBJET');
     toggleCall(false);
   };
 

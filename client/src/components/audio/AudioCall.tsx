@@ -1,9 +1,9 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import {  useEffect, useRef, useState } from 'react';
 import { peerService } from '../../services/peerJS/peerService';
 import { webSocketService } from '../../services/webSocketService';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
 import { ISectionChannel } from '../../types/sectionTypes';
-import { MediaContext } from '../../context/MediaContext';
+
 import Cookies from 'js-cookie';
 
 interface IAudioProps {

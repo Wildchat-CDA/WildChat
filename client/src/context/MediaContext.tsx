@@ -1,10 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
-interface IAudioObjg {
-  peerId: string;
-  roomUuid: string;
-  name: string;
-}
 interface MediaState {
   isMicrophoneOn: boolean;
   isWebcamOn: boolean;
@@ -18,7 +13,6 @@ interface MediaState {
   availableWebcams: MediaDeviceInfo[];
   availableSpeakers: MediaDeviceInfo[];
   isCalling: boolean;
-  audioObj: IAudioObjg;
 }
 
 interface MediaContextType extends MediaState {
@@ -32,7 +26,6 @@ interface MediaContextType extends MediaState {
   selectSpeaker: (deviceId: string) => void;
   refreshDevices: () => Promise<void>;
   toggleCall: (prevState: boolean) => void;
-  setAudioObjg: (prevState: IAudioObjg) => void;
 }
 
 export const MediaContext = createContext<MediaContextType | undefined>(
@@ -55,11 +48,6 @@ export const MediaProvider: React.FC<React.PropsWithChildren> = ({
     availableWebcams: [],
     availableSpeakers: [],
     isCalling: false,
-    audioObj: {
-      peerId: '',
-      roomUuid: '',
-      name: '',
-    },
   });
 
   const refreshDevices = async () => {
@@ -137,9 +125,6 @@ export const MediaProvider: React.FC<React.PropsWithChildren> = ({
   const toggleCall = (isCalling: boolean) => {
     setState((prevState) => ({ ...prevState, isCalling: isCalling }));
   };
-  const setAudioObjg = (audioObj: IAudioObjg) => {
-    setState((prevState) => ({ ...prevState, audioObj: audioObj }));
-  };
 
   return (
     <MediaContext.Provider
@@ -155,7 +140,6 @@ export const MediaProvider: React.FC<React.PropsWithChildren> = ({
         selectSpeaker,
         refreshDevices,
         toggleCall,
-        setAudioObjg,
       }}
     >
       {children}
