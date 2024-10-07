@@ -3,6 +3,7 @@
   margin-left: 80px;
   height: calc(100% - 60px);
   transition: width 0.3s ease;
+  height: 100%;
 }
 
 @media (max-width: 768px) {
