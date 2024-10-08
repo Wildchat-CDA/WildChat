@@ -1,13 +1,17 @@
-import { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type UserRole = 'student' | 'teacher';
 
 interface UserRoleContextType {
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
+  vocalChannelPosition: string | null;
+  setVocalChannelPosition: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined);
+const UserRoleContext = createContext<UserRoleContextType | undefined>(
+  undefined
+);
 
 export function useUserRole() {
   const context = useContext(UserRoleContext);
@@ -23,8 +27,14 @@ interface UserRoleProviderProps {
 
 export function UserRoleProvider({ children }: UserRoleProviderProps) {
   const [userRole, setUserRole] = useState<UserRole>('student');
+  const [vocalChannelPosition, setVocalChannelPosition] = useState<string>('');
 
-  const value = { userRole, setUserRole };
+  const value = {
+    userRole,
+    setUserRole,
+    vocalChannelPosition,
+    setVocalChannelPosition,
+  };
 
   return (
     <UserRoleContext.Provider value={value}>

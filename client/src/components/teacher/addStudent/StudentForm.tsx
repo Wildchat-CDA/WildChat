@@ -1,13 +1,12 @@
 import React from 'react';
 import { Student } from './AddStudentPage';
-import "./addStudent.css";
+import '../../../pages/studentAccount/addStudent.css';
 
 interface StudentFormProps {
   student: Student;
   onUpdate: (updatedStudent: Student) => void;
   onRemove: () => void;
 }
-
 function StudentForm({ student, onUpdate, onRemove }: StudentFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -11,8 +11,7 @@ import { Role } from './role.entity';
 import { Channel } from './channel.entity';
 
 @Entity()
-@Unique(['email']) 
-
+@Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

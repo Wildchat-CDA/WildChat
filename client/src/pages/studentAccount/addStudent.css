@@ -1,4 +1,4 @@
-.add-students-page {
+ .add-students-page {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
@@ -9,6 +9,8 @@
   justify-content: flex-start;
   overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", sans-serif;
+
 }
 
 form {
@@ -37,13 +39,17 @@ form {
   background-color: #fff;
 }
 
-/* Ajout de la règle pour les labels en blanc */
+
+.form-field input{
+  width: 100%;
+}
+
 .student-form label {
-  color: white; /* Couleur des labels en blanc */
-  font-size: 14px;
+  color: white;
+  font-size: 12px;
   margin-bottom: 5px;
   align-self: flex-start;
-  padding-left: 15%;
+  padding-left: 7%;
 }
 
 .removeStudent-form {
@@ -92,4 +98,113 @@ form {
 .add-student-button:hover,
 .submit-button:hover {
   background-color: #2a7b4c;
+}
+
+.notifications {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.error {
+    background-color: #f44336;
+}
+
+.magic-links {
+    margin-top: 10px;
+    margin-left: 1px;
+    padding: 13px;
+    background-color: #2B2D31;
+    border-radius: 25px;
+    font-size: 13px;
+}
+
+.magic-links h2 {
+    margin-top: 0;
+    font-size: 15px;
+}
+
+.magic-links ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 5px;
+    color: #fcfefe;
+}
+
+.magic-links li {
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+li a{
+  color: #f5f5f5;
+} 
+
+.set-password-page {
+  width: 100%;
+  max-width: 550px;
+  padding: 20px;
+  color: white;
+
+}
+
+.set-password-page h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  padding-left: 15px;
+}
+
+button.ChangePassword {
+  background-color: #35a554;
+  color: white;
+  font-size: 13px;
+  border: none;
+  border-radius: 15px;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.error-message{
+  padding: 15px;
+  font-size: 20px;
+}
+
+button.ChangePassword:hover {
+  background-color: #2a7b4c;
+}
+
+@media (max-width: 768px) {
+  .set-password-page {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .set-password-page {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .form-group input {
+    font-size: 10px;
+}
 }

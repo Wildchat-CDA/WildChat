@@ -4,6 +4,7 @@ import { editMessage } from '../../../services/message/fetch/EditMessage';
 import './EditMessage.css';
 import { handleKeyDown } from '../../../services/eventHandlerService';
 
+
 const MessageEditor: React.FC<IMessageUpdateProps> = ({
   name,
   message,
@@ -19,6 +20,7 @@ const MessageEditor: React.FC<IMessageUpdateProps> = ({
     setActiveEdit(false);
   };
 
+  
   const handleSaveClick = async () => {
     if (newMessage.length === 0) {
       setError('Message cannot be empty');
@@ -31,6 +33,7 @@ const MessageEditor: React.FC<IMessageUpdateProps> = ({
       await editMessage({ name, index, message: newMessage, roomId });
       console.log('Edit successful');
       setActiveEdit(false);
+       console.log(newMessage, 'edition');
       updateMessage(newMessage, index);
     } catch (error) {
       console.error('Failed to edit message:', error);

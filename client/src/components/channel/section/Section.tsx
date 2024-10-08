@@ -28,7 +28,6 @@ const Section = ({ type }: ISectionProps) => {
   const [activeSection, setActiveSection] = useState<number[]>([]);
 
   useEffect(() => {
-
     try {
       fetchGetSection(type)
         .then((data) => {
@@ -141,6 +140,7 @@ const Section = ({ type }: ISectionProps) => {
                   currentSection={currentSection}
                   setActiveModal={setActiveModal}
                   activeModal={activeModal}
+                  type={type}
                 />
                 <AddButton action={() => handleNewRoom(section)} />
               </>

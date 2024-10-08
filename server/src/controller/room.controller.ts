@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { RoomService, User } from '../service/room.service';
+import { RoomService, User } from '../service/roomOld/room.service';
 
 @Controller('/room')
 export class RoomController {

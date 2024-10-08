@@ -9,6 +9,10 @@ import {
   BadRequestException,
   HttpStatus,
   UseGuards,
+  Get,
+  Param,
+  Put,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -17,6 +21,7 @@ import { InviteStudentDto } from './dto/invite-student.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { SetPasswordDto } from './dto/set-password.dto';
 
 @Controller()
 export class AuthController {
@@ -61,26 +66,42 @@ export class AuthController {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
   }
+@Post('invite')
+@UseGuards(RolesGuard, JwtAuthGuard)
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+async inviteStudents(@Body() inviteStudentDto: InviteStudentDto[], @Req() req) {
+  console.log('Headers reçus:', req.headers);
+  console.log('Token reçu:', req.headers.authorization);
+  console.log('Body reçu:', inviteStudentDto);
 
-  @Post('invite')
-  @UseGuards(RolesGuard, JwtAuthGuard)
-  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async inviteStudent(@Body() inviteStudentDto: InviteStudentDto) {
-    try {
-      const result = await this.authService.inviteStudent(
-        inviteStudentDto.email,
-        inviteStudentDto.name,
-        inviteStudentDto.firstName,
-      );
-      return {
-        message: result.message,
-        token: result.token,
-      };
-    } catch (error) {
-      throw new HttpException(
-        error.message,
-        error.status || HttpStatus.BAD_REQUEST,
-      );
-    }
+  try {
+    const result = await this.authService.inviteStudents(inviteStudentDto);
+    return {
+      message: result.message,
+      invitations: result.invitations,
+    };
+  } catch (error) {
+    console.error('Erreur dans inviteStudents:', error);
+    throw new HttpException(
+      error.message,
+      error.status || HttpStatus.BAD_REQUEST,
+    );
   }
+}
+@Put('invite/:token')
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+async setPassword(@Param('token') token: string, @Body() setPasswordDto: SetPasswordDto) {
+  try {
+    const result = await this.authService.setPassword(token, setPasswordDto.password);
+    return {
+      message: result.message,
+    };
+  } catch (error) {
+    console.error('Erreur lors de la définition du mot de passe:', error);
+    throw new HttpException(
+      error.message,
+      error.status || HttpStatus.BAD_REQUEST,
+    );
+  }
+}
 }

@@ -7,11 +7,16 @@ import {
   Delete,
   Put,
   NotFoundException,
+  Req,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ChannelService } from '../service/channel.service';
 import { Channel } from 'src/entity/channel.entity';
 import { Config } from 'src/entity/config.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { Request } from 'express';
+import { User } from 'src/entity/user.entity';
+import UserIdRequest from '../interface/userIdRequest.interface';
 
 @Controller('/channel')
 export class ChannelController {
@@ -69,5 +74,30 @@ export class ChannelController {
     } catch (error) {
       throw new NotFoundException(error.message);
     }
+  }
+
+  @Get('/all/private')
+  async getChannelsWithConfigPrivate(
+    @Req() request: UserIdRequest,
+  ): Promise<Channel[]> {
+    const userId = request['user'].id;
+
+    try {
+      return await this.channelService.getChannelsWithConfigPrivate(userId);
+    } catch (error) {
+      if (error.message === 'User not found') {
+        throw new NotFoundException('User not found');
+      } else {
+        throw new InternalServerErrorException(error.message);
+      }
+    }
+  }
+
+  @Post('/private')
+  async createPrivateChannel(
+    @Body('userId') id: number,
+    @Body('targetUser') targetUser: number,
+  ): Promise<Channel> {
+    return await this.channelService.createPrivateChannel(id, targetUser);
   }
 }

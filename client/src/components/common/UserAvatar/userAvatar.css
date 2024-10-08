@@ -27,3 +27,8 @@
   width: auto;
   max-width: 200px;
 }
+
+.user-avatar-container{
+      display: flex;
+    align-items: center;
+}

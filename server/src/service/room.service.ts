@@ -1,61 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-
-export interface User {
-  uuid: string;
-  peerID: string;
-}
+import { RedisService } from './redis.service';
 
 @Injectable()
 export class RoomService {
-  private _users: User[];
-  private _channelUUID: string;
-
-  constructor() {
-    this._users = [];
-    this._channelUUID = uuidv4(); // UUID fixe pour le canal vocal
+  private _userPeerId: string;
+  private _allRooms: string[];
+  constructor(private readonly redisService: RedisService) {
+    this._userPeerId = '';
+    this._allRooms = [];
   }
 
-  addUser(peerID: string): string {
-    const existingUser = this._users.find((user) => user.peerID === peerID);
-    if (existingUser) {
-      return existingUser.uuid;
+  setClientToPeer(client) {
+    this.redisService.setClientToPeer(client);
+  }
+
+  deleteClientToPeer(client) {
+    this.redisService.deleteClientToPeer(client);
+  }
+
+  addUserOnRoom(data, client) {
+    this.redisService.postPeerIdOnRoom(data, client);
+  }
+
+  deletePeerIdUser(data) {
+    try {
+      this.redisService.deletePeerIdUser(data);
+    } catch (err) {
+      console.error(err);
     }
-    const uuid = uuidv4();
-    this._users.push({ uuid, peerID });
-    return uuid;
-  }
-
-  removeUser(peerID: string): void {
-    this._users = this._users.filter((user) => user.peerID !== peerID);
-  }
-
-  get users(): User[] {
-    return [...this._users];
-  }
-
-  get channelUUID(): string {
-    return this._channelUUID;
-  }
-
-  getUserByPeerID(peerID: string): User | undefined {
-    return this._users.find((user) => user.peerID === peerID);
-  }
-
-  getUserByUUID(uuid: string): User | undefined {
-    return this._users.find((user) => user.uuid === uuid);
-  }
-
-  isPeerConnected(peerID: string): boolean {
-    return this._users.some((user) => user.peerID === peerID);
-  }
-
-  updateUserPeerID(uuid: string, newPeerID: string): boolean {
-    const userIndex = this._users.findIndex((user) => user.uuid === uuid);
-    if (userIndex !== -1) {
-      this._users[userIndex].peerID = newPeerID;
-      return true;
-    }
-    return false;
   }
 }

@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { UserController } from './controller/user.controller';
+import { UserService } from './service/user.service';
 import { AuthModule } from './auth/auth.module';
 import { ChannelController } from './controller/channel.controller';
 import { ConfigController } from './controller/config.controller';
 import { RaisedHandsController } from './controller/RaisedHands.controller';
 import { RedisController } from './controller/redis.controller';
-import { RoomController } from './controller/room.controller';
+// import { RoomController } from './controller/room.controller'; //TODO Voir avec Sonia
 import { SectionController } from './controller/section.controller';
 import { StudentController } from './controller/student.controller';
 import { TypeController } from './controller/type.controller';
@@ -47,7 +49,7 @@ import { TestEmailController } from './controller/test-email.controller';
       entities: [Role, User, Section, Channel, Type, Config],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Section, Channel, Type, Config]),
+    TypeOrmModule.forFeature([Section, Channel, Type, Config, User]),
     AuthModule,
   ],
   controllers: [
@@ -56,7 +58,8 @@ import { TestEmailController } from './controller/test-email.controller';
     ConfigController,
     RaisedHandsController,
     RedisController,
-    RoomController,
+    // RoomController,
+    UserController,
     SectionController,
     TypeController,
     StudentController,
@@ -69,6 +72,7 @@ import { TestEmailController } from './controller/test-email.controller';
     ConfigService,
     RedisService,
     RoomService,
+    UserService,
     SectionService,
     TypeService,
     PresenceService,

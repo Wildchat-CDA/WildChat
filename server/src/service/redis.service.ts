@@ -17,6 +17,7 @@ import {
   IMessageGet,
   IMessageUpdatePayload,
 } from '../../../common/interface/messageInterface';
+import { IPeerIdOnRoomPayload } from '../../../common/interface/redisInterface';
 
 @Injectable()
 export class RedisService implements OnModuleInit {
@@ -67,6 +68,89 @@ export class RedisService implements OnModuleInit {
     return this._client;
   }
 
+  public async deleteClientToPeer(client) {
+    try {
+      // Vérifie si un peerId est associé à ce client
+      const peerId = await this.client.hGet(`client:${client.id}`, 'peerId');
+
+      if (peerId) {
+        console.log(
+          `Client ${client.id} est associé au peerId : ${peerId}. Suppression...`,
+        );
+
+        // Appelle la méthode pour supprimer le peerId associé au client
+        const data = {
+          peerId: peerId,
+          roomUuid: null,
+          name: null,
+          client: null,
+        };
+        await this.deletePeerIdUser(data);
+
+        // Supprime également le peerId du hSet client
+        await this.client.hDel(`client:${client.id}`, 'peerId');
+
+        console.log(
+          `Le peerId ${peerId} a été supprimé pour le client ${client.id}.`,
+        );
+      } else {
+        console.log(
+          `Aucun peerId trouvé pour le client ${client.id}. Pas de suppression nécessaire.`,
+        );
+      }
+    } catch (error) {
+      console.error(
+        'Erreur lors de la suppression du peerId pour le client:',
+        error,
+      );
+      throw new InternalServerErrorException(
+        'Failed to delete peerId for client.',
+      );
+    }
+  }
+
+  public async deletePeerIdUser(data: IPeerIdOnRoomPayload) {
+    if (data.peerId === null || data.peerId.length === 0) {
+      throw new Error('Le peerId ne peut pas être vide');
+    }
+
+    try {
+      const peerData = `${data.peerId}:${data.name}`;
+      const result = await this.client.lRem(
+        `roomPeerId:${data.roomUuid}`,
+        0,
+        peerData,
+      );
+
+      if (result === 0) {
+        console.warn(
+          `Le peerId ${data.peerId} n'a pas été trouvé dans la room ${data.roomUuid}`,
+        );
+      } else {
+        console.log(
+          `Le peerId ${data.peerId} a été supprimé de la room ${data.roomUuid}`,
+        );
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression du peerId:', error);
+      throw new InternalServerErrorException(
+        'Erreur lors de la suppression du peerId de Redis',
+      );
+    }
+  }
+
+  public async getPeerId(roomId: string) {
+    try {
+      const peerList = await this._client.lRange(`roomPeerId:${roomId}`, 0, -1);
+      return peerList;
+    } catch (error) {
+      console.error('Failed to get peerId list', error);
+      throw new InternalServerErrorException(
+        'Failed to retrieve Peer Id List from redis',
+      );
+    }
+  }
+
   private checkConnection() {
     if (!this._client || !this._client.isReady) {
       throw new Error('Redis client is not ready');
@@ -90,8 +174,45 @@ export class RedisService implements OnModuleInit {
     }
   }
 
+  public async setClientToPeer(client) {
+    console.log('client ID : ', client.id);
+    await this.client.hSet(`client:${client.id}`, 'clientId', client.id);
+  }
+
+  public async affectedClientToPeer(data, client) {
+    // Vérifie si le peerId est fourni
+    if (!data.peerId || data.peerId.length === 0) {
+      throw new Error('Le peerId ne peut pas être vide');
+    }
+
+    try {
+      // Récupère l'ID de peer existant pour le client
+      const existingPeerId = await this.client.hGet(
+        `client:${client.id}`,
+        'peerId',
+      );
+
+      if (existingPeerId) {
+        console.log(
+          `Client ${client.id} a déjà un peerId : ${existingPeerId}. Ne rien faire.`,
+        );
+        return; // Si le client a déjà un peerId, ne rien faire
+      }
+
+      // Affecte le peerId au client dans son hSet
+      await this.client.hSet(`client:${client.id}`, 'peerId', data.peerId);
+      console.log(`Affecté peerId ${data.peerId} au client ${client.id}.`);
+    } catch (error) {
+      console.error("Erreur lors de l'affectation du peerId au client:", error);
+      throw new InternalServerErrorException(
+        "Échec de l'affectation du peerId au client.",
+      );
+    }
+  }
+
   public async postMessage(data: IMessagePostPayload) {
     this.checkConnection();
+
     if (data.message.length === 0) {
       throw new Error(
         'The message cannot be empty. Please enter some text before submitting.',
@@ -108,6 +229,44 @@ export class RedisService implements OnModuleInit {
       throw new InternalServerErrorException('Failed to post message to Redis');
     }
   }
+  public async postPeerIdOnRoom(data: IPeerIdOnRoomPayload, client) {
+    this.checkConnection();
+    this.affectedClientToPeer(data, client);
+    if (data.peerId === null || data.peerId.length === 0) {
+      throw new Error('The peerId cannot be empty');
+    }
+
+    try {
+      // Vérifie si le peerId existe déjà dans une autre room
+      const existingRoomUuid = await this.client.hGet(
+        'roomPeerIdMapping',
+        data.peerId,
+      );
+
+      if (existingRoomUuid) {
+        // Supprime le peerId de l'ancienne room
+        await this.client.lRem(
+          `roomPeerId:${existingRoomUuid}`,
+          0,
+          data.peerId,
+        );
+      }
+
+      // Ajoute le peerId dans la nouvelle room
+      await this.client.rPush(
+        `roomPeerId:${data.roomUuid}`,
+        `${data.peerId}:${data.name}`,
+      );
+
+      // Met à jour la nouvelle roomUuid dans le mapping de peerId
+      await this.client.hSet('roomPeerIdMapping', data.peerId, data.roomUuid);
+    } catch (error) {
+      console.error('Failed to post peerId:', error);
+      throw new InternalServerErrorException('Failed to post peerId to Redis');
+    }
+  }
+
+  // public async setUserOnRoom (data){
 
   public async updateMessage(
     data: IMessageUpdatePayload,
@@ -121,6 +280,7 @@ export class RedisService implements OnModuleInit {
       if (data.index < 0 || data.index >= currentMessages.length) {
         throw new Error('Index out of range');
       }
+
       if (data.message.length === 0) {
         throw new Error(
           'The message cannot be empty. Please enter some text before submitting.',
@@ -298,8 +458,8 @@ export class RedisService implements OnModuleInit {
       );
       const result = await this._client.set(
         `magiclink:${token}`,
-        userId.toString(),
-        {
+        userId,
+     {
           EX: expirationTime,
         },
       );
@@ -310,11 +470,11 @@ export class RedisService implements OnModuleInit {
         `Immediate verification - Stored token value: ${storedValue}`,
       );
 
-      const ttl = await this._client.ttl(`magiclink:${token}`);
-      console.log(`Token TTL: ${ttl}`);
+    const ttl = await this._client.ttl(`magiclink:${token}`);
+     console.log(`Token TTL: ${ttl}`);
 
-      const allKeys = await this._client.keys('magiclink:*');
-      console.log('All magiclink keys after setting:', allKeys);
+    const allKeys = await this._client.keys('magiclink:*');
+      console.log('All magiclink keys after setting:', allKeys)
     } catch (error) {
       console.error('Failed to create token:', error);
       throw new InternalServerErrorException('Failed to store token in Redis');
