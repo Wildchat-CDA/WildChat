@@ -28,7 +28,7 @@ function MediaControl({ userId }: MediaControlProps) {
   const isSpeakerOn = speakerVolume > 0;
 
   return (
-    <div className="media-control">
+    <div className="media-control media-control--hide-text">
       <div className="media-buttons">
         <IconButton
           icon={isMicrophoneOn ? 'microphone.png' : 'unmute.png'}

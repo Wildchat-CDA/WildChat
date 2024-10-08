@@ -2,18 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 10px;
 }
 
-.media-control .icon-button span {
-  display: none;
-}
 .media-buttons {
   display: flex;
-  gap: 10px;
-}
-
-.media-button-wrapper {
-  position: relative;
+  gap: 15px;
 }
 
 .icon-button {
@@ -31,6 +25,10 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
+}
+
+.media-control--hide-text .icon-button span {
+  display: none;
 }
 
 .icon-button .nav-text {
