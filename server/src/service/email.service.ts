@@ -33,6 +33,13 @@ export class EmailService {
       html,
     };
 
-    return this.transporter.sendMail(mailOptions);
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      this.logger.log(`Email sent successfully to ${to}`);
+      return info;
+    } catch (error) {
+      this.logger.error(`Failed to send email to ${to}: ${error.message}`);
+      throw error;
+    }
   }
 }
