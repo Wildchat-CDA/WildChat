@@ -24,6 +24,7 @@ const Section = ({ type }: ISectionProps) => {
     setIsClassRoom,
   } = useNavigation();
   const { setActiveModal, activeModal } = useModal();
+
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
 

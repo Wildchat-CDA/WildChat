@@ -10,7 +10,6 @@ interface IUserIconsProps {
 }
 
 const UserIcons = ({ room }: IUserIconsProps) => {
-  console.log('room', room);
   const [peerList, setPeerList] = useState<string[]>([]);
 
   useEffect(() => {
@@ -25,7 +24,6 @@ const UserIcons = ({ room }: IUserIconsProps) => {
     };
 
     const deleteName = (data: IPeerIdOnRoomPayload) => {
-      console.log('je passe dans delete name');
       if (data.roomUuid === room.uuid) {
         const userData = parsedData(data);
         setPeerList((prevState: string[]) =>

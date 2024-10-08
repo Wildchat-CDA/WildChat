@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useUserRole } from '../../../context/UserRoleContext';
 import useHandRaise from '../../../hooks/useHandRaise';
 import Logo from '../Logo';
@@ -11,18 +11,21 @@ import {
 } from '../../../context/NavigationContext';
 import IconButton from '../../common/button/IconButton/IconButton';
 import { MediaContext } from '../../../context/MediaContext';
+import Cookies from 'js-cookie';
 
 interface NavbarProps {
   isMobile: boolean;
 }
 
 function Navbar({ isMobile }: NavbarProps) {
-  const { userRole, userInfos } = useUserRole();
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const { userRole } = useUserRole();
+
   const { currentSection } = useNavigation();
 
   const { isHandRaised, raiseHand, lowerHand } = useHandRaise(
     1,
-    userInfos.firstname,
+    cookie.userInfo.firstname,
     currentSection.channelTitle
   );
   const [showHandRaiseDropdown, setShowHandRaiseDropdown] = useState(false);

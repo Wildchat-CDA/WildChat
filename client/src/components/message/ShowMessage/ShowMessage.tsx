@@ -15,24 +15,17 @@ import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 import Cookies from 'js-cookie';
 import { useUserRole } from '../../../context/UserRoleContext';
-
 const ShowMessage = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-  const { userInfos } = useUserRole();
+  const cookie = JSON.parse(Cookies.get('token') as string);
 
-  const firstname = userInfos.firstname;
-
-  console.log(
-    currentSection,
-    'loadMessages pour tester mise à jour currentSection'
-  );
+  const firstname = cookie.userInfo.firstname;
 
   useEffect(() => {
-    console.log('je passe par le useeffet je me rafraichisssss');
     // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)

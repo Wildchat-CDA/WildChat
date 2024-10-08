@@ -4,16 +4,16 @@ import { webSocketService } from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
 import { useNavigation } from '../../../context/NavigationContext';
-// import { useAuth } from '../../../context/AuthentificationContext';
-import { useUserRole } from '../../../context/UserRoleContext';
+import Cookies from 'js-cookie';
 
 const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const { userInfos } = useUserRole();
+  const cookie = JSON.parse(Cookies.get('token') as string);
+
   const { currentSection } = useNavigation();
 
-  const firstname = userInfos.firstname;
+  const firstname = cookie.userInfo.firstname;
 
   const adjustHeight = () => {
     if (textAreaRef.current) {

@@ -5,7 +5,6 @@ import { useNavigation } from '../../context/NavigationContext';
 import { fetchPrivateChannel } from '../../services/channel/fetch/FetchPrivateChannel';
 import Cookies from 'js-cookie';
 import { useScrollToBottom } from '../../services/useScrollBottom';
-import { useUserRole } from '../../context/UserRoleContext';
 
 interface Student {
   id: number;
@@ -16,9 +15,9 @@ function PrivateMessagePage() {
   const [students, setStudents] = useState([]);
   const { setActiveContentMainComp, currentSection, setCurrentSection } =
     useNavigation();
-  const { userInfos } = useUserRole();
+  const cookie = JSON.parse(Cookies.get('token') as string);
 
-  const userId: number = userInfos.id;
+  const userId: number = cookie.userInfo.id;
 
   console.log(userId, 'id dans privateMessage');
 

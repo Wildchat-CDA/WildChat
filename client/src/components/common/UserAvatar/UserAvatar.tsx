@@ -4,7 +4,6 @@ import { useAvatar } from '../../../hooks/useAvatar';
 import { useNavigate } from 'react-router-dom';
 import './userAvatar.css';
 import Cookies from 'js-cookie';
-import { useUserRole } from '../../../context/UserRoleContext';
 
 interface UserAvatarProps {
   userId: string;
@@ -21,10 +20,11 @@ function UserAvatar({
   const [showDropdown, setShowDropdown] = useState(false);
   const { avatarUrl, firstName, lastName, isLoading, error } =
     useAvatar(userId);
-  const { userInfos } = useUserRole();
+  const cookie = JSON.parse(Cookies.get('token') as string);
+
   const navigate = useNavigate();
 
-  const firstname = userInfos.firstname;
+  const firstname = cookie.userInfo.firstname;
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 

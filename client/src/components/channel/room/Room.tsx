@@ -36,7 +36,6 @@ function Room({
   const { toggleCall, isCalling } = useMedia();
 
   const handleRoom = (room: IChannel) => {
-    console.log('je passe');
     if (type === 'library') {
       setActiveContentMainComp(true);
     }
