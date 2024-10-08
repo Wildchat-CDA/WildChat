@@ -28,6 +28,8 @@ import { RoomService } from './service/room.service';
 import { SectionService } from './service/section.service';
 import { StudentService } from './service/student.service';
 import { TypeService } from './service/type.service';
+import { EmailService } from './service/email.service';
+import { TestEmailController } from './controller/test-email.controller';
 
 @Module({
   imports: [
@@ -58,6 +60,7 @@ import { TypeService } from './service/type.service';
     SectionController,
     TypeController,
     StudentController,
+    TestEmailController,
   ],
   providers: [
     AppService,
@@ -71,6 +74,7 @@ import { TypeService } from './service/type.service';
     PresenceService,
     StudentService,
     PresenceSimulatorService,
+    EmailService,
   ],
 })
 export class AppModule {}
