@@ -19,7 +19,7 @@ function UserControlSettings({
 }: UserControlSettingsProps) {
   return (
     <div className='user-control-settings'>
-      <div className='user-info'>
+      <div className='user-infos'>
         <UserAvatar
           userId={userId}
           onChangeAvatar={onChangeAvatar}

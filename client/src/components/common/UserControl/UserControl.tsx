@@ -24,7 +24,7 @@ function UserControl({
 }: UserControlProps) {
   return (
     <div className="user-control">
-      <div className="user-info">
+      <div className="user-infos">
         <UserAvatar 
           userId={userId}
           onChangeAvatar={onChangeAvatar}

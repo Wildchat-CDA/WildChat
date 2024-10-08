@@ -9,7 +9,10 @@
 .user-info {
   display: flex;
   align-items: center;
+  
 }
+
+
 
 .control-panel {
   display: flex;
