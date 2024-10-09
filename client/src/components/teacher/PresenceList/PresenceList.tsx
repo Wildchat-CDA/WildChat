@@ -3,7 +3,7 @@ import { webSocketService } from '../../../services/webSocketService';
 import './PresenceList.css';
 
 interface User {
-  id: string;
+  id: number;
   name: string;
   firstName: string;
   status: 'online' | 'offline';
@@ -21,21 +21,29 @@ const usePresence = (): User[] => {
   }, []);
 
   useEffect(() => {
-    const handleInitialPresence = (initialUsers: User[]) => {
-      setUsers(initialUsers);
+    const fetchInitialPresence = async () => {
+      try {
+        const response = await fetch('/api/user/presence');
+        if (!response.ok) {
+          throw new Error('Failed to fetch presence data');
+        }
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching presence data:', error);
+      }
     };
 
     const handlePresenceUpdateEvent = (updatedUser: User) => {
       handlePresenceUpdate(updatedUser);
     };
 
+    fetchInitialPresence();
+
     webSocketService.connect();
-    webSocketService.on('initialPresence', handleInitialPresence);
     webSocketService.on('presenceUpdate', handlePresenceUpdateEvent);
-    webSocketService.emit('getPresence');
 
     return () => {
-      webSocketService.off('initialPresence', handleInitialPresence);
       webSocketService.off('presenceUpdate', handlePresenceUpdateEvent);
     };
   }, [handlePresenceUpdate]);
