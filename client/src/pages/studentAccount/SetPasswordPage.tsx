@@ -78,8 +78,8 @@ function SetPasswordPage() {
           <label htmlFor="confirmPassword" aria-label='confirmPassword'>Confirmer le mot de passe</label>
           <input
             type="password"
-            placeholder="Votre Email"
-            autoComplete="email"
+            placeholder= "Confirmer Votre password"
+            autoComplete="password"
             id="confirmPassword"
             
             {...register('confirmPassword')}
