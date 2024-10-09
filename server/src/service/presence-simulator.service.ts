@@ -36,7 +36,7 @@ export class PresenceSimulatorService implements OnModuleInit, OnModuleDestroy {
         firstName: randomStudent.firstName,
         status: newStatus ? 'online' : 'offline',
       };
-      
+
       this.presenceUpdateCallback(updatedStudent);
     }, intervalMs);
   }

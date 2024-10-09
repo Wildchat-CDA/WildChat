@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from './redis.service';
-import { StudentService, Student } from './student.service';
+import { UserService } from './user.service';
+import { User } from '../entity/user.entity';
 
 export interface PresenceData {
-  student: Student;
+  user: User;
   status: 'online' | 'offline';
 }
 
@@ -11,20 +12,25 @@ export interface PresenceData {
 export class PresenceService {
   constructor(
     private readonly redisService: RedisService,
-    private readonly studentService: StudentService,
+    private readonly userService: UserService,
   ) {}
 
-  public async setUserPresence(userId: string, status: 'online' | 'offline'): Promise<void> {
-    await this.redisService.setUserPresence(userId, status);
+  async setUserPresence(
+    userId: number,
+    status: 'online' | 'offline',
+  ): Promise<void> {
+    await this.redisService.setUserPresence(userId.toString(), status);
   }
 
-  public async getAllUsersPresence(): Promise<PresenceData[]> {
-    const students: Student[] = this.studentService.getAllStudents();
+  async getAllUsersPresence(): Promise<PresenceData[]> {
+    const users = await this.userService.findAll();
     const allPresences = await this.redisService.getAllUserPresences();
 
-    return students.map((student) => ({
-      student,
-      status: (allPresences[student.id] || 'offline') as 'online' | 'offline',
+    return users.map((user) => ({
+      user,
+      status: (allPresences[user.id.toString()] || 'offline') as
+        | 'online'
+        | 'offline',
     }));
   }
 }
