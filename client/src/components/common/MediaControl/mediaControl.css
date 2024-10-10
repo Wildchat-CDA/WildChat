@@ -1,5 +1,6 @@
 .media-control {
   display: flex;
+
   /* align-items: center; */
   /* justify-content: center; */
 }
@@ -12,13 +13,13 @@
   gap: 10px;
   background-color: #232428;
   /* test css */
-    
-    /* position: absolute;
+
+  /* position: absolute;
     bottom: 5.5%; */
-   
-    /* left: 9%; */
-        /* left: 5%; */
-       width:31.6%
+
+  /* left: 9%; */
+  /* left: 5%; */
+  width: 31.6%;
 }
 
 .media-button-wrapper {
@@ -52,4 +53,12 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+@media (max-width: 768px) {
+  .media-control {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
 }

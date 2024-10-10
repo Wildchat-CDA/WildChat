@@ -10,6 +10,7 @@ import { ModalTypeEnum } from '../../../context/ModalContext';
 import EditButton from '../../common/button/edit/EditButton';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
+import Cookies from 'js-cookie';
 
 export interface ISectionProps {
   type: 'library' | 'classRoom';
@@ -24,7 +25,8 @@ const Section = ({ type }: ISectionProps) => {
     setIsClassRoom,
   } = useNavigation();
   const { setActiveModal, activeModal } = useModal();
-
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const role = cookie.userInfo.role;
   const [allRoomsAndChannels, setAllRoomsAndChannels] = useState([]);
   const [activeSection, setActiveSection] = useState<number[]>([]);
 
@@ -107,8 +109,12 @@ const Section = ({ type }: ISectionProps) => {
       <div className='section-topic-title'>
         <h3>{type === 'library' ? 'Bibliothèque' : 'Salle de  classe'} </h3>
         <div className='topic-container'>
-          <em className='topic-title'>Ajouter une section </em>
-          <AddButton action={handleNewSection} />
+          {role === 'professeur' && (
+            <>
+              <em className='topic-title'>Ajouter une section </em>
+              <AddButton action={handleNewSection} />
+            </>
+          )}
         </div>
       </div>
 
@@ -128,8 +134,12 @@ const Section = ({ type }: ISectionProps) => {
                 />
               </div>
               <h5 className='section-title'>{section.title}</h5>
-              <DeleteButton action={() => handleDeleteSection(section)} />
-              <EditButton action={() => handleEditSection(section)} />
+              {role === 'professeur' && (
+                <>
+                  <DeleteButton action={() => handleDeleteSection(section)} />
+                  <EditButton action={() => handleEditSection(section)} />
+                </>
+              )}
             </div>
 
             {activeSection.includes(index) && (
@@ -143,7 +153,9 @@ const Section = ({ type }: ISectionProps) => {
                   activeModal={activeModal}
                   type={type}
                 />
-                <AddButton action={() => handleNewRoom(section)} />
+                {role === 'professeur' && (
+                  <AddButton action={() => handleNewRoom(section)} />
+                )}
               </>
             )}
           </div>

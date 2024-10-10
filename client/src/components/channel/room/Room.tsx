@@ -11,6 +11,7 @@ import UserIcons from '../../audio/UserIcons';
 import { AudioCall } from '../../audio/AudioCall';
 import { ISectionProps } from '../section/Section';
 import { useMedia } from '../../../context/MediaContext';
+import Cookies from 'js-cookie';
 
 interface IRoomProps {
   section: ISection;
@@ -32,7 +33,8 @@ function Room({
   type,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
-
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const role = cookie.userInfo.role;
   const { toggleCall, isCalling } = useMedia();
 
   const handleRoom = (room: IChannel) => {
@@ -77,8 +79,13 @@ function Room({
     <div className='rooms-container'>
       {section.channels.map((room) => (
         <div className='rooms-column' key={room.id}>
-          <DeleteButton action={() => handleDeleteRoom(room)} />
-          <EditButton action={() => handleEditRoom(room)} />
+          {role === 'professeur' && (
+            <>
+              <DeleteButton action={() => handleDeleteRoom(room)} />
+              <EditButton action={() => handleEditRoom(room)} />
+            </>
+          )}
+
           <div className='rooms-column-users'>
             <span
               className='room-span'

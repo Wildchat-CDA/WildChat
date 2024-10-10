@@ -28,14 +28,14 @@ function ContentSideBarWrapper({
       content = <PrivateMessagePage />; //TODO : METTRE MON COMPOSANT ICI
       break;
     case ContentSideBarEnum.PresenceList:
-      content = userRole === 'teacher' && <PresenceList />;
+      content = userRole === 'professeur' && <PresenceList />;
       break;
     case ContentSideBarEnum.RaisedHand:
-      content = userRole === 'teacher' && <RaisedHandsList />;
+      content = userRole === 'professeur' && <RaisedHandsList />;
       break;
     case ContentSideBarEnum.AddStudent:
       content = <AddStudentsPage />;
-      break;  
+      break;
   }
 
   return <ContentSideBarActive>{content}</ContentSideBarActive>;

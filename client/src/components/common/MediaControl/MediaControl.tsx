@@ -21,7 +21,6 @@ function MediaControl({ userId }: MediaControlProps) {
     setSpeakerVolume,
     isCalling,
     toggleCall,
-
   } = mediaContext;
 
   const toggleSpeaker = () => {
@@ -54,15 +53,16 @@ function MediaControl({ userId }: MediaControlProps) {
           ariaLabel={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
         />
         <IconButton
-          icon="ecrou.png"
-          text=""
-          onClick={() => {/* Logique pour ouvrir les réglages */}}
-          ariaLabel="Ouvrir les réglages"
+          icon='ecrou.png'
+          text=''
+          onClick={() => {
+            /* Logique pour ouvrir les réglages */
+          }}
+          ariaLabel='Ouvrir les réglages'
         />
         {isCalling && (
           <IconButton
             icon='raccrocher.png'
-            text='Quitter le salon vocal'
             onClick={handleCall}
             ariaLabel='Quitter le salon vocal'
           />

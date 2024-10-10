@@ -1,16 +1,23 @@
 .user-control-settings {
   width: 100%;
   height: 70px;
-  /* height:120px; */
+
   background-color: #232428;
   display: flex;
   justify-content: space-evenly;
 
   z-index: 1001;
-  /* display: NONE; */
 }
 
 .user-infos {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .user-control-settings {
+    position: fixed;
+    bottom: 50px;
+  }
 }
