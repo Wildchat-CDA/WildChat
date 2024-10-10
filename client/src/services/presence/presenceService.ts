@@ -7,7 +7,7 @@ const API_URL = `${import.meta.env.VITE_API_URL}:${
 export const presenceService = {
   async getInitialPresence(): Promise<PresenceData[]> {
     try {
-      const response = await fetch(`${API_URL}/api/presence`);
+      const response = await fetch(`${API_URL}/presence`);
       if (!response.ok) {
         throw new Error("Failed to fetch presence data");
       }
