@@ -7,6 +7,7 @@
   padding: 20px 600px;
   background: #1E1E1E;
   color: #fff;
+  font-family: 'Nunito', sans-serif;
 }
 
 .auth-container h2 {
@@ -186,3 +187,12 @@ input.invalid {
   color: red;
 }
 
+.ChangePassword{
+  width: 60%;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20%;
+  border-radius: 15px;
+  cursor: pointer;
+}

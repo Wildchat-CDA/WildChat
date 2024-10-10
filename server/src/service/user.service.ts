@@ -13,13 +13,10 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     return await this.userRepository.find({
-      relations: ['channels', 'channels.config.type'],
+      relations: ['role', 'channels', 'channels.config.type'],
     });
   }
 
-  // async findAll(): Promise<User[]> {
-  //   return await this.userRepository.find();
-  // }
   async getUserChannels(userId: number): Promise<Channel[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -32,8 +29,15 @@ export class UserService {
       (channel) => channel.config.type.name === 'public',
     );
 
-    if (channels.length === 0) throw new Error('User has no private channels');
+    if (channels.length === 0) throw new Error('User has no public channels');
 
     return channels;
+  }
+
+  async getUserById(id: number): Promise<User | undefined> {
+    return await this.userRepository.findOne({
+      where: { id },
+      relations: ['role'],
+    });
   }
 }

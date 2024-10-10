@@ -14,24 +14,18 @@ import { ModalTypeEnum, useModal } from '../../../context/ModalContext';
 import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 import Cookies from 'js-cookie';
-
+import { useUserRole } from '../../../context/UserRoleContext';
 const ShowMessage = () => {
   const [messages, setMessages] = useState<IMessagePostPayload[]>([]);
   const [activeEdit, setActiveEdit] = useState<boolean>();
   const [currentIndex, setCurrentIndex] = useState<number>();
   const { setActiveModal, activeModal } = useModal();
   const { currentSection, setCurrentSection } = useNavigation();
-
   const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.name;
 
-  console.log(
-    currentSection,
-    'loadMessages pour tester mise à jour currentSection'
-  );
+  const firstname = cookie.userInfo.firstname;
 
   useEffect(() => {
-    console.log('je passe par le useeffet je me rafraichisssss');
     // Load messages with redis (init)
     LoadMessage(currentSection)
       .then(setMessages)
@@ -91,7 +85,7 @@ const ShowMessage = () => {
             <span className='name'>{message.name} </span>
             {currentIndex === index &&
             activeEdit === true &&
-            name === message.name ? (
+            firstname === message.name ? (
               <MessageEditor
                 name={message.name}
                 message={message.message}
@@ -106,7 +100,7 @@ const ShowMessage = () => {
                 {message.message}
               </ReactMarkdown>
             )}
-            {name === message.name && (
+            {firstname === message.name && (
               <div className='span-action_container'>
                 <span
                   aria-label='Modifier ce message'

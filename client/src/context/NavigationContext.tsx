@@ -20,6 +20,7 @@ export enum ContentSideBarEnum {
   PrivateMessage = 'privateMessage',
   PresenceList = 'presenceList',
   RaisedHand = 'raisedHame',
+  AddStudent = 'addStudent',
 }
 
 export type ActiveSideBarType = ContentSideBarEnum;

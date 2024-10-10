@@ -4,6 +4,8 @@ import { useAvatar } from '../../../hooks/useAvatar';
 import { useNavigate } from 'react-router-dom';
 import './userAvatar.css';
 import Cookies from 'js-cookie';
+import { logout } from '../../../services/auth/Logout';
+import { webSocketService } from '../../../services/webSocketService';
 
 interface UserAvatarProps {
   userId: string;
@@ -18,48 +20,56 @@ function UserAvatar({
   onChangeAccount,
 }: UserAvatarProps) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { avatarUrl, firstName, lastName, isLoading, error } = useAvatar(userId);
+  const { avatarUrl, firstName, lastName, isLoading, error } =
+    useAvatar(userId);
+  const cookie = JSON.parse(Cookies.get('token') as string);
+
   const navigate = useNavigate();
 
-
-  const cookie = JSON.parse(Cookies.get('token') as string);
- const name = cookie.userInfo.name;
-  
+  const firstname = cookie.userInfo.firstname;
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
-  
-  const onLogout = () => {
-    Cookies.remove('token');
-    navigate("/login");
-  }
 
-  const dropdownItems = useMemo(() => [
-    {
-      icon: 'icons/change-avatar.png',
-      text: 'Changer d\'avatar',
-      onClick: onChangeAvatar,
-    },
-    {
-      icon: 'icons/switch-account.png',
-      text: 'Changer de compte',
-      onClick: onChangeAccount,
-    },
-    {
-      icon: 'icons/logout.png',
-      text: 'Deconnexion',
-      onClick: onLogout,
-    },
-  ], [onChangeAvatar, onChangeAccount, navigate]);
+  const onLogout = () => {
+    webSocketService.emit('updatePresence', {
+      userId: cookie.userInfo.id,
+      status: 'offline',
+    });
+    logout(cookie.userInfo.id);
+    Cookies.remove('token');
+    navigate('/login');
+  };
+
+  const dropdownItems = useMemo(
+    () => [
+      {
+        icon: 'icons/change-avatar.png',
+        text: "Changer d'avatar",
+        onClick: onChangeAvatar,
+      },
+      {
+        icon: 'icons/switch-account.png',
+        text: 'Changer de compte',
+        onClick: onChangeAccount,
+      },
+      {
+        icon: 'icons/logout.png',
+        text: 'Deconnexion',
+        onClick: onLogout,
+      },
+    ],
+    [onChangeAvatar, onChangeAccount, navigate]
+  );
 
   const renderAvatar = () => {
     if (isLoading) {
-      return <div className="avatar-placeholder">Chargement...</div>;
+      return <div className='avatar-placeholder'>Chargement...</div>;
     }
     return (
       <img
         src={avatarUrl || '/icons/avatar.png'}
         // alt={`Avatar de ${firstName} ${lastName}`}
-        alt={`Avatar de  ${name}`}
+        alt={`Avatar de  ${firstname}`}
         className={`user-avatar ${error ? 'default-avatar' : ''}`}
         width='40'
         height='40'
@@ -78,7 +88,7 @@ function UserAvatar({
         {renderAvatar()}
         <span className='user-name'>
           {/* {isLoading ? 'Chargement...' : `${firstName} ${lastName}`} */}
-          {isLoading ? 'Chargement...' : ` ${name}`}
+          {isLoading ? 'Chargement...' : ` ${firstname}`}
         </span>
       </button>
       {showDropdown && (

@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 
-type UserRole = 'student' | 'teacher';
+type UserRole = 'eleve' | 'professeur';
 
 interface UserRoleContextType {
   userRole: UserRole;
@@ -26,7 +32,7 @@ interface UserRoleProviderProps {
 }
 
 export function UserRoleProvider({ children }: UserRoleProviderProps) {
-  const [userRole, setUserRole] = useState<UserRole>('student');
+  const [userRole, setUserRole] = useState<UserRole>('eleve');
   const [vocalChannelPosition, setVocalChannelPosition] = useState<string>('');
 
   const value = {

@@ -4,20 +4,16 @@ import { webSocketService } from '../../../services/webSocketService';
 import './InputMessage.css';
 import '../../../App.css';
 import { useNavigation } from '../../../context/NavigationContext';
-// import { useAuth } from '../../../context/AuthentificationContext';
 import Cookies from 'js-cookie';
 
 const InputMessage = () => {
   const [input, setInput] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  // const { user } = useAuth();
-  // const name = user?.name; // TODO: Use context for user
+  const cookie = JSON.parse(Cookies.get('token') as string);
+
   const { currentSection } = useNavigation();
 
-
-  const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.name;
- 
+  const firstname = cookie.userInfo.firstname;
 
   const adjustHeight = () => {
     if (textAreaRef.current) {
@@ -34,7 +30,7 @@ const InputMessage = () => {
     e.preventDefault();
     if (input.trim()) {
       const payload = {
-        name,
+        name: firstname,
         message: input,
         roomId: currentSection?.uuid || '',
       };

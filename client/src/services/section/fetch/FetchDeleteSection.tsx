@@ -13,10 +13,6 @@ export async function fetchDeleteSection(id: number | null): Promise<number> {
       );
     }
 
-    // Return the status code
-    console.log(
-      `Section ${id} deleted successfully with status: ${response.status}`
-    );
     return response.status;
   } catch (error) {
     console.error('Failed to delete section:', error);

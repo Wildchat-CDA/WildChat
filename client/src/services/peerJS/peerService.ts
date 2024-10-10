@@ -74,6 +74,20 @@ export default class PeerService {
   }
 
   // Méthode pour fermer toutes les connexions actives avec d'autres peers.
+  closeOnCall(peerId: string) {
+    for (let call of this._activeCalls) {
+      if (call.remotePeerId === peerId) {
+        console.log(call.call.connectionId, call.remotePeerId, 'closed');
+        call.call.close();
+        // Filtrer les appels actifs pour retirer celui avec le même peerId
+        this._activeCalls = this._activeCalls.filter((activeCall) => {
+          return activeCall.remotePeerId !== peerId;
+        });
+      }
+    }
+    console.log('Active calls après suppression : ', this._activeCalls);
+  }
+
   closeCalls() {
     for (let call of this._activeCalls) {
       console.log(call.call.connectionId, call.remotePeerId, 'closed');

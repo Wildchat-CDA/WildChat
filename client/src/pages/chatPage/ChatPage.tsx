@@ -1,4 +1,3 @@
-import React from 'react';
 import ShowMessage from '../../components/message/ShowMessage/ShowMessage';
 import InputMessage from '../../components/message/InputMessage/InputMessage';
 import './ChatPage.css';

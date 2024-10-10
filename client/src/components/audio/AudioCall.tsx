@@ -17,12 +17,10 @@ export interface IAudioRef {
 import { IPeerIdOnRoomPayload } from '../../../../common/interface/redisInterface';
 
 export function AudioCall({ currentSection }: IAudioProps) {
+  const cookie = JSON.parse(Cookies.get('token') as string);
   const [peerList, setPeerList] = useState<string[]>([]); // État contenant la liste des peerId (chaînes) des utilisateurs connectés.
   const audiosRef = useRef<IAudioRef[]>([]); // Référence pour stocker les références d'éléments audio distants pour chaque peer.
   const peerManagerRef = useRef<boolean>(false); // Variable pour gérer si un peer a été ajouté récemment (pour éviter des doublons ou des erreurs de gestion de peers).
-
-  const cookie = JSON.parse(Cookies.get('token') as string);
-  const name = cookie.userInfo.name;
 
   useEffect(() => {
     // Charger la liste des peerId à partir du backend (Redis) et la stocker dans le state peerList.
@@ -39,15 +37,17 @@ export function AudioCall({ currentSection }: IAudioProps) {
       webSocketService.emit('join-room', {
         peerId: peerService.peerId,
         roomUuid: currentSection.uuid,
-        name: name,
+        name: cookie.userInfo.firstname,
       });
     }
 
     // Quand un nouvel utilisateur rejoint la salle, on l'ajoute à la peerList.
     const joinChannel = (data: IPeerIdOnRoomPayload) => {
-      // TODO : Ajouter une vérification pour éviter d'ajouter son propre peerId à la liste.
-      peerManagerRef.current = true; // Marque qu'un nouveau peer a été ajouté.
-      setPeerList((prevState) => [...prevState, data.peerId]); // Ajoute le peerId reçu à la liste des peers.
+      if (data.peerId !== peerService.peerId) {
+        // TODO : Ajouter une vérification pour éviter d'ajouter son propre peerId à la liste.
+        peerManagerRef.current = true; // Marque qu'un nouveau peer a été ajouté.
+        setPeerList((prevState) => [...prevState, data.peerId]); // Ajoute le peerId reçu à la liste des peers.
+      }
     };
 
     // Quand un utilisateur quitte la salle, on le retire de la peerList.
@@ -55,6 +55,8 @@ export function AudioCall({ currentSection }: IAudioProps) {
       setPeerList(
         (prevState) => prevState.filter((peerId) => peerId !== data.peerId) // Filtre et supprime le peerId de l'utilisateur qui a quitté.
       );
+
+      peerService.closeOnCall(data.peerId);
     };
 
     // Écoute les événements "join-channel" et "leave-channel" envoyés par le serveur pour gérer l'ajout et la suppression des peers dans la salle.
@@ -67,43 +69,48 @@ export function AudioCall({ currentSection }: IAudioProps) {
       webSocketService.emit('leave-room', {
         peerId: peerService.peerId,
         roomUuid: currentSection.uuid,
-        name: name,
+        name: cookie.userInfo.firstname,
       });
+
       peerService.closeCalls(); // Ferme toutes les connexions PeerJS en cours.
     };
   }, [currentSection]);
 
   useEffect(() => {
     // Gère l'ajout de nouveaux peers après que la liste des peers a été mise à jour.
-    if (peerManagerRef.current === false) {
-      // Si aucun peer n'a été ajouté récemment (cas initial ou mise à jour générale de la peerList) :
-      for (let obj of audiosRef.current) {
-        peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute chaque peer de la liste actuelle avec son élément audio.
+    if (peerList.length !== 0) {
+      if (peerManagerRef.current === false) {
+        // Si aucun peer n'a été ajouté récemment (cas initial ou mise à jour générale de la peerList) :
+        for (let obj of audiosRef.current) {
+          peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute chaque peer de la liste actuelle avec son élément audio.
+        }
+      } else {
+        // Si un peer a été ajouté récemment (optimisation pour éviter de tout re-parcourir) :
+        const obj = audiosRef.current[audiosRef.current.length - 1]; // Récupère le dernier peer ajouté.
+        peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute ce peer spécifique.
+        peerManagerRef.current = false; // Réinitialise la variable pour la prochaine mise à jour.
       }
-    } else {
-      // Si un peer a été ajouté récemment (optimisation pour éviter de tout re-parcourir) :
-      const obj = audiosRef.current[audiosRef.current.length - 1]; // Récupère le dernier peer ajouté.
-      peerService.addNewPeer(obj.peerId, obj.audioRef!); // Ajoute ce peer spécifique.
-      peerManagerRef.current = false; // Réinitialise la variable pour la prochaine mise à jour.
     }
-    console.log('peerList : ', peerList);
   }, [peerList]); // useEffect se déclenche à chaque fois que peerList change.
   return (
     <>
-      {peerList.map((datas, index) => {
-        const peerId = datas.split(':')[0].trim(); // Déclare la variable avant le JSX.
-        console.log('peerId : ', peerId);
-        return (
-          <div key={index}>
-            <audio
-              ref={
-                (audioRef) => (audiosRef.current[index] = { audioRef, peerId }) // Associe chaque peerId à son élément audio correspondant.
-              }
-              autoPlay // L'audio démarre automatiquement quand il est reçu.
-            />
-          </div>
-        );
-      })}
+      {peerList.length !== 0 &&
+        peerList
+          .filter((peerId) => peerId !== peerService.peerId)
+          .map((datas, index) => {
+            const peerId = datas;
+            return (
+              <div key={index}>
+                <audio
+                  ref={
+                    (audioRef) =>
+                      (audiosRef.current[index] = { audioRef, peerId }) // Associe chaque peerId à son élément audio correspondant.
+                  }
+                  autoPlay // L'audio démarre automatiquement quand il est reçu.
+                />
+              </div>
+            );
+          })}
     </>
   );
 }

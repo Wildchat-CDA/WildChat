@@ -4,7 +4,9 @@ export async function fetchDeleteRoom(
   currentSection: NavigationContextType['currentSection']
 ): Promise<number> {
   try {
-    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+    const apiUrl = `${import.meta.env.VITE_API_URL}:${
+      import.meta.env.VITE_API_PORT
+    }`;
     const response = await fetch(
       `${apiUrl}/channel/${currentSection.channelId}`,
       {
@@ -21,10 +23,6 @@ export async function fetchDeleteRoom(
       );
     }
 
-    // Return the status code
-    console.log(
-      `Room ${currentSection.channelId} deleted successfully with status: ${response.status}`
-    );
     return response.status;
   } catch (error) {
     console.error('Failed to delete room:', error);

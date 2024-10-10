@@ -9,6 +9,9 @@ import DeleteButton from '../../common/button/delete/DeleteButton';
 import ModalWrapper from '../../common/modal/ModalWrapper';
 import UserIcons from '../../audio/UserIcons';
 import { AudioCall } from '../../audio/AudioCall';
+import { ISectionProps } from '../section/Section';
+import { useMedia } from '../../../context/MediaContext';
+import Cookies from 'js-cookie';
 
 interface IRoomProps {
   section: ISection;
@@ -17,6 +20,7 @@ interface IRoomProps {
   setActiveContentMainComp: NavigationContextType['setActiveContentMainComp'];
   setActiveModal: ModalContextType['setActiveModal'];
   activeModal: ModalContextType['activeModal'];
+  type: ISectionProps['type'];
 }
 
 function Room({
@@ -29,8 +33,17 @@ function Room({
   type,
 }: IRoomProps) {
   const { vocalChannelPosition, setVocalChannelPosition } = useUserRole();
+  const cookie = JSON.parse(Cookies.get('token') as string);
+  const role = cookie.userInfo.role;
+  const { toggleCall, isCalling } = useMedia();
 
   const handleRoom = (room: IChannel) => {
+    if (type === 'library') {
+      setActiveContentMainComp(true);
+    }
+    if (type === 'classRoom') {
+      toggleCall(true);
+    }
     affectedCurrentSection(room);
   };
 
@@ -56,27 +69,36 @@ function Room({
     setActiveModal(ModalTypeEnum.DeleteRoom);
   };
 
+  const callAutorization = (room: IChannel) => {
+    return (
+      vocalChannelPosition === room.uuid && type === 'classRoom' && isCalling
+    );
+  };
+
   return (
     <div className='rooms-container'>
       {section.channels.map((room) => (
         <div className='rooms-column' key={room.id}>
-          <DeleteButton action={() => handleDeleteRoom(room)} />
-          <EditButton action={() => handleEditRoom(room)} />
+          {role === 'professeur' && (
+            <>
+              <DeleteButton action={() => handleDeleteRoom(room)} />
+              <EditButton action={() => handleEditRoom(room)} />
+            </>
+          )}
+
           <div className='rooms-column-users'>
             <span
               className='room-span'
               onClick={() => {
                 handleRoom(room);
-                setActiveContentMainComp(true);
               }}
             >
               {room.title}
             </span>
             <div className='users'>
               {type === 'classRoom' && <UserIcons room={room} />}
-              {vocalChannelPosition === room.uuid && type === 'classRoom' && (
+              {callAutorization(room) && (
                 <>
-                  {/* <UserIcons currentSection={currentSection} /> */}
                   <AudioCall currentSection={currentSection} />
                 </>
               )}

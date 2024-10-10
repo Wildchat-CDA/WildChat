@@ -6,6 +6,7 @@ import { PasswordStrength } from './PasswordStrength';
 import './Auth.css';
 import Cookies from 'js-cookie';
 import Logo from '../common/Logo';
+import { webSocketService } from '../../services/webSocketService';
 
 type LoginFormData = {
   email: string;
@@ -25,11 +26,16 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const user = await login(data.email, data.password);
-      console.log(user, "user dans login")
+      console.log('USER : ', user);
       /*if(user?.accessToken){
         Cookies.set('token', user?.accessToken, { secure: true, sameSite: 'strict' });
       }*/
 
+      webSocketService.connect();
+      webSocketService.emit('updatePresence', {
+        userId: user.id,
+        status: 'online',
+      });
       navigate('/');
     } catch (error) {
       console.error('Erreur de connexion', error);

@@ -1,0 +1,210 @@
+ .add-students-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(to bottom, #2b2d31, #3c3f43);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", sans-serif;
+
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.student-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.student-form input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  height: 30px;
+  width: 70%;
+  padding: 0 10px;
+  border: 2px solid #35a554;
+  background-color: #fff;
+}
+
+
+.form-field input{
+  width: 100%;
+}
+
+.student-form label {
+  color: white;
+  font-size: 12px;
+  margin-bottom: 5px;
+  align-self: flex-start;
+  padding-left: 7%;
+}
+
+.removeStudent-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.removeStudent-form button {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  width: 30%;
+  height: 30px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  border: none;
+  cursor: pointer;
+}
+
+.removeStudent-form button:hover {
+  background-color: #35a554;
+}
+
+.AddStudentBTN {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: auto;
+  margin-bottom: 30px;
+}
+
+.add-student-button,
+.submit-button {
+  background-color: #35a554;
+  color: white;
+  font-size: 12px;
+  height: 30px;
+  width: 30%;
+  border: none;
+  border-radius: 25px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.add-student-button:hover,
+.submit-button:hover {
+  background-color: #2a7b4c;
+}
+
+.notifications {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.error {
+    background-color: #f44336;
+}
+
+.magic-links {
+    margin-top: 10px;
+    margin-left: 1px;
+    padding: 13px;
+    background-color: #2B2D31;
+    border-radius: 25px;
+    font-size: 13px;
+}
+
+.magic-links h2 {
+    margin-top: 0;
+    font-size: 15px;
+}
+
+.magic-links ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 5px;
+    color: #fcfefe;
+}
+
+.magic-links li {
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+li a{
+  color: #f5f5f5;
+} 
+
+.set-password-page {
+  width: 100%;
+  max-width: 550px;
+  padding: 20px;
+  color: white;
+
+}
+
+.set-password-page h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  padding-left: 15px;
+}
+
+button.ChangePassword {
+  background-color: #35a554;
+  color: white;
+  font-size: 13px;
+  border: none;
+  border-radius: 15px;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.error-message{
+  padding: 15px;
+  font-size: 20px;
+}
+
+button.ChangePassword:hover {
+  background-color: #2a7b4c;
+}
+
+@media (max-width: 768px) {
+  .set-password-page {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .set-password-page {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .form-group input {
+    font-size: 10px;
+}
+}

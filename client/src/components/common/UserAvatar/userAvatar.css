@@ -11,6 +11,7 @@
   border: 0;
   max-width: 200px;
   padding: 0 10px;
+  cursor: pointer;
 }
 
 .user-avatar {
@@ -28,7 +29,7 @@
   max-width: 200px;
 }
 
-.user-avatar-container{
+/* .user-avatar-container{
       display: flex;
     align-items: center;
-}
+} */

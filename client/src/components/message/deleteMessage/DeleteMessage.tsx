@@ -9,13 +9,19 @@ import Cookies from 'js-cookie';
 interface IDeleteMessageProps {
   setMessage: IModalMessagePayload['setMessages'];
   setActiveModal: ModalContextType['setActiveModal'];
+}
 
+const token = Cookies.get('token');
+let name = null;
+
+if (token) {
+  try {
+    const cookie = JSON.parse(token);
+    name = cookie.userInfo?.name || null; // Assurez-vous que userInfo et name existent
+  } catch (error) {
+    console.error('Erreur lors du parsing du cookie:', error);
   }
-
-    // const cookie = JSON.parse(Cookies.get('token') as string);
-    // const name = cookie.userInfo.name;
-
-
+}
 
 const DeleteMessage = ({ setMessage, setActiveModal }: IDeleteMessageProps) => {
   const { currentSection } = useNavigation();
@@ -45,7 +51,7 @@ const DeleteMessage = ({ setMessage, setActiveModal }: IDeleteMessageProps) => {
       <h2>Tu es sûr(e) de vouloir supprimer ce message ?</h2>
 
       <div className='modal-name_container'>
-        <span className='name'>BOB</span> <br />
+        <span className='name'>{name}</span> <br />
         <span>{currentSection.currentMessage}</span>
       </div>
       <DeleteAction handleCancel={handleCancel} handleDelete={handleDelete} />

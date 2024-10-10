@@ -14,8 +14,8 @@ export class RoomService {
     this.redisService.setClientToPeer(client);
   }
 
-  deleteClientToPeer(client) {
-    this.redisService.deleteClientToPeer(client);
+  async deletePeerFromClient(client) {
+    return this.redisService.deletePeerFromClient(client);
   }
 
   addUserOnRoom(data, client) {

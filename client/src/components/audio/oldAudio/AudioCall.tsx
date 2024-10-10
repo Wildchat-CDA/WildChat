@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import Peer, { MediaConnection } from 'peerjs';
 import io, { Socket } from 'socket.io-client';
-import { User, ChannelInfo, JoinChannelResponse } from '../../../types/audioTypes';
+import {
+  User,
+  ChannelInfo,
+  JoinChannelResponse,
+} from '../../../types/audioTypes';
 
 const SOCKET_SERVER = 'http://localhost:3000';
 
@@ -57,7 +61,6 @@ export function AudioCall(): JSX.Element {
   }, []);
 
   const setupSocketListeners = () => {
-    console.log('je passe');
     if (!socketRef.current) return;
 
     socketRef.current.on('user-joined', (data: { users: User[] }) => {

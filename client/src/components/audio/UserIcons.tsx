@@ -3,17 +3,16 @@ import { webSocketService } from '../../services/webSocketService';
 import { useEffect, useState } from 'react';
 import { IPeerIdOnRoomPayload } from '../../../../common/interface/redisInterface';
 import { loadPeerList } from '../../services/peerJS/fetchPeerList';
-import { NavigationContextType } from '../../context/NavigationContext';
+import { IChannel } from '../../types/sectionTypes';
 
 interface IUserIconsProps {
-  room: NavigationContextType['currentSection'];
+  room: IChannel;
 }
 
 const UserIcons = ({ room }: IUserIconsProps) => {
   const [peerList, setPeerList] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log('room ', room);
     loadPeerList(room).then((result) => {
       setPeerList(result);
     });

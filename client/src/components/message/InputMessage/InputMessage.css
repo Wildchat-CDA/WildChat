@@ -1,7 +1,8 @@
 .input-message-container {
   width: 100%;
-  height: 10%;
+
   background-color: var(--color-secondary);
+  overflow-y: hidden;
 }
 
 .form-container {

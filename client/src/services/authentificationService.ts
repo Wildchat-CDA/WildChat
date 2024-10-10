@@ -40,7 +40,7 @@ export const login = async (email: string, password: string) => {
 
     if (response.data.accessToken) {
       console.log(response, 'response authentification service');
-     /* Cookies.set('token', response.data.accessToken, {
+      /* Cookies.set('token', response.data.accessToken, {
         secure: true,
         sameSite: 'strict',
       });*/
@@ -50,6 +50,7 @@ export const login = async (email: string, password: string) => {
         userInfo: {
           email: response.data.email,
           name: response.data.name,
+          firstname: response.data.firstName,
           role: response.data.role,
           id: response.data.id,
         },
@@ -61,7 +62,7 @@ export const login = async (email: string, password: string) => {
         secure: true,
         sameSite: 'strict',
       });
-//      Cookies.set('user', response.data.id);
+      //      Cookies.set('user', response.data.id);
     }
 
     return response.data;
@@ -90,7 +91,7 @@ export const register = async (
         sameSite: 'strict',
       });
     }
-
+    console.log('response :', response);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'inscription:", error);
@@ -105,10 +106,8 @@ export const logout = async () => {
     console.error('Erreur lors de la déconnexion côté serveur:', error);
   } finally {
     Cookies.remove('token');
-   
   }
 };
 export const isAuthenticated = () => {
   return !!Cookies.get('token');
 };
-

@@ -1,14 +1,14 @@
 .content-sidebar {
   width: 33%;
   margin-left: 80px;
-  height: calc(100% - 60px);
+  height: calc(100% - 70px);
   transition: width 0.3s ease;
 }
 
 @media (max-width: 768px) {
   .content-sidebar {
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 70px);
     left: 0;
     margin: 0;
   }
