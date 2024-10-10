@@ -90,43 +90,45 @@ function Navbar({ isMobile }: NavbarProps) {
         <>
           <IconButton
             icon='home.png'
-            text='Accueil'
+            text={isMobile ? '' : 'Accueil'}
             onClick={() => handleComponent(ContentSideBarEnum.Home)}
             ariaLabel="Aller à l'accueil"
           />
-            <IconButton
+          <IconButton
             icon='email.png'
-            text='Message privée'
+            text={isMobile ? '' : 'Message privée'}
             onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
-            ariaLabel="Voir les messages privés"
+            ariaLabel='Voir les messages privés'
           />
           <IconButton
             icon='listStudent.png'
-            text='Liste des présences'
+            text={isMobile ? '' : 'Liste des présences'}
             onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
-            ariaLabel="Voir la liste des présences"
+            ariaLabel='Voir la liste des présences'
           />
-           <IconButton
+          <IconButton
             icon='palm.png'
-            text='Mains levées'
+            text={isMobile ? '' : 'Mains levées'}
             onClick={() => handleComponent(ContentSideBarEnum.RaisedHand)}
-            ariaLabel="Voir la liste des mains levées"
+            ariaLabel='Voir la liste des mains levées'
           />
           <IconButton
             icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
-            text='Prendre la parole'
+            text={isMobile ? '' : 'Prendre la parole'}
             onClick={toggleMicrophone}
             isActive={isMicrophoneOn}
-            ariaLabel={isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'}
+            ariaLabel={
+              isMicrophoneOn ? 'Couper le microphone' : 'Activer le microphone'
+            }
           />
         </>
       );
     } else {
       const handRaiseItem = (
-        <div className="hand-raise-container">
+        <div className='hand-raise-container'>
           <IconButton
             icon='palm.png'
-            text='Lever la main'
+            text={isMobile ? '' : 'Lever la main'}
             onClick={toggleHandRaiseDropdown}
             isActive={isHandRaised.self || isHandRaised.table}
             ariaLabel='Lever la main'
@@ -144,19 +146,24 @@ function Navbar({ isMobile }: NavbarProps) {
         <>
           <IconButton
             icon='home.png'
-            text='Accueil'
+            text={isMobile ? '' : 'Accueil'}
             onClick={() => handleComponent(ContentSideBarEnum.Home)}
             ariaLabel="Aller à l'accueil"
           />
           <IconButton
             icon='email.png'
-            text='Messages privés'
+            text={isMobile ? '' : 'Messages privés'}
             onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
-            ariaLabel="Aller aux messages privés"
+            ariaLabel='Aller aux messages privés'
           />
           {isMobile && (
-            <div className="nav-item">
-              <IconButton icon='media.png' text='Média' onClick={toggleMediaDropdown} ariaLabel="Ouvrir les contrôles média" />
+            <div className='nav-item'>
+              <IconButton
+                icon='media.png'
+                text={isMobile ? '' : 'Média'}
+                onClick={toggleMediaDropdown}
+                ariaLabel='Ouvrir les contrôles média'
+              />
               {showMediaDropdown && (
                 <Dropdown
                   items={mediaDropdownItems}

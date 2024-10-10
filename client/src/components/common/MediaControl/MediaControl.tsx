@@ -32,19 +32,19 @@ function MediaControl({ userId }: MediaControlProps) {
       <div className="media-buttons">
         <IconButton
           icon={isMicrophoneOn ? 'microphone.png' : 'unmute.png'}
-          text={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}
+          text={isMicrophoneOn ? '' : ''}
           onClick={toggleMicrophone}
           ariaLabel={isMicrophoneOn ? 'Désactiver le microphone' : 'Activer le microphone'}
         />
         <IconButton
           icon={isSpeakerOn ? 'volume.png' : 'mute.png'}
-          text={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
+          text={isSpeakerOn ? '' : ''}
           onClick={toggleSpeaker}
           ariaLabel={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
         />
         <IconButton
           icon="ecrou.png"
-          text="Réglages"
+          text=""
           onClick={() => {/* Logique pour ouvrir les réglages */}}
           ariaLabel="Ouvrir les réglages"
         />

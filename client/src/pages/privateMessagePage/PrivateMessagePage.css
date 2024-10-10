@@ -3,6 +3,7 @@
   height: 100%;
   background-color: var(--color-secondary);
   color : var(--color-font);
+   overflow-y: auto; 
 }
 
 .privateMessagePage-container > h1 {
