@@ -1,0 +1,7 @@
+.desktop-layout {
+  height: 100vh;
+
+  .desktop-content {
+    height: 100vh;
+  }
+}

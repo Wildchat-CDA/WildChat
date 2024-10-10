@@ -1,11 +1,10 @@
 .chat-page {
-  height: 100%;
+  height: calc(100% - 70px);
 }
 
 @media (max-width: 768px) {
   .chat-page {
     width: 100%;
     height: calc(100vh - (50px * 2));
- 
   }
 }

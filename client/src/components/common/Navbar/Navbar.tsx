@@ -19,7 +19,8 @@ interface NavbarProps {
 
 function Navbar({ isMobile }: NavbarProps) {
   const cookie = JSON.parse(Cookies.get('token') as string);
-  const { userRole } = useUserRole();
+  const { userRole, setUserRole } = useUserRole();
+  setUserRole(cookie.userInfo.role);
 
   const { currentSection } = useNavigation();
 
@@ -105,36 +106,36 @@ function Navbar({ isMobile }: NavbarProps) {
   };
 
   const renderNavItems = () => {
-    if (userRole === 'teacher') {
+    if (userRole === 'professeur') {
       return (
         <>
           <IconButton
             icon='home.png'
-            text={isMobile ? "" : 'Accueil'}
+            text={isMobile ? '' : 'Accueil'}
             onClick={() => handleComponent(ContentSideBarEnum.Home)}
             ariaLabel="Aller à l'accueil"
           />
           <IconButton
             icon='email.png'
-            text={isMobile ? "" :'Message privée'}
+            text={isMobile ? '' : 'Message privée'}
             onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             ariaLabel='Voir les messages privés'
           />
           <IconButton
             icon='listStudent.png'
-            text={isMobile ? "" : 'Liste des présences'}
+            text={isMobile ? '' : 'Liste des présences'}
             onClick={() => handleComponent(ContentSideBarEnum.PresenceList)}
             ariaLabel='Voir la liste des présences'
           />
           <IconButton
             icon='palm.png'
-            text={isMobile ? "" : 'Mains levées'}
+            text={isMobile ? '' : 'Mains levées'}
             onClick={() => handleComponent(ContentSideBarEnum.RaisedHand)}
             ariaLabel='Voir la liste des mains levées'
           />
           <IconButton
             icon={isMicrophoneOn ? 'speak.png' : 'NoSpeak.png'}
-            text={isMobile ? "" : 'Prendre la parole'}
+            text={isMobile ? '' : 'Prendre la parole'}
             onClick={toggleMicrophone}
             isActive={isMicrophoneOn}
             ariaLabel={
@@ -144,11 +145,10 @@ function Navbar({ isMobile }: NavbarProps) {
 
           <IconButton
             icon='add-new.png'
-            text={isMobile ? "" : 'Ajouter un élève'}
+            text={isMobile ? '' : 'Ajouter un élève'}
             onClick={() => handleComponent(ContentSideBarEnum.AddStudent)}
-            ariaLabel="Ajouter un élève"
+            ariaLabel='Ajouter un élève'
           />
-
         </>
       );
     } else {
@@ -156,7 +156,7 @@ function Navbar({ isMobile }: NavbarProps) {
         <div className='hand-raise-container'>
           <IconButton
             icon='palm.png'
-            text='Lever la main'
+            text={isMobile ? '' : 'Lever la main'}
             onClick={toggleHandRaiseDropdown}
             isActive={isHandRaised.self || isHandRaised.table}
             ariaLabel='Lever la main'
@@ -174,13 +174,13 @@ function Navbar({ isMobile }: NavbarProps) {
         <>
           <IconButton
             icon='home.png'
-            text='Accueil'
+            text={isMobile ? '' : 'Accueil'}
             onClick={() => handleComponent(ContentSideBarEnum.Home)}
             ariaLabel="Aller à l'accueil"
           />
           <IconButton
             icon='email.png'
-            text='Messages privés'
+            text={isMobile ? '' : 'Messages privés'}
             onClick={() => handleComponent(ContentSideBarEnum.PrivateMessage)}
             ariaLabel='Aller aux messages privés'
           />
@@ -188,7 +188,7 @@ function Navbar({ isMobile }: NavbarProps) {
             <div className='nav-item'>
               <IconButton
                 icon='media.png'
-                text='Média'
+                text={isMobile ? '' : 'Média'}
                 onClick={toggleMediaDropdown}
                 ariaLabel='Ouvrir les contrôles média'
               />
