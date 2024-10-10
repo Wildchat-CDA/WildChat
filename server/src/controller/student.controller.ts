@@ -1,6 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { StudentService, Student } from '../service/student.service';
+import { StudentService } from '../service/student.service';
 import { PresenceService, PresenceData } from '../service/presence.service';
+import { User } from '../entity/user.entity';
 
 @Controller('students')
 export class StudentController {
@@ -10,13 +11,13 @@ export class StudentController {
   ) {}
 
   @Get()
-  getAllStudents(): Student[] {
+  async getAllStudents(): Promise<User[]> {
     return this.studentService.getAllStudents();
   }
 
   @Get(':id')
-  getStudentById(@Param('id') id: string): Student | undefined {
-    return this.studentService.getStudentById(id);
+  async getStudentById(@Param('id') id: string): Promise<User | undefined> {
+    return this.studentService.getStudentById(Number(id));
   }
 
   @Get('presence')

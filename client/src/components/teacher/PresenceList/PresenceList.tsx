@@ -1,21 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { webSocketService } from '../../../services/webSocketService';
+import { presenceService } from '../../../services/presence/presenceService';
+import { User, PresenceUpdateData } from '../../../types/presenceTypes';
 import './PresenceList.css';
-
-interface User {
-  id: number;
-  name: string;
-  firstName: string;
-  status: 'online' | 'offline';
-}
 
 const usePresence = (): User[] => {
   const [users, setUsers] = useState<User[]>([]);
 
-  const handlePresenceUpdate = useCallback((updatedUser: User) => {
+  const handlePresenceUpdate = useCallback((updateData: PresenceUpdateData) => {
     setUsers(prevUsers => 
       prevUsers.map(user => 
-        user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+        user.id === updateData.userId ? { ...user, status: updateData.status } : user
       )
     );
   }, []);
@@ -23,28 +18,23 @@ const usePresence = (): User[] => {
   useEffect(() => {
     const fetchInitialPresence = async () => {
       try {
-        const response = await fetch('/api/user/presence');
-        if (!response.ok) {
-          throw new Error('Failed to fetch presence data');
-        }
-        const data = await response.json();
-        setUsers(data);
+        const data = await presenceService.getInitialPresence();
+        setUsers(data.map(presenceData => ({
+          ...presenceData.user,
+          status: presenceData.status
+        })));
       } catch (error) {
         console.error('Error fetching presence data:', error);
       }
     };
 
-    const handlePresenceUpdateEvent = (updatedUser: User) => {
-      handlePresenceUpdate(updatedUser);
-    };
-
     fetchInitialPresence();
 
     webSocketService.connect();
-    webSocketService.on('presenceUpdate', handlePresenceUpdateEvent);
+    webSocketService.on('presenceUpdate', handlePresenceUpdate);
 
     return () => {
-      webSocketService.off('presenceUpdate', handlePresenceUpdateEvent);
+      webSocketService.off('presenceUpdate', handlePresenceUpdate);
     };
   }, [handlePresenceUpdate]);
 

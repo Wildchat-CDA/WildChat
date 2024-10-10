@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from './redis.service';
-import { UserService } from './user.service';
+import { StudentService } from './student.service';
 import { User } from '../entity/user.entity';
 
 export interface PresenceData {
@@ -12,18 +12,18 @@ export interface PresenceData {
 export class PresenceService {
   constructor(
     private readonly redisService: RedisService,
-    private readonly userService: UserService,
+    private readonly studentService: StudentService,
   ) {}
 
-  async setUserPresence(
+  public async setUserPresence(
     userId: number,
     status: 'online' | 'offline',
   ): Promise<void> {
     await this.redisService.setUserPresence(userId.toString(), status);
   }
 
-  async getAllUsersPresence(): Promise<PresenceData[]> {
-    const users = await this.userService.findAll();
+  public async getAllUsersPresence(): Promise<PresenceData[]> {
+    const users = await this.studentService.getAllStudents();
     const allPresences = await this.redisService.getAllUserPresences();
 
     return users.map((user) => ({
@@ -32,5 +32,18 @@ export class PresenceService {
         | 'online'
         | 'offline',
     }));
+  }
+
+  public async getUserPresence(userId: number): Promise<'online' | 'offline'> {
+    return (await this.redisService.getUserPresence(userId.toString())) as
+      | 'online'
+      | 'offline';
+  }
+
+  public async updatePresence(
+    userId: number,
+    status: 'online' | 'offline',
+  ): Promise<void> {
+    await this.setUserPresence(userId, status);
   }
 }

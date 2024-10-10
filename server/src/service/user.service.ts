@@ -6,6 +6,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
+  getUserById(id: number) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -17,9 +20,6 @@ export class UserService {
     });
   }
 
-  // async findAll(): Promise<User[]> {
-  //   return await this.userRepository.find();
-  // }
   async getUserChannels(userId: number): Promise<Channel[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -35,5 +35,9 @@ export class UserService {
     if (channels.length === 0) throw new Error('User has no private channels');
 
     return channels;
+  }
+
+  async getStudentById(id: number): Promise<User | undefined> {
+    return await this.userRepository.findOne({ where: { id } });
   }
 }

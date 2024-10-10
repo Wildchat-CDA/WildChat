@@ -10,8 +10,8 @@ import {
 import { Server, Socket } from 'socket.io';
 import { PresenceService } from './presence.service';
 import { RedisService } from './redis.service';
-import { IMessagePostPayload } from '../../../common/interface/messageInterface';
 import { RoomService } from './room.service';
+import { IMessagePostPayload } from '../../../common/interface/messageInterface';
 
 interface HandRaiseData {
   userId: number;
@@ -33,24 +33,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly roomService: RoomService,
   ) {}
 
-  async handleConnection(client: Socket) {
+  handleConnection(client: Socket) {
     if (client) {
-      await this.sendInitialPresenceList(client);
-      const userId = this.getUserIdFromSocket(client);
-      if (userId) {
-        await this.presenceService.setUserPresence(userId, 'online');
-        this.server.emit('presenceUpdate', { userId, status: 'online' });
-      }
+      this.sendInitialPresenceList(client);
     }
   }
 
-  async handleDisconnect(client: Socket) {
+  handleDisconnect(client: Socket) {
     console.log(`client ${client.id} disconnected`);
-    const userId = this.getUserIdFromSocket(client);
-    if (userId) {
-      await this.presenceService.setUserPresence(userId, 'offline');
-      this.server.emit('presenceUpdate', { userId, status: 'offline' });
-    }
     const peerID = this.socketToPeerMap.get(client.id);
     if (peerID) {
       this.socketToPeerMap.delete(client.id);
@@ -58,13 +48,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('getPresence')
-  async handleGetPresence(client: Socket) {
-    await this.sendInitialPresenceList(client);
+  handleGetPresence(client: Socket) {
+    this.sendInitialPresenceList(client);
   }
 
   private async sendInitialPresenceList(client: Socket) {
-    const presenceList = await this.presenceService.getAllUsersPresence();
-    client.emit('initialPresence', presenceList);
+    try {
+      const presenceData = await this.presenceService.getAllUsersPresence();
+      const presenceList = presenceData.map(({ user, status }) => ({
+        id: user.id,
+        name: user.name,
+        firstName: user.firstName,
+        status,
+      }));
+      client.emit('initialPresence', presenceList);
+    } catch (error) {
+      console.error('Error fetching initial presence list:', error);
+    }
   }
 
   @SubscribeMessage('message')
@@ -100,12 +100,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       client.join(data.roomUuid);
+
       await this.roomService.addUserOnRoom(data, client);
       this.server.to(data.roomUuid).emit('join-room', {
         peerId: data.peerId,
         name: data.name,
         roomUuid: data.roomUuid,
       });
+
       this.server.emit('join', {
         peerId: data.peerId,
         name: data.name,
@@ -133,6 +135,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         roomUuid: data.roomUuid,
         client: client.id,
       });
+
       client.leave(data.roomUuid);
       const payload = { ...data, clientId: client.id };
       await this.roomService.deletePeerIdUser(payload);
@@ -141,7 +144,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  private getUserIdFromSocket(client: Socket): number | null {
-    return Math.floor(Math.random() * 1000) + 1;
+  @SubscribeMessage('updatePresence')
+  async handleUpdatePresence(
+    @MessageBody() data: { userId: number; status: 'online' | 'offline' },
+  ) {
+    await this.presenceService.updatePresence(data.userId, data.status);
+    this.server.emit('presenceUpdate', data);
   }
 }
