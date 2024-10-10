@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { register as registerUser } from '../../services/authentificationService';
@@ -84,10 +83,10 @@ const RegisterForm = () => {
           <PasswordStrength password={password || ""} />
         </div>
         <div className="form-group">
-        <label htmlFor="repat-password" aria-label=" mot de passe"> Répéter Mot-de-Passe </label>
+        <label htmlFor="repeat-password" aria-label=" mot de passe"> Répéter Mot-de-Passe </label>
           <input
             type="password"
-            id="repat-password"
+            id="repeat-password"
             autoComplete='new-password'
             placeholder="Répéter Mot de Passe"
             {...register('confirmPassword', {

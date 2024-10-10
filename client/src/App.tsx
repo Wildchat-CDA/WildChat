@@ -1,7 +1,5 @@
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import { LoginForm } from './components/authentification/Login';
-import { RegisterForm } from './components/authentification/Register';
+import {Navigate } from 'react-router-dom'; 
 import MainContent from './components/common/mainContent/MainContent';
 import { HandRaiseProvider } from './context/HandRaiseContext';
 import { UserRoleProvider } from './context/UserRoleContext';
@@ -9,17 +7,16 @@ import { NavigationProvider } from './context/NavigationContext';
 import DesktopLayout from './components/layout/DesktopLayout';
 import MobileLayout from './components/layout/MobileLayout';
 import { ModalProvider } from './context/ModalContext';
-import { AudioProvider } from './context/AudioContext';
-import PolitiquePrive from './pages/PolitiquePrive';
-
+//import { AudioProvider } from './context/AudioContext';
 import Cookies from 'js-cookie';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // const cookie = JSON.parse(Cookies.get('token') as string);
+  const cookie = JSON.parse(Cookies.get('token') as string);
   // const token = cookie.encoded;
+  // console.log("token dans app:" ,token)
 
   const token = Cookies.get('token');
   //TODO CALL TOKEN DECODED FROM

@@ -1,42 +1,40 @@
 import { useState, useEffect, useCallback } from 'react';
 import { webSocketService } from '../../../services/webSocketService';
+import { presenceService } from '../../../services/presence/presenceService';
+import { User, PresenceUpdateData } from '../../../types/presenceTypes';
 import './PresenceList.css';
-
-interface User {
-  id: string;
-  name: string;
-  firstName: string;
-  status: 'online' | 'offline';
-}
 
 const usePresence = (): User[] => {
   const [users, setUsers] = useState<User[]>([]);
 
-  const handlePresenceUpdate = useCallback((updatedUser: User) => {
+  const handlePresenceUpdate = useCallback((updateData: PresenceUpdateData) => {
     setUsers(prevUsers => 
       prevUsers.map(user => 
-        user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+        user.id === updateData.userId ? { ...user, status: updateData.status } : user
       )
     );
   }, []);
 
   useEffect(() => {
-    const handleInitialPresence = (initialUsers: User[]) => {
-      setUsers(initialUsers);
+    const fetchInitialPresence = async () => {
+      try {
+        const data = await presenceService.getInitialPresence();
+        setUsers(data.map(presenceData => ({
+          ...presenceData.user,
+          status: presenceData.status
+        })));
+      } catch (error) {
+        console.error('Error fetching presence data:', error);
+      }
     };
 
-    const handlePresenceUpdateEvent = (updatedUser: User) => {
-      handlePresenceUpdate(updatedUser);
-    };
+    fetchInitialPresence();
 
     webSocketService.connect();
-    webSocketService.on('initialPresence', handleInitialPresence);
-    webSocketService.on('presenceUpdate', handlePresenceUpdateEvent);
-    webSocketService.emit('getPresence');
+    webSocketService.on('presenceUpdate', handlePresenceUpdate);
 
     return () => {
-      webSocketService.off('initialPresence', handleInitialPresence);
-      webSocketService.off('presenceUpdate', handlePresenceUpdateEvent);
+      webSocketService.off('presenceUpdate', handlePresenceUpdate);
     };
   }, [handlePresenceUpdate]);
 

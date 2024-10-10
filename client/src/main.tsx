@@ -13,7 +13,7 @@ import { RegisterForm } from './components/authentification/Register';
 import PolitiquePrive from './pages/PolitiquePrive';
 import CGU from './pages/CGU';
 import { MediaProvider } from './context/MediaContext';
-import { useEffect } from 'react';
+import SetPasswordPage from './pages/studentAccount/SetPasswordPage';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
@@ -46,20 +46,18 @@ root.render(
   <BrowserRouter>
     <AuthProvider>
       <Routes>
-        <Route path='/login' element={<LoginForm />} />
-        <Route path='/register' element={<RegisterForm />} />
-        <Route path='/politique_prive' element={<PolitiquePrive />} />
-        <Route path='/CGU' element={<CGU />} />
-        <Route
-          path='/'
-          element={
-            <ProtectedRoute>
-              <MediaProvider>
-                <App />
-              </MediaProvider>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/invite/:token" element={<SetPasswordPage />} />
+        <Route path="/politique_prive" element={<PolitiquePrive />} />
+        <Route path="/CGU" element={<CGU />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <MediaProvider>
+              <App />
+            </MediaProvider>
+          </ProtectedRoute>
+        } />
       </Routes>
     </AuthProvider>
   </BrowserRouter>

@@ -9,7 +9,7 @@ interface PasswordStrengthProps {
   const { isValid, errors } = validatePasswordStrength(password);
   
   const conditions = [
-    { requirement: "Entre 8 et 100 caractères", condition: password.length >= 8 && password.length <= 100 },
+    { requirement: "Entre 8 et 100 caractères, sans ponctuation", condition: password.length >= 8 && password.length <= 100 },
     { requirement: "1 majuscule", condition: /[A-Z]/.test(password) },
     { requirement: "1 minuscule", condition: /[a-z]/.test(password) },
     { requirement: "1 caractère spécial", condition: /[!@#$%^&*(),.?":{}|<>]/.test(password) },
