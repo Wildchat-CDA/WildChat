@@ -59,6 +59,16 @@ export class AuthController {
     }
   }
 
+  @Post('logout')
+  async logout(@Body() data: any) {
+    try {
+      const result = this.redisService.setUserPresence(data.id, 'offline');
+      return result;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Post('login')
   @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))

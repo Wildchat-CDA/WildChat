@@ -4,6 +4,7 @@ import { useAvatar } from '../../../hooks/useAvatar';
 import { useNavigate } from 'react-router-dom';
 import './userAvatar.css';
 import Cookies from 'js-cookie';
+import { logout } from '../../../services/auth/Logout';
 
 interface UserAvatarProps {
   userId: string;
@@ -29,6 +30,7 @@ function UserAvatar({
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
   const onLogout = () => {
+    logout(cookie.userInfo.id);
     Cookies.remove('token');
     navigate('/login');
   };
