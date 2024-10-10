@@ -12,8 +12,8 @@ interface IDeleteMessageProps {
 
   }
 
-    // const cookie = JSON.parse(Cookies.get('token') as string);
-    // const name = cookie.userInfo.name;
+    const cookie = JSON.parse(Cookies.get('token') as string);
+    const name = cookie.userInfo.name;
 
 
 
@@ -45,7 +45,7 @@ const DeleteMessage = ({ setMessage, setActiveModal }: IDeleteMessageProps) => {
       <h2>Tu es sûr(e) de vouloir supprimer ce message ?</h2>
 
       <div className='modal-name_container'>
-        <span className='name'>BOB</span> <br />
+        <span className='name'>{name}</span> <br />
         <span>{currentSection.currentMessage}</span>
       </div>
       <DeleteAction handleCancel={handleCancel} handleDelete={handleDelete} />
