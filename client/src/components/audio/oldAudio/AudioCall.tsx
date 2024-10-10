@@ -7,7 +7,7 @@ import {
   JoinChannelResponse,
 } from '../../../types/audioTypes';
 
-const SOCKET_SERVER = 'http://localhost:3000';
+const SOCKET_SERVER = `${import.meta.env.VITE_API_URL}`;
 
 export function AudioCall(): JSX.Element {
   const [myPeerID, setMyPeerID] = useState<string>('');
