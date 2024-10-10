@@ -8,9 +8,12 @@ const usePresence = (): User[] => {
   const [users, setUsers] = useState<User[]>([]);
 
   const handlePresenceUpdate = useCallback((updateData: PresenceUpdateData) => {
-    setUsers(prevUsers => 
-      prevUsers.map(user => 
-        user.id === updateData.userId ? { ...user, status: updateData.status } : user
+    console.log('je passe dans handlePresence');
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === updateData.userId
+          ? { ...user, status: updateData.status }
+          : user
       )
     );
   }, []);
@@ -19,10 +22,12 @@ const usePresence = (): User[] => {
     const fetchInitialPresence = async () => {
       try {
         const data = await presenceService.getInitialPresence();
-        setUsers(data.map(presenceData => ({
-          ...presenceData.user,
-          status: presenceData.status
-        })));
+        setUsers(
+          data.map((presenceData) => ({
+            ...presenceData.user,
+            status: presenceData.status,
+          }))
+        );
       } catch (error) {
         console.error('Error fetching presence data:', error);
       }
@@ -44,27 +49,29 @@ const usePresence = (): User[] => {
 const PresenceList = (): JSX.Element => {
   const users = usePresence();
 
-  const onlineUsers = users.filter(user => user.status === 'online');
-  const offlineUsers = users.filter(user => user.status === 'offline');
+  const onlineUsers = users.filter((user) => user.status === 'online');
+  const offlineUsers = users.filter((user) => user.status === 'offline');
 
   const renderUserList = (userList: User[], className: string) => (
     <ul className={className}>
-      {userList.map(user => (
-        <li key={`${user.id}-${user.status}`}>{user.name} {user.firstName}</li>
+      {userList.map((user) => (
+        <li key={`${user.id}-${user.status}`}>
+          {user.name} {user.firstName}
+        </li>
       ))}
     </ul>
   );
 
   return (
-    <div className="presence-list">
+    <div className='presence-list'>
       <h1>Liste des présences</h1>
       <details>
         <summary>Non connectés ({offlineUsers.length})</summary>
-        {renderUserList(offlineUsers, "studentOffline")}
+        {renderUserList(offlineUsers, 'studentOffline')}
       </details>
       <details>
         <summary>Connectés ({onlineUsers.length})</summary>
-        {renderUserList(onlineUsers, "studentOnline")}
+        {renderUserList(onlineUsers, 'studentOnline')}
       </details>
     </div>
   );

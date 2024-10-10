@@ -91,7 +91,7 @@ export const register = async (
         sameSite: 'strict',
       });
     }
-
+    console.log('response :', response);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'inscription:", error);

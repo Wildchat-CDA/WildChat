@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './userAvatar.css';
 import Cookies from 'js-cookie';
 import { logout } from '../../../services/auth/Logout';
+import { webSocketService } from '../../../services/webSocketService';
 
 interface UserAvatarProps {
   userId: string;
@@ -30,6 +31,10 @@ function UserAvatar({
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
   const onLogout = () => {
+    webSocketService.emit('updatePresence', {
+      userId: cookie.userInfo.id,
+      status: 'offline',
+    });
     logout(cookie.userInfo.id);
     Cookies.remove('token');
     navigate('/login');
