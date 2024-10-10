@@ -16,18 +16,10 @@ export class StudentService {
   }
 
   async getStudentById(id: number): Promise<User | undefined> {
-    const user = this.userService.getUserById(id);
-    console.log('user');
-
-    // Vérification explicite pour éviter un retour de type 'void'
-    // if (!user) {
-    //   return undefined; // Ou gérer l'erreur d'une autre manière
-    // }
-
-    // if (user.role && user.role.name === 'eleve') {
-    //   return user;
-    // }
-
+    const user = await this.userService.getUserById(id);
+    if (user && user.role && user.role.name === 'eleve') {
+      return user;
+    }
     return undefined;
   }
 
@@ -35,7 +27,7 @@ export class StudentService {
     const user = await this.getStudentById(id);
     if (user) {
       await this.redisService.setUserPresence(
-        id.toString(),
+        id,
         online ? 'online' : 'offline',
       );
     }

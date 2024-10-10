@@ -409,12 +409,13 @@ export class RedisService implements OnModuleInit {
   }
 
   public async setUserPresence(
-    userId: string,
+    userId: number,
     status: 'online' | 'offline',
   ): Promise<void> {
     this.checkConnection();
     try {
       await this._client.set(`presence:${userId}`, status);
+
       console.log(`User presence set for ${userId}: ${status}`);
     } catch (error) {
       console.error('Failed to set user presence:', error);
@@ -439,11 +440,12 @@ export class RedisService implements OnModuleInit {
       );
     }
   }
-
+  //TODO ENlever les  console.log
   public async getAllUserPresences(): Promise<Record<string, string>> {
     this.checkConnection();
     try {
       const keys = await this._client.keys('presence:*');
+
       const presences = await Promise.all(
         keys.map(async (key) => {
           const userId = key.split(':')[1];

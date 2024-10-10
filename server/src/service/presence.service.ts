@@ -19,19 +19,26 @@ export class PresenceService {
     userId: number,
     status: 'online' | 'offline',
   ): Promise<void> {
-    await this.redisService.setUserPresence(userId.toString(), status);
+    await this.redisService.setUserPresence(userId, status);
   }
 
   public async getAllUsersPresence(): Promise<PresenceData[]> {
     const users = await this.studentService.getAllStudents();
+    console.log('users : ', users);
     const allPresences = await this.redisService.getAllUserPresences();
+    console.log('all presence : ', allPresences);
 
-    return users.map((user) => ({
-      user,
-      status: (allPresences[user.id.toString()] || 'offline') as
-        | 'online'
-        | 'offline',
-    }));
+    return users.map(
+      (user) => (
+        console.log('user dans map', user),
+        {
+          user,
+          status: (allPresences[user.id.toString()] || 'offline') as
+            | 'online'
+            | 'offline',
+        }
+      ),
+    );
   }
 
   public async getUserPresence(userId: number): Promise<'online' | 'offline'> {
