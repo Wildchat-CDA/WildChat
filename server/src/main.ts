@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const allowedOrigins = [
-    process.env.FRONTEND_URL + ':' + process.env.PORT_FRONT,
+    process.env.FRONTEND_URL,
     process.env.LOCALTUNNEL_URL,
     /^https:\/\/.*\.loca\.lt$/,
   ];

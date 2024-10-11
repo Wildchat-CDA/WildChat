@@ -3,10 +3,10 @@ import Peer from 'peerjs'; // Importation de Peer et MediaConnection depuis Peer
 export default class PeerService {
   // Déclaration des propriétés privées :
   private peer = new Peer({
-    host: 'localhost', // Hôte de ton serveur PeerJS
-    port: 9000, // Port de ton serveur
-    path: '/peerjs', // Chemin de ton serveur PeerJS
-    secure: false, // Secure doit être false si tu n'utilises pas HTTPS
+    // host: 'localhost', // Hôte de ton serveur PeerJS
+    // port: 9000, // Port de ton serveur
+    // path: '/peerjs', // Chemin de ton serveur PeerJS
+    // secure: false, // Secure doit être false si tu n'utilises pas HTTPS
   }); // Initialisation d'une instance PeerJS.
   private _peerId: string | null = null; // Stocke l'identifiant du peer (sera défini une fois connecté).
   private _localStream: MediaStream | null = null; // Stocke le flux audio local (sera défini après l'autorisation d'accès au microphone).
@@ -44,11 +44,12 @@ export default class PeerService {
 
   // Méthode pour établir une nouvelle connexion avec un peer distant via son ID, et diffuser le flux audio.
   addNewPeer(remotePeerId: string, audioRef: HTMLAudioElement) {
+    console.log('remotePeerId ', remotePeerId);
+    console.log('audioRef : ', remotePeerId);
     // Si le flux local n'est pas encore disponible, on renvoie une erreur.
     if (this._localStream === null) throw new Error('local stream is missing');
 
     // Appelle le peer distant en lui envoyant le flux audio local.
-    // if (remotePeerId !== this.peerId) {
     const call = this.peer.call(remotePeerId, this._localStream);
 
     // Écoute le flux audio du peer distant et l'attache à l'élément audio HTML via audioRef.

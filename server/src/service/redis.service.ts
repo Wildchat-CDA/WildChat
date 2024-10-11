@@ -119,10 +119,6 @@ export class RedisService implements OnModuleInit {
   }
 
   public async deletePeerIdUser(data: IPeerIdOnRoomPayload) {
-    if (data.peerId === null || data.peerId.length === 0) {
-      throw new Error('Le peerId ne peut pas être vide');
-    }
-
     try {
       const peerData = `${data.peerId}:${data.name}`;
       const result = await this.client.lRem(
