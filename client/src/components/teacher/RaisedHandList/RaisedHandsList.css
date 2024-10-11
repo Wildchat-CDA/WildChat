@@ -65,6 +65,7 @@ h2 {
   padding: 10px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .hand-info-container {

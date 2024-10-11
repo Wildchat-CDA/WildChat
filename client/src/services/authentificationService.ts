@@ -26,13 +26,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // TODO: mettre l'API_URL dans le .env après
-
+const API_URL = `${import.meta.env.VITE_API_URL}`;
 
 export const login = async (email: string, password: string) => {
   try {
-    const url = `${import.meta.env.VITE_API_URL}/login`;
     const response = await axios.post(
-      url,
+      `${API_URL}/login`,
       { email, password },
       { withCredentials: true }
     );
