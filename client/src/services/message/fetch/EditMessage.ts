@@ -3,9 +3,7 @@ import { IMessageUpdatePayload } from "../../../../../common/interface/messageIn
 export async function editMessage(
   messageUpdate: IMessageUpdatePayload
 ): Promise<void> {
-  const apiUrl = `${import.meta.env.VITE_API_URL}:${
-    import.meta.env.VITE_API_PORT
-  }`;
+  const apiUrl = `${import.meta.env.VITE_API_URL}`;
   const url = `${apiUrl}/room/${messageUpdate.roomId}/message`;
 
   try {

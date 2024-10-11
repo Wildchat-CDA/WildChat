@@ -24,8 +24,6 @@
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-import { Role } from '../../../server/src/entity/role.entity';
 
 // TODO: mettre l'API_URL dans le .env après
 const API_URL = `${import.meta.env.VITE_API_URL}`;

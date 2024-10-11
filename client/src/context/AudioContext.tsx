@@ -9,9 +9,7 @@ import Peer, { MediaConnection } from 'peerjs';
 import io, { Socket } from 'socket.io-client';
 import { User, ChannelInfo, JoinChannelResponse } from '../types/audioTypes';
 
-const apiUrl = `${import.meta.env.VITE_API_URL}:${
-  import.meta.env.VITE_API_PORT
-}`;
+const apiUrl = `${import.meta.env.VITE_API_URL}`;
 
 const SOCKET_SERVER = apiUrl;
 

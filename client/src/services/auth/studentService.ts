@@ -1,7 +1,7 @@
 import axios from "axios";
 import { StudentInvite } from "../../types/studentInviteType";
 
-const API_URL = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+const API_URL = `${import.meta.env.VITE_API_URL}`;
 
 export const inviteStudents = async (students: StudentInvite[]) => {
   const tokenCookie = document.cookie

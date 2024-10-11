@@ -6,7 +6,7 @@ export async function loadPeerList(
 ): Promise<string[]> {
   try {
     const response = await fetch(
-      ` ${import.meta.env.VITE_API_URL}:3000/room/peer/${
+      ` ${import.meta.env.VITE_API_URL}/room/peer/${
         currentChannel ? currentChannel.uuid : ''
       }`
     );

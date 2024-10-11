@@ -18,7 +18,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const API_URL = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+const API_URL = `${import.meta.env.VITE_API_URL}`;
 
 function SetPasswordPage() {
   const { token } = useParams<{ token: string }>();

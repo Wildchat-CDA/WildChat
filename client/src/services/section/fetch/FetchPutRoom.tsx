@@ -9,7 +9,7 @@ export async function fetchPutRoom(
     title: data,
   };
   try {
-    const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+    const apiUrl = `${import.meta.env.VITE_API_URL}`;
     const response = await fetch(
       `${apiUrl}/section/${currentSection.sectionId}/topic/channel/${currentSection.channelId}`,
       {

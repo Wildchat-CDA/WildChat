@@ -1,7 +1,5 @@
 export async function logout(id: number) {
-  const apiURL = `${import.meta.env.VITE_API_URL}:${
-    import.meta.env.VITE_API_PORT
-  }`;
+  const apiURL = `${import.meta.env.VITE_API_URL}`;
   const url = `${apiURL}/logout`;
 
   try {
