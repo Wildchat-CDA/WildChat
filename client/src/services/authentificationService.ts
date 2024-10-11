@@ -24,16 +24,15 @@
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-import { Role } from '../../../server/src/entity/role.entity';
 
 // TODO: mettre l'API_URL dans le .env après
-const API_URL = 'http://localhost:3000';
+
 
 export const login = async (email: string, password: string) => {
   try {
+    const url = `${import.meta.env.VITE_API_URL}/login`;
     const response = await axios.post(
-      `${API_URL}/login`,
+      url,
       { email, password },
       { withCredentials: true }
     );

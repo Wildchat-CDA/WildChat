@@ -4,9 +4,7 @@ export async function deleteMessage(
   data: IMessageDeletePayload
 ): Promise<void> {
   try {
-    const apiUrl = `${import.meta.env.VITE_API_URL}:${
-      import.meta.env.VITE_API_PORT
-    }`;
+    const apiUrl = `${import.meta.env.VITE_API_URL}`;
     const response = await fetch(
       `${apiUrl}/room/${data.roomId}/message/${data.index}`,
       {
