@@ -1,0 +1,73 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: deploy
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install dependencies
+      run: |
+        cd server
+        npm install
+        cd ../client
+        npm install
+    - name: Build client
+      run: |
+        cd client
+        npm run build    
+    - name: Build NestJS app
+      run: |
+        cd server
+        npm run build
+    - name: scp Client APP
+      uses: c0c1/scp-action@v1.0
+      with:
+        # Source dir to deploy
+        src: "client/dist"
+          # SSH address
+        host: ${{ secrets.SERVER_HOST }}
+          # Remote dir path
+        remote: "/var/www/html"
+          # SSH Port
+          # SSH User name
+        user: ${{ secrets.SERVER_USERNAME }}
+          # Private key
+        key: ${{ secrets.SERVER_SSH_KEY }}
+    - name: ssh pipelines
+      uses: cross-the-world/ssh-pipeline@master
+      env:
+        WELCOME: "ssh pipeline"
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        user: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT }}
+        connect_timeout: 10s
+        script: |
+          service caddy restart
+
+    
+        
+            
+      
